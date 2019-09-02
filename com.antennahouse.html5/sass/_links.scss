@@ -1,0 +1,29 @@
+// This file is part of the DITA Open Toolkit project.
+//
+// Copyright 2016 Roger Sheen
+//
+// See the accompanying LICENSE file for applicable license.
+
+// Sass partial for link group styles
+
+/* Most link groups are created with <div>. Ensure they have space before and after. */
+
+.ul-child-links {
+  list-style-type: none;
+  margin-bottom: 0.5em;
+  margin-top: 0.5em;
+}
+
+.ol-child-links {
+  margin-bottom: 0.5em;
+  margin-top: 0.5em;
+}
+
+.link-label{
+  font-weight: bold;
+}
+
+.ul-friend-links {
+  margin-top: 0;
+  list-style-type: disc;
+}

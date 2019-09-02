@@ -1,0 +1,24 @@
+// This file is part of the DITA Open Toolkit project.
+//
+// Copyright 2005 IBM Corporation
+//
+// See the accompanying LICENSE file for applicable license.
+//
+// Copyright 2019 Antenna House, Inc.
+// Modified based on DITA-OT Apache 2.0 license
+//
+
+/* Add space for top level topics */
+.nested0 {
+  margin-top: 1em;
+}
+
+/* div with class=p is used for paragraphs that contain blocks, to keep the XHTML valid */
+.p {
+  margin-top: 1em;
+}
+
+body {
+  line-height: $line-height-base;
+  font-family: $font-family-sans-serif;
+}

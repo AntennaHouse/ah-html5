@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="ah.html5.css.build" default="dita2.ahhtml5.css.build" xmlns:dita="http://dita-ot.sourceforge.net" xmlns:if="ant:if" xmlns:unless="ant:unless">
+
+    <!-- Build CSS File From SCSS -->
+    <target name="dita2.ahhtml5.css.build" description="Build CSS files into plugin- CSS folder">
+        <property name="target.css.dir" location="${plugin.dir}${file.separator}CSS"/>
+        <antcall target="ahhtml5.scss.compile">
+            <param name="prmOutputDir" value="${target.css.dir}"/>
+        </antcall>
+    </target>
+
+    <!-- Invoke gulp to compile SCSS -->
+    <target name="ahhtml5.scss.compile">
+        <property name="gulp.cmd" value="gulp"/>
+        <exec executable="${gulp.cmd}" logerror="true" failonerror="false" dir="${basedir}" vmlauncher="false">
+            <arg value="sass"/>
+            <arg value="--destdir"/>
+            <arg value="${prmOutputDir}"/>
+        </exec>
+    </target>
+
+</project>

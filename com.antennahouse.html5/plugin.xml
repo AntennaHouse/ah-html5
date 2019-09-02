@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin id="com.antennahouse.html5">
+    <extension-point id="dita.xsl.ahhtml5" name="HTML5 XSLT import"/>
+    <extension-point id="dita.conductor.ahhtml5.param" name="HTML5 XSLT parameters"/>
+    <extension-point id="dita.conductor.ahhtml5.toc.param" name="HTML/XSLT XSLT parameter"/>
+    <extension-point id="dita.xsl.ahhtml5.toc" name="HTML5 TOC XSLT import"/>
+    <extension-point id="dita.xsl.ahhtml5.cover" name="HTML5 Cover XSLT import"/>
+    <transtype name="ah.html5" desc="HTML5">
+        <param name="nav.toc" type="enum" desc="Specifies whether to generate a navigation TOC in topic pages.">
+            <val default="true" desc="No TOC">none</val>
+            <val desc="Partial TOC that shows the current topic">partial</val>
+            <val desc="Full TOC">full</val>
+        </param>
+    </transtype>
+    <feature extension="dita.conductor.target.relative" value="integrator.xml" type="file"/>
+    <feature extension="dita.conductor.ahhtml5.param" file="params.xml"/>
+    <template file="build_template.xml"/>
+</plugin>

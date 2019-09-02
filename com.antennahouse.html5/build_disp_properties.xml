@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="ah.html5.build.disp.properties">
+    <target name="disp_properties">
+        <echo message="*-- Plug-in Parameters ------------------------------------------*"/>
+        <echo message="dita.map.filename.root=${dita.map.filename.root}"/>
+        <echo message="user.input.file=${user.input.file}"/>
+        <echo message="dita.temp.dir.fullpath=${dita.temp.dir.fullpath}"/>
+        <echo message="dita.temp.dir=${dita.temp.dir}"/>
+        <echo message="user.input.dir=${user.input.dir}"/>
+        <echo message="dita.map.output.dir=${dita.map.output.dir}"/>
+        <echo message="clean.temp=${clean.temp}"/>
+        <echo message="*----------------------------------------------------------------*"/>
+    </target>
+</project>

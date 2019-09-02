@@ -1,0 +1,79 @@
+// This file is part of the DITA Open Toolkit project.
+//
+// Copyright 2016 Roger Sheen
+//
+// See the accompanying LICENSE file for applicable license.
+//
+// Copyright 2019 Antenna House, Inc.
+// Modified based on DITA-OT Apache 2.0 license
+//
+// Sass partial for table styles
+
+table {
+  border-collapse: collapse;
+}
+
+table caption {
+  font-style: italic;
+}
+
+// @pgwide
+
+.table-pgwide-1 {
+  width: 100%;
+}
+
+// @align
+// Remove "char" because it is not supported in all browsers
+
+$align: left right center justify;
+
+@each $value in $align {
+  .align-#{$value} {
+    text-align: $value;
+  }
+}
+
+// @valign
+
+$valign: top bottom middle;
+
+@each $value in $valign {
+  .valign-#{$value} {
+    vertical-align: $value;
+  }
+}
+
+// Cell border is fully controlled by .colsep-0/1, .rowsep-0/1
+
+// @colsep
+
+.colsep-0 {
+  border-right: 0;
+}
+
+.colsep-1 {
+  border-right: 1px solid;
+}
+
+// @rowsep
+
+.rowsep-0 {
+  border-bottom: 0;
+}
+
+.rowsep-1 {
+  border-bottom: 1px solid;
+}
+
+// Table cell padding
+
+.entry {
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.stentry {
+  padding-left: 4px;
+  padding-right: 4px;
+}

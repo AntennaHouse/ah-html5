@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    
+    <target name="dita2ah.html5">
+        <!-- Set "force-unique" to generate uique output files in preprocess when map contains multiple references to a single topic -->
+        <property name="force-unique" value="true"/>
+        <condition property="map2.ah.html5.invoke" value="yes" else="no">
+            <and>
+                <not>
+                    <isset property="noMap"/>
+                </not>
+                <not>
+                    <equals arg1="${args.build.css.only}" arg2="yes"/> 
+                </not>
+            </and>
+        </condition>
+        <condition property="build.ah.html5.css.invoke" value="yes" else="no">
+            <and>
+                <not>
+                    <isset property="noMap"/>
+                </not>
+                <equals arg1="${args.build.css.only}" arg2="yes"/> 
+            </and>
+        </condition>
+        <antcall target="topic2.ah.html5.check"/>
+        <antcall target="build.ah.html5.css"/>
+        <antcall target="map2.ah.html5"/>
+    </target> 
+    
+    <target name="topic2.ah.html5.check" if="noMap">
+        <echo message="[ah.html5] This plugin does not support topic only formatting. Use map or bookmap!"/>
+    </target>
+    
+    <!-- Normal Target -->
+    <target name="map2.ah.html5" if="${map2.ah.html5.invoke}" depends="build-init,preprocess">
+        <property name="plugin.dir" value="${dita.plugin.com.antennahouse.html5.dir}"/>
+        <ant dir="${plugin.dir}" inheritRefs="true"/>
+    </target>
+
+    <!-- SCSS compile only -->
+    <target name="build.ah.html5.css" if="${build.ah.html5.css.invoke}">
+        <property name="plugin.dir" value="${dita.plugin.com.antennahouse.html5.dir}"/>
+        <ant dir="${plugin.dir}" inheritRefs="true" antfile="${plugin.dir}${file.separator}build.css.xml"/>
+    </target>
+</project>

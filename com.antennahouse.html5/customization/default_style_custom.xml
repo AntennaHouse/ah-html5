@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    ************************************************************
+    DITA to HTML5 Style Definition 
+    ************************************************************
+    File Name : default_style_custom.xml
+    ************************************************************
+    Copyright © 2009-2019 Antenna House, Inc.
+    Antenna House is a trademark of Antenna House, Inc.
+    URL : http://www.antennahouse.com/
+    ************************************************************
+-->
+<style-definition xmlns="http://www.antennahouse.com/names/XSLT/Document/Layout">
+</style-definition>

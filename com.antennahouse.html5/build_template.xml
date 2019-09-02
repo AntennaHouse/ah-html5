@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="ah.html5.build" default="dita2.ahhtml5.main" xmlns:dita="http://dita-ot.sourceforge.net" xmlns:if="ant:if" xmlns:unless="ant:unless">
+    <import file="build_disp_properties.xml"/>
+    
+    <dirname property="dita.temp.dir.fullpath" file="${dita.temp.dir}${file.separator}dummy.file"/>
+    <property name="map" value="${dita.temp.dir}${file.separator}${dita.input.filename}"/>
+    <makeurl property="map.url" file="${map}" separator="/" validate="yes"/>
+
+    <!-- Main Target -->
+    <target name="dita2.ahhtml5.main" depends="disp_properties,ahhtml5.init,dita2.ahhtml5.map,dita2.ahhtml5.topic,dita2.ahhtml5.css"/>
+    
+    <target name="ahhtml5.init">
+        <condition property="args.xsl" value="${plugin.dir}/xsl/dita2html5_topic_shell.xsl">
+            <not>
+                <isset property="args.xsl"/>
+            </not>
+        </condition>
+
+        <condition property="ahhtml5.nav.toc" value="${nav.toc}" else="none">
+            <isset property="nav.toc"/>
+        </condition>
+        
+        <condition property="out.ext" value=".html">
+            <not>
+                <isset property="args.outext"/>
+            </not>
+        </condition>
+
+        <condition property="ahhtml5.reloadstylesheet" value="false">
+            <not>
+                <isset property="ahhtml5.reloadstylesheet"/>
+            </not>
+        </condition>
+    </target>
+    
+    <!-- Map -->
+    <target name="dita2.ahhtml5.map" depends="ahhtml5.map.init,ahhtml5.map.impl"/>
+    
+    <target name="ahhtml5.map.init">
+        <condition property="args.ahhtml5.map.xsl" value="${plugin.dir}/xsl/dita2html5_map_shell.xsl">
+            <not>
+                <isset property="args.ahhtml5.map.xsl"/>
+            </not>
+        </condition>
+        <condition property="args.ahhtml5.map" value="index">
+            <not>
+                <isset property="args.ahhtml5.map"/>
+            </not>
+        </condition>
+        <makeurl file="${dita.input.valfile}" property="dita.input.valfile.url" validate="no"/>    
+    </target>
+    
+    <target name="ahhtml5.map.impl" description="Build HTML5 Map file">
+        <echo message="[ahhtml5.map.impl] Start converting map file!"/>
+        <echo message="[ahhtml5.map.impl] Map=${dita.temp.dir}${file.separator}${dita.input.filename}"/>
+        <property name="ahhtml5.map.output.dir" value="${dita.output.dir}"/>
+        <xslt basedir="${dita.temp.dir}"
+            in="${dita.temp.dir}${file.separator}${dita.input.filename}"
+            out="${ahhtml5.map.output.dir}${file.separator}${args.ahhtml5.map}${out.ext}"
+            style="${args.ahhtml5.map.xsl}"
+            force="true">
+            <factory name="net.sf.saxon.TransformerFactoryImpl">
+                <!-- Output timing information -->
+                <attribute name="http://saxon.sf.net/feature/timing" value="true"/>
+                <!-- Suppress namespace warning -->
+                <attribute name="http://saxon.sf.net/feature/suppressXsltNamespaceCheck" value="true"/>
+                <!--Assert-->
+                <attribute name="http://saxon.sf.net/feature/enableAssertions" value="true"/>
+                <!-- Trace -->
+                <!--attribute name="http://saxon.sf.net/feature/traceListenerClass" value="net.sf.saxon.trace.XSLTTraceListener"/-->
+            </factory>
+            <param name="PRM_PROCESSING_FILE_NAME" expression="${dita.input.filename}" if:set="dita.input.filename"/>
+            <param name="PRM_PROCESSING_FILE_DIR"  expression="${${dita.temp.dir}}" if:set="dita.temp.dir"/>
+            <param name="PRM_FILTER_FILE" expression="${dita.input.valfile.url}" if:set="dita.input.valfile"/>
+            <param name="PRM_OUTPUT_EXTENSION" expression="${out.ext}" if:set="out.ext"/>
+            <param name="contenttarget" expression="${args.html5.contenttarget}" if:set="args.html5.contenttarget"/>
+            <param name="CSS" expression="${args.css.file}" if:set="args.css.file"/>
+            <param name="CSSPATH" expression="${user.csspath}" if:set="user.csspath"/>
+            <param name="OUTPUTCLASS" expression="${args.html5.toc.class}" if:set="args.html5.toc.class"/>
+            <param name="PRM_OUTPUT_AS_XML" expression="${output.as.xml}" if:set="output.as.xml"/>
+            <param name="PRM_MAP_URL" expression="${map.url}" if:set="map.url"/>
+            <dita:extension id="dita.conductor.ahhtml5.param" behavior="org.dita.dost.platform.InsertAction"/>
+            <xmlcatalog refid="dita.catalog"/>
+        </xslt>
+    </target>
+    
+    <!-- Topic -->
+    <target name="dita2.ahhtml5.topic" depends="ahhtml5.topic.init, ahhtml5.image-metadata, ahhtml5.topics.common"/>
+  
+    <target name="ahhtml5.topic.init">
+        <loadfile property="ahhtml5.map" srcfile="${dita.temp.dir}/${user.input.file.listfile}">
+            <filterchain>
+                <headfilter lines="1"/>
+            </filterchain>
+        </loadfile>
+        <makeurl property="ahhtml5.map.url" file="${dita.temp.dir}/${ahhtml5.map}"/>
+        <makeurl file="${dita.input.valfile}" property="dita.input.valfile.url" validate="no"/>    
+    </target>
+    
+    <target name="ahhtml5.image-metadata" unless="ahhtml5.image-metadata.skip" description="Read image file and copy to output dir">
+        <pipeline message="Read image file" taskname="image-metadata">
+            <module class="org.dita.dost.module.ImageMetadataModule">
+                <param name="outputdir" location="${dita.output.dir}"/>
+            </module>
+        </pipeline>
+    </target>
+    
+    <target name="ahhtml5.topics.common">
+        <property name="fullditatopic" value="${dita.temp.dir}/fullditatopic.list"/>
+        <xslt basedir="${dita.temp.dir}" 
+            destdir="${dita.output.dir}"                               
+            reloadstylesheet="${ahhtml5.reloadstylesheet}"
+            extension="${out.ext}"
+            style="${args.xsl}"
+            includesfile="${fullditatopic}"
+            filenameparameter="PRM_PROCESSING_FILE_NAME"
+            filedirparameter="PRM_PROCESSING_FILE_DIR"
+            force="true">
+            <factory name="net.sf.saxon.TransformerFactoryImpl">
+                <attribute name="http://saxon.sf.net/feature/timing" value="true"/>
+                <!-- Suppress namespace warning -->
+                <attribute name="http://saxon.sf.net/feature/suppressXsltNamespaceCheck" value="true"/>
+                <!--Assert-->
+                <attribute name="http://saxon.sf.net/feature/enableAssertions" value="true"/>
+                <!-- Trace -->
+                <!--attribute name="http://saxon.sf.net/feature/traceListenerClass" value="net.sf.saxon.trace.XSLTTraceListener"/-->
+            </factory>
+            <param name="PRM_MAP_URL" expression="${ahhtml5.map.url}" if:set="ahhtml5.map.url"/>
+            <param name="PRM_FILTER_FILE" expression="${dita.input.valfile.url}" if:set="dita.input.valfile"/>
+            <param name="PRM_OUTPUT_EXTENSION" expression="${out.ext}" if:set="out.ext"/>
+            <param name="PRM_USER_CSSPATH" expression="${user.csspath}" if:set="user.csspath"/>
+            <param name="HDF" expression="${args.hdf}" if:set="args.hdf"/>
+            <param name="HDR" expression="${args.hdr}" if:set="args.hdr"/>
+            <param name="FTR" expression="${args.ftr}" if:set="args.ftr"/>
+            <param name="DRAFT" expression="${args.draft}" if:set="args.draft"/>
+            <param name="ARTLBL" expression="${args.artlbl}" if:set="args.artlbl"/>
+            <param name="GENERATE-TASK-LABELS" expression="${args.gen.task.lbl}" if:set="args.gen.task.lbl"/>
+            <param name="PRESERVE-DITA-CLASS" expression="${args.html5.classattr}" if:set="args.html5.classattr"/>
+            <param name="NOPARENTLINK" expression="${args.hide.parent.link}" if:set="args.hide.parent.link"/>
+            <param name="include.rellinks" expression="${include.rellinks}"/>
+            <param name="INDEXSHOW" expression="${args.indexshow}" if:set="args.indexshow"/>
+            <param name="genDefMeta" expression="${args.gen.default.meta}" if:set="args.gen.default.meta"/>
+            <param name="BASEDIR" expression="${dita.dir}"/>
+            <param name="OUTPUTDIR" expression="${dita.output.dir}"/>
+            <param name="defaultLanguage" expression="${default.language}"/>
+            <param name="PRM_OUTPUT_AS_XML" expression="${output.as.xml}" if:set="output.as.xml"/>
+            <param name="PRM_MAP_URL" expression="${map.url}" if:set="map.url"/>
+            <dita:extension id="dita.conductor.ahhtml5.param" behavior="org.dita.dost.platform.InsertAction"/>
+            <xmlcatalog refid="dita.catalog"/>
+        </xslt>
+    </target>
+
+    <!-- CSS -->
+    <!-- args.css
+          Specifies the name of a custom .css file.
+          The value of this parameter should be only the file name (or an absolute path to the file). A relative
+          path can be specified with args.cssroot.
+          
+        args.csspath
+          Specifies the destination directory to which .css files are copied (relative to the output directory).
+          Corresponds to the XSLT parameter CSSPATH.
+          DITA-OT will copy the file to this location.
+          Tip: If args.csspath is not set, the custom CSS file (and the default CSS files) will be copied
+            to the root level of the output folder. To copy CSS files to an output subfolder named css, set
+            args.csspath to css.
+            
+        args.cssroot
+          Specifies the source directory that contains the custom .css file.
+          DITA-OT will copy the file from this location.
+          DITA Open Toolkit | DITA-OT parameters | 64
+          Tip: The value you enter here will be interpreted relative to the location of the input map file. If
+            your map is stored at the root level of your project folder and the CSS file is stored in a subfolder
+            named resources, set args.cssroot to resources.
+            
+        args.build.css.always
+          Always build CSS file from sass/*.scss file into output CSS folder CSS file.
+          The plugin-dir/css folder is not used.
+     -->
+    <target name="dita2.ahhtml5.css" description="Build &amp; Copy CSS files">
+
+        <condition property="user.csspath.url" value="yes" else="no">
+            <or>
+                <contains string="${args.csspath}" substring="http://"/>
+                <contains string="${args.csspath}" substring="https://"/>
+            </or>
+        </condition>
+        
+        <condition property="user.csspath" value="" else="${args.csspath}">
+            <or>
+                <not>
+                    <isset property="args.csspath"/>
+                </not>
+                <isabsolute path="${args.csspath}"/>
+            </or>
+        </condition>
+        
+        <condition property="user.css.real" value="${args.cssroot}${file.separator}${args.css}" else="${args.css}">
+            <isset property="args.cssroot"/>
+        </condition>
+        
+        <local name="user.css.basename"/>
+        <basename property="user.css.basename" file="${args.css}"/>
+        <condition property="args.css.file" value="${user.css.basename}">
+            <or>
+                <available file="${user.css.real}" type="file"/>
+                <isset property="user.csspath.url"/>
+            </or>
+        </condition>
+        
+        <condition property="user.copycss.yes" value="yes" else="no">
+            <and>
+                <equals arg1="${args.copycss}" arg2="yes"/>
+                <available file="${user.css.real}" type="file"/>
+            </and>
+        </condition>
+        
+        <condition property="build.css.default.yes" value="yes" else="no">
+            <not>
+                <equals arg1="${args.build.css}" arg2="no"/>
+            </not>
+        </condition>
+
+        <condition property="build.css.from.scss.always" value="yes" else="no">
+            <equals arg1="${args.build.css.always}" arg2="yes"/>
+        </condition>
+
+        <condition property="copy.system.default.css.file" value="yes" else="no">
+            <not>
+                <equals arg1="${args.build.css.always}" arg2="yes"/>
+            </not>
+        </condition>
+
+        <property name="user.csspath.real" location="${dita.output.dir}/${user.csspath}"/>
+        <mkdir dir="${user.csspath.real}"/>
+
+        <echo message="user.copycss.yes=${user.copycss.yes}"/>
+        <echo message="build.css.from.scss.always=${build.css.from.scss.always}"/>
+        <echo message="copy.system.default.css.file=${copy.system.default.css.file}"/>
+        
+        <!-- Build CSS file from SASS -->
+        <antcall target="ahhtml5.build.css.from.scss">
+            <param name="prmOutputDir" value="${user.csspath.real}"/>
+        </antcall>
+        
+        <!-- Copy System CSS file -->
+        <antcall target="ahhtml5.copy.system.css.file"/>
+        
+        <!-- Copy user specified CSS file when required -->
+        <antcall target="ahhtml5.copy.css.user"/>
+    </target>
+
+    <!-- Build CSS File From SASS -->
+    <target name="ahhtml5.build.css.from.scss" if="${build.css.from.scss.always}">
+        <property name="gulp.cmd" value="gulp"/>
+        <exec executable="${gulp.cmd}" logerror="true" failonerror="false" dir="${basedir}" vmlauncher="false">
+            <arg value="sass"/>
+            <arg value="--destdir"/>
+            <arg value="${prmOutputDir}"/>
+        </exec>
+    </target>
+
+    <!-- Copy Default Sytem CSS File -->
+    <target name="ahhtml5.copy.system.css.file" if="${copy.system.default.css.file}">
+        <copy todir="${user.csspath.real}">
+            <fileset dir="${plugin.dir}/css" includes="*.css"/>
+        </copy>
+    </target>
+
+    <!-- Copy User CSS File -->
+    <target name="ahhtml5.copy.css.user" if="${user.copycss.yes}">
+        <copy file="${user.css.real}" todir="${user.csspath.real}"/>
+    </target>
+    
+</project>

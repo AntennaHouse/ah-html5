@@ -1,0 +1,56 @@
+// This file is part of the DITA Open Toolkit project.
+//
+// Copyright 2016 Roger Sheen
+//
+// See the accompanying LICENSE file for applicable license.
+//
+// Copyright 2019 Antenna House, Inc.
+// Modified based on DITA-OT Apache 2.0 license
+//
+// Sass partial for list styles
+
+/* Sl do not get a bullet */
+ul.sl {
+  list-style-type: none;
+}
+
+/* Intended list style */
+.list-style-none {
+  list-style:none;
+}
+
+ul.list-style-none li::before {
+  content: "\200B";
+}
+
+/* Default of bold for definition list terms */
+.dt {
+  font-weight: bold;
+}
+
+/* Use CSS to compact lists with @compact="yes" */
+li.compact-yes  {
+  line-height: 1.0;  
+}
+
+dt.compact-yes {
+  line-height: 1.0;  
+}
+
+dd + dt.compact-yes {
+  margin-top: 0.2em;
+}
+
+dd.compact-yes {
+  line-height: 1.0;  
+}
+
+/* Table foormatted dl */
+.dl-table {
+  border: black 1px solid;
+}
+
+.dl-dlhead-th, .dl-dt-td, .dl-dd-td{
+  border: black 1px solid;
+  padding: 4px;
+}
