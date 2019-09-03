@@ -80,7 +80,9 @@
             <param name="PRM_OUTPUT_AS_XML" expression="${output.as.xml}" if:set="output.as.xml"/>
             <param name="PRM_MAP_URL" expression="${map.url}" if:set="map.url"/>
             <dita:extension id="dita.conductor.ahhtml5.param" behavior="org.dita.dost.platform.InsertAction"/>
-            <xmlcatalog refid="dita.catalog"/>
+            <xmlcatalog>
+                <catalogpath path="${dita.plugin.org.dita.base.dir}/catalog-dita.xml"/>
+            </xmlcatalog>
         </xslt>
     </target>
     
@@ -146,7 +148,9 @@
             <param name="PRM_OUTPUT_AS_XML" expression="${output.as.xml}" if:set="output.as.xml"/>
             <param name="PRM_MAP_URL" expression="${map.url}" if:set="map.url"/>
             <dita:extension id="dita.conductor.ahhtml5.param" behavior="org.dita.dost.platform.InsertAction"/>
-            <xmlcatalog refid="dita.catalog"/>
+            <xmlcatalog>
+                <catalogpath path="${dita.plugin.org.dita.base.dir}/catalog-dita.xml"/>
+            </xmlcatalog>
         </xslt>
     </target>
 
