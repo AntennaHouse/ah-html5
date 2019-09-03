@@ -94,7 +94,7 @@
             </xsl:for-each>
         </xsl:variable>
         <xsl:if test="empty($tokenizedClassAtt)">
-            <xsl:message select="'[genClassAtt] elemet=',$prmElement"/>
+            <xsl:message select="'[genClassAtt] element=',$prmElement"/>
         </xsl:if>
         
         <!-- HTML @class attribute -->
