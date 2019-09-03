@@ -243,7 +243,7 @@
     -->
     <xsl:function name="ahf:hasFigTitle" as="xs:boolean">
         <xsl:param name="prmFig" as="element()"/>
-        <xsl:sequence select="$prmFig/*[contains-token(@class, 'topic/title') or contains-token(@class, 'topic/desc')] => exists()"/>
+        <xsl:sequence select="$prmFig/*[ahf:seqContainsToken(@class, ('topic/title','topic/desc'))] => exists()"/>
     </xsl:function>
     
     <!--
