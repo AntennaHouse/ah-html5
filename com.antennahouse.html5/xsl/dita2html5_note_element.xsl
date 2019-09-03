@@ -26,27 +26,34 @@
     -->
     <xsl:template match="*[contains-token(@class, 'topic/note')]">
         <xsl:variable name="note" as="element()" select="."/>
+        <xsl:variable name="noteType" as="xs:string">
+            <xsl:choose>
+                <xsl:when test="$note/@type => exists()">
+                    <xsl:variable name="tempType" as="xs:string" select="$note/@type => string()"/>
+                    <xsl:choose>
+                        <xsl:when test="$tempType eq 'other'">
+                            <xsl:sequence select="$note/@othertype => string()"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:sequence select="$tempType"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:sequence select="'note'"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
         <div>
             <xsl:call-template name="genCommonAtts"/>
             <xsl:call-template name="genIdAtt"/>
-            <xsl:variable name="type">
-                <xsl:variable name="tempType" as="xs:string" select="$note/@type => string()"/>
-                <xsl:choose>
-                    <xsl:when test="$tempType eq 'other'">
-                        <xsl:sequence select="$note/@othertype => string()"/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:sequence select="$tempType"/>
-                    </xsl:otherwise>
-                </xsl:choose>
-            </xsl:variable>
             <span>
                 <xsl:call-template name="genCommonAtts">
                     <xsl:with-param name="prmElement" select="()"/>
                     <xsl:with-param name="prmDefaultOutputClass" select="ahf:getVarValue('Note_Title')"/>
                 </xsl:call-template>
                 <xsl:call-template name="getVarValueWithLangAsText">
-                    <xsl:with-param name="prmVarName" select="'Note_' || $type"/>
+                    <xsl:with-param name="prmVarName" select="'Note_' || substring($noteType,1,1) => upper-case() || substring($noteType,2)"/>
                 </xsl:call-template>
             </span>
             <xsl:apply-templates/>
