@@ -50,7 +50,7 @@
                 <xsl:if test="string($gpBodyOutputClass)">
                     <xsl:attribute name="class" select="$gpBodyOutputClass"/>
                 </xsl:if>
-                <xsl:if test="descendant::*[contains-token(@class, 'map/topicref')][ahf:isToc(.)][not(ahf:isResourceOnly(.))]">
+                <xsl:if test="descendant::*[ahf:outputTopicref(.)] => exists()">
                     <nav>
                         <ul>
                             <xsl:apply-templates select="*[contains-token(@class, 'map/topicref')]" mode="MODE_NAV_PAGE"/>
@@ -130,7 +130,7 @@
     return:     li
     note:       
     -->
-    <xsl:template match="*[contains-token(@class, 'map/topicref')][ahf:isToc(.)][not(ahf:isResourceOnly(.))]" mode="MODE_NAV_PAGE">
+    <xsl:template match="*[ahf:outputTopicref(.)]" mode="MODE_NAV_PAGE">
         <xsl:variable name="navTitle" as="xs:string">
             <xsl:call-template name="getNavTitle"/>    
         </xsl:variable>
@@ -152,7 +152,11 @@
                             <xsl:value-of select="$navTitle"/>
                         </xsl:otherwise>
                     </xsl:choose>
-                    <xsl:apply-templates select="*[contains-token(@class, 'map/topicref')]" mode="#current"/>
+                    <xsl:if test="*[ahf:outputTopicref(.)] => exists()">
+                        <ul>
+                            <xsl:apply-templates select="*[contains-token(@class, 'map/topicref')]" mode="#current"/>
+                        </ul>
+                    </xsl:if>
                 </li>
             </xsl:when>
             <xsl:otherwise>
@@ -160,11 +164,32 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    
+
     <xsl:template match="*[contains-token(@class, 'mapgroup-d/topicgroup')]" priority="5" mode="MODE_NAV_PAGE">
         <xsl:apply-templates select="*[contains-token(@class, 'map/topicref')]" mode="#current"/>
     </xsl:template>
 
+    <xsl:template match="*[contains-token(@class, 'mapgroup-d/keydef')]" priority="5" mode="MODE_NAV_PAGE">
+    </xsl:template>
+    
+    <xsl:template match="*[contains-token(@class, 'bookmap/frontmatter')]" priority="10" mode="MODE_NAV_PAGE">
+        <xsl:apply-templates select="*[contains-token(@class, 'map/topicref')]" mode="#current"/>
+    </xsl:template>
+
+    <xsl:template match="*[contains-token(@class, 'bookmap/backmatter')]" priority="10" mode="MODE_NAV_PAGE">
+        <xsl:apply-templates select="*[contains-token(@class, 'map/topicref')]" mode="#current"/>
+    </xsl:template>
+
+    <!--
+    function:   Determine to process topicref
+    param:      prmTopicRef
+    return:     xs:boolean
+    note:       
+    -->
+    <xsl:function name="ahf:outputTopicref" as="xs:boolean">
+        <xsl:param name="prmTopicref" as="element()"/>
+        <xsl:sequence select="$prmTopicref[contains-token(@class, 'map/topicref')][ahf:isToc(.)][not(ahf:isResourceOnly(.))] => exists()"/>
+    </xsl:function>
     <!--
     function:   Generate Navtitle Template
     param:      prmTopicRef
@@ -179,16 +204,16 @@
                 <xsl:variable name="navTitleTemp" as="xs:string*">
                     <xsl:apply-templates select="$prmTopicRef/*[contains-token(@class, 'map/topicmeta')]/*[contains-token(@class, 'topic/navtitle')]" mode="TEXT_ONLY"/>
                 </xsl:variable>
-                <xsl:sequence select="normalize-space(string-join($navTitleTemp,''))"/>
+                <xsl:sequence select="$navTitleTemp => string-join('') => normalize-space()"/>
             </xsl:when>
             <xsl:when test="$prmTopicRef/@navtitle">
-                <xsl:sequence select="$prmTopicRef/@navtitle/normalize-space(string())"/>
+                <xsl:sequence select="$prmTopicRef/@navtitle => string() => normalize-space()"/>
             </xsl:when>
             <xsl:when test="$prmTopicRef/*[contains-token(@class, 'map/topicmeta')]/*[contains-token(@class, 'map/linktext')]">
                 <xsl:variable name="linkTextTemp" as="xs:string*">
                     <xsl:apply-templates select="$prmTopicRef/*[contains-token(@class, 'map/topicmeta')]/*[contains-token(@class, 'map/linktext')]" mode="TEXT_ONLY"/>
                 </xsl:variable>
-                <xsl:sequence select="normalize-space(string-join($linkTextTemp,''))"/>
+                <xsl:sequence select="$linkTextTemp => string-join('') => normalize-space()"/>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:sequence select="$prmTopicRef/@href => normalize-space()"/>
