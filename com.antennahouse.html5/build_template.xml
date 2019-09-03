@@ -5,6 +5,7 @@
     <dirname property="dita.temp.dir.fullpath" file="${dita.temp.dir}${file.separator}dummy.file"/>
     <property name="map" value="${dita.temp.dir}${file.separator}${dita.input.filename}"/>
     <makeurl property="map.url" file="${map}" separator="/" validate="yes"/>
+    <typedef name="isabsolute" classname="org.dita.dost.ant.IsAbsolute"/>
 
     <!-- Main Target -->
     <target name="dita2.ahhtml5.main" depends="disp_properties,ahhtml5.init,dita2.ahhtml5.map,dita2.ahhtml5.topic,dita2.ahhtml5.css"/>
