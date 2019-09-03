@@ -41,7 +41,20 @@
                     </xsl:when>
                     <!-- It's the link to a DITA file - process the file name (adding the html extension) and process the rest of the href -->
                     <xsl:when test="ahf:isDitaTarget($prmLinkElem)">
-                        <xsl:attribute name="href" select="concat(ahf:replaceExtension($href,$gpOutputExtension), if (contains($href, '#')) then concat('#',ahf:getIdFromTopicAndElementId(ahf:getTopicIdFromHref($href) => xs:ID(),ahf:getElementIdFromHref($href))) else '')"/>
+                        <xsl:attribute name="href">
+                            <xsl:variable name="targetFilePath" select="ahf:replaceExtension($href,$gpOutputExtension)"/>
+                            <xsl:variable name="fragment" as="xs:string">
+                                <xsl:choose>
+                                    <xsl:when test="contains($href, '#')">
+                                        <xsl:sequence select="'#' || substring-after($href,'#')"/>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:sequence select="''"/>
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                            </xsl:variable>
+                            <xsl:value-of select="concat($targetFilePath,$fragment)"/>
+                        </xsl:attribute>
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:assert test="false()" select="'[ahf:genHrefAtt] Invalid href information. $prmLinkElem/@href=',$href"/>
@@ -141,15 +154,26 @@
             </xsl:when>
             <!-- It's the link to a DITA file - get element from external file -->
             <xsl:when test="ahf:isDitaTarget($prmLinkElem)">
-                <xsl:variable name="filePath" as="xs:string" select="substring-before($href,'#')"/>
-                <xsl:variable name="topicId" as="xs:string" select="ahf:getTopicIdFromHref($href)"/>
-                <xsl:variable name="elemId" as="xs:string" select="ahf:getElementIdFromHref($href)"/>
+                <xsl:variable name="ditaFilePath" as="xs:string" select="if (contains($href,'#')) then substring-before($href,'#') else $href"/>
+                <xsl:variable name="ditaFileDoc" as="document-node()" select="saxon:discard-document(document($ditaFilePath,root($prmLinkElem)))"/>
+                <xsl:variable name="topicId" as="xs:string">
+                    <xsl:choose>
+                        <xsl:when test="contains($href,'#')">
+                            <xsl:variable name="fragment" as="xs:string" select="substring-after($href,'#')"/>
+                            <xsl:sequence select="if (contains($fragment,'/')) then substring-before($fragment,'/') else $fragment"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:sequence select="$ditaFileDoc/descendant::*[contains-token(@class,'topic/topic')][1]/@id => string()"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:variable>
+                <xsl:variable name="elemId" as="xs:string" select="if (contains($href,'/')) then substring-after($href,'/') else ''"/>
                 <xsl:choose>
                     <xsl:when test="string($elemId)">
-                        <xsl:sequence select="saxon:discard-document(document($filePath,root($prmLinkElem)))/descendant::*[contains-token(@class,'topic/topic')][@id => string() eq $topicId]/descendant::*[@id => string() eq $elemId]"/>
+                        <xsl:sequence select="$ditaFileDoc/descendant::*[contains-token(@class,'topic/topic')][@id => string() eq $topicId]/descendant::*[@id => string() eq $elemId]"/>
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:sequence select="saxon:discard-document(document($filePath,root($prmLinkElem)))/descendant::*[contains-token(@class,'topic/topic')][@id => string() eq $topicId]"/>
+                        <xsl:sequence select="$ditaFileDoc/descendant::*[contains-token(@class,'topic/topic')][@id => string() eq $topicId]"/>
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:when>
