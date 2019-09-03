@@ -171,6 +171,16 @@
 
     <xsl:template match="*[contains-token(@class, 'mapgroup-d/keydef')]" priority="5" mode="MODE_NAV_PAGE">
     </xsl:template>
+
+    <xsl:template match="*[contains-token(@class, 'bookmap/booklists')]" priority="5" mode="MODE_NAV_PAGE">
+        <xsl:apply-templates select="*[contains-token(@class, 'map/topicref')]" mode="#current"/>
+    </xsl:template>
+
+    <xsl:template match="*[contains-token(@class, 'bookmap/booklists')]/*[contains-token(@class, 'bookmap/toc')]" priority="5" mode="MODE_NAV_PAGE">
+    </xsl:template>
+
+    <xsl:template match="*[contains-token(@class, 'bookmap/booklists')]/*[contains-token(@class, 'bookmap/indexlist')]" priority="5" mode="MODE_NAV_PAGE">
+    </xsl:template>
     
     <xsl:template match="*[contains-token(@class, 'bookmap/frontmatter')]" priority="10" mode="MODE_NAV_PAGE">
         <xsl:apply-templates select="*[contains-token(@class, 'map/topicref')]" mode="#current"/>
