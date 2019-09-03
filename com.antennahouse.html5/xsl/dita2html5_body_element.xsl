@@ -180,56 +180,72 @@
     -->
     <xsl:template name="genFigTitle">
         <xsl:param name="prmFig" as="element()" required="no" select="."/>
-        <xsl:variable name="figCount" as="xs:integer" select="count($prmFig/preceding::*[contains-token(@class, 'topic/fig')]/*[contains-token(@class, 'topic/title')]) + 1"/>
-        <figcaption>
-            <xsl:if test="$prmFig/*[contains-token(@class,'topic/title')]">
-                <xsl:call-template name="genCommonAtts">
-                    <xsl:with-param name="prmElement" select="$prmFig/*[contains-token(@class,'topic/title')]"/>
-                </xsl:call-template>
-            </xsl:if>
-            <span>
-                <xsl:call-template name="genCommonAtts">
-                    <xsl:with-param name="prmElement" select="$prmFig/*[contains-token(@class,'topic/title')]"/>
-                </xsl:call-template>
-                <xsl:call-template name="getVarValueAsText">
-                    <xsl:with-param name="prmVarName" select="'Figure_Title'"/>
-                </xsl:call-template>
-                <xsl:value-of select="$figCount"/>
-                <xsl:text> </xsl:text>
-            </span>
-            <xsl:choose>
-                <xsl:when test="*[contains-token(@class,'topic/title')]">
+        <xsl:choose>
+            <xsl:when test="ahf:hasFigTitle($prmFig)">
+                <xsl:variable name="topic" as="element()" select="$prmFig/ancestor::*[contains-token(@class,'topic/topic')][last()]"/>
+                <xsl:variable name="figCount" as="xs:integer" select="count($prmFig[ahf:hasFigTitle(.)] | $topic/descendant::*[contains-token(@class, 'topic/fig')][ahf:hasFigTitle(.)][. &lt;&lt; $prmFig])"/>
+                <figcaption>
+                    <xsl:if test="$prmFig/*[contains-token(@class,'topic/title')]">
+                        <xsl:call-template name="genCommonAtts">
+                            <xsl:with-param name="prmElement" select="$prmFig/*[contains-token(@class,'topic/title')]"/>
+                        </xsl:call-template>
+                    </xsl:if>
                     <span>
                         <xsl:call-template name="genCommonAtts">
                             <xsl:with-param name="prmElement" select="$prmFig/*[contains-token(@class,'topic/title')]"/>
                         </xsl:call-template>
-                        <xsl:apply-templates select="$prmFig/*[contains-token(@class,'topic/title')]/node()"/>
-                    </span>
-                    <xsl:if test="$prmFig/*[contains-token(@class,'topic/desc')]">
-                        <xsl:text>.</xsl:text>
-                        <br/>
-                        <span>
-                            <xsl:call-template name="genCommonAtts">
-                                <xsl:with-param name="prmElement" select="$prmFig/*[contains-token(@class,'topic/desc')]"/>
-                            </xsl:call-template>
-                            <xsl:apply-templates select="$prmFig/*[contains-token(@class,'topic/desc')]/node()"/>
-                        </span>
-                    </xsl:if>
-                </xsl:when>
-                <xsl:when test="*[contains-token(@class,'topic/desc')]">
-                    <br/>
-                    <span>
-                        <xsl:call-template name="genCommonAtts">
-                            <xsl:with-param name="prmElement" select="$prmFig/*[contains-token(@class,'topic/desc')]"/>
-                            <xsl:with-param name="prmDefaultOutputClass" select="'figdesc'"/>
+                        <xsl:call-template name="getVarValueAsText">
+                            <xsl:with-param name="prmVarName" select="'Figure_Title'"/>
                         </xsl:call-template>
-                        <xsl:apply-templates select="$prmFig/*[contains-token(@class,'topic/desc')]/node()"/>
+                        <xsl:value-of select="$figCount"/>
+                        <xsl:text> </xsl:text>
                     </span>
-                </xsl:when>
-            </xsl:choose>
-        </figcaption>
+                    <xsl:choose>
+                        <xsl:when test="*[contains-token(@class,'topic/title')]">
+                            <span>
+                                <xsl:apply-templates select="$prmFig/*[contains-token(@class,'topic/title')]/node()"/>
+                            </span>
+                            <xsl:if test="$prmFig/*[contains-token(@class,'topic/desc')]">
+                                <xsl:text>.</xsl:text>
+                                <br/>
+                                <span>
+                                    <xsl:call-template name="genCommonAtts">
+                                        <xsl:with-param name="prmElement" select="$prmFig/*[contains-token(@class,'topic/desc')]"/>
+                                    </xsl:call-template>
+                                    <xsl:apply-templates select="$prmFig/*[contains-token(@class,'topic/desc')]/node()"/>
+                                </span>
+                            </xsl:if>
+                        </xsl:when>
+                        <xsl:when test="*[contains-token(@class,'topic/desc')]">
+                            <br/>
+                            <span>
+                                <xsl:call-template name="genCommonAtts">
+                                    <xsl:with-param name="prmElement" select="$prmFig/*[contains-token(@class,'topic/desc')]"/>
+                                    <xsl:with-param name="prmDefaultOutputClass" select="'figdesc'"/>
+                                </xsl:call-template>
+                                <xsl:apply-templates select="$prmFig/*[contains-token(@class,'topic/desc')]/node()"/>
+                            </span>
+                        </xsl:when>
+                    </xsl:choose>
+                </figcaption>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:sequence select="()"/>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
-
+    
+    <!--
+    function:   Return fig has title or desc
+    param:      prmFig
+    return:     xs:boolean
+    note:              
+    -->
+    <xsl:function name="ahf:hasFigTitle" as="xs:boolean">
+        <xsl:param name="prmFig" as="element()"/>
+        <xsl:sequence select="$prmFig/*[contains-token(@class, 'topic/title') or contains-token(@class, 'topic/desc')] => exists()"/>
+    </xsl:function>
+    
     <!--
     function:   image template
     param:      none
