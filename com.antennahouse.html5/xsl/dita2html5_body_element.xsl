@@ -487,30 +487,36 @@
     function:   fn template
     param:      none
     return:     a
-    note:              
+    note:       Ignore fn when mode="MODE_GET_CONTENTS"
     -->
     <xsl:variable name="fnRefPrefix" as="xs:string" select="ahf:getVarValue('Footnote_Ref_Prefix')"/>
     <xsl:variable name="fnRefSuffix" as="xs:string" select="ahf:getVarValue('Footnote_Ref_Suffix')"/>
     
     <xsl:template match="*[contains-token(@class, 'topic/fn')]">
+        <xsl:param name="prmWithNoFn" tunnel="yes" required="no" as="xs:boolean" select="false()"/>
         <xsl:variable name="fn" as="element()" select="."/>
-        <xsl:if test="@id => empty()">
-            <xsl:variable name="fnRefStr" as="xs:string" select="ahf:getFnRefStr($fn)"/>
-            <xsl:if test="string($fnRefStr)">
-                <a>
-                    <xsl:call-template name="genCommonAtts">
-                        <xsl:with-param name="prmDefaultOutputClass" select="ahf:getVarValue('Fn_Ref')"/>
-                    </xsl:call-template>
-                    <xsl:attribute name="href" select="'#' || string(ahf:genIdAtt($fn,true()))"/>
-                    <span>
-                        <xsl:call-template name="genCommonAtts">
-                            <xsl:with-param name="prmDefaultOutputClass" select="ahf:getVarValue('Fn_Ref')"/>
-                        </xsl:call-template>
-                        <xsl:value-of select="$fnRefStr"/>
-                    </span>
-                </a>
-            </xsl:if>
-        </xsl:if>
+        <xsl:choose>
+            <xsl:when test="$prmWithNoFn"/>
+            <xsl:otherwise>
+                <xsl:if test="@id => empty()">
+                    <xsl:variable name="fnRefStr" as="xs:string" select="ahf:getFnRefStr($fn)"/>
+                    <xsl:if test="string($fnRefStr)">
+                        <a>
+                            <xsl:call-template name="genCommonAtts">
+                                <xsl:with-param name="prmDefaultOutputClass" select="ahf:getVarValue('Fn_Ref')"/>
+                            </xsl:call-template>
+                            <xsl:attribute name="href" select="'#' || string(ahf:genIdAtt($fn,true()))"/>
+                            <span>
+                                <xsl:call-template name="genCommonAtts">
+                                    <xsl:with-param name="prmDefaultOutputClass" select="ahf:getVarValue('Fn_Ref')"/>
+                                </xsl:call-template>
+                                <xsl:value-of select="$fnRefStr"/>
+                            </span>
+                        </a>
+                    </xsl:if>
+                </xsl:if>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
     <!--
