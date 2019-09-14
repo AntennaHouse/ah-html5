@@ -54,7 +54,7 @@ E-mail : info@antennahouse.com
     <!-- Top level element -->
     <xsl:variable name="root"  as="element()" select="/*[1]"/>
     <xsl:variable name="map" as="element()?" select="$root[contains-token(@class,'map/map')]"/>
-    <xsl:variable name="topic" as="element()?" select="$root[contains-token(@class,'topic/topic')]"/>
+    <xsl:variable name="topic" as="element()?" select="if ($root/self::dita) then $root/*[contains-token(@class,'topic/topic')][1] else $root"/>
     
     <!-- Map class -->
     <xsl:variable name="classMap" select="'map'" as="xs:string"/>

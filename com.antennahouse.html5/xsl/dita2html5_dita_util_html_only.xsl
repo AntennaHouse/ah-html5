@@ -26,9 +26,20 @@
      param:     none
      return;    element()?
      note:      Specific to topic processing
+                If input file is chunked, the root element become 'dita'.
     -->
     <xsl:function name="ahf:getTopicref" as="element()?">
-        <xsl:variable name="href" as="xs:string" select="$gpProcessingFileDir || '/' || $gpProcessingFileName"/>
+        <xsl:variable name="href" as="xs:string">
+            <xsl:choose>
+                <xsl:when test="$root instance of element(dita)">
+                    <xsl:variable name="topicId" as="xs:string" select="$topic/@id => string()"/>
+                    <xsl:sequence select="$gpProcessingFileDir || '/' || $gpProcessingFileName || '#' || $topicId"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:sequence select="$gpProcessingFileDir || '/' || $gpProcessingFileName"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
         <xsl:sequence select="$gpMapDoc/descendant::*[contains-token(@class,'map/topicref')][ancestor::*[contains-token(@class,'map/reltable')] => empty()][(if (@copy-to => exists()) then @copy-to => string() else @href => string()) eq $href]"/>
     </xsl:function>
 

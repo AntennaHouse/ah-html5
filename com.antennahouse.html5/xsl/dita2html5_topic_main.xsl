@@ -25,26 +25,16 @@
     note:       If topicref/@chunk="to-content" is specified, DITA-OT generates <dita> element at the top of merged topic file.
     -->
     <xsl:template match="/">
-        <xsl:variable name="rootElem" as="element()" select="/*[1]"/>
-        <xsl:choose>
-            <xsl:when test="$rootElem instance of element(dita)">
-                <xsl:apply-templates select="$rootElem/*[1]"/>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:apply-templates select="$rootElem"/>
-            </xsl:otherwise>
-        </xsl:choose>
+        <xsl:apply-templates select="$topic"/>
     </xsl:template>
     
-    <xsl:template match="/*[1][self::dita => empty()] | /*[1]/*[1][parent::dita => exists()]">
+    <xsl:template match="*[. is $topic]">
         <xsl:variable name="topic" as="element()" select="."/>
-        <xsl:variable name="topicRef" as="element()" select="ahf:getTopicref()"/>
-
+        <xsl:variable name="topicRef" as="element()?" select="ahf:getTopicref()"/>
         <xsl:message select="'*----------------------------------------------------*'"/>
         <xsl:message select="'$PRM_PROCESSING_FILE_NAME=' || $PRM_PROCESSING_FILE_NAME"/>
         <xsl:message select="'$PRM_PROCESSING_FILE_DIR=' || $PRM_PROCESSING_FILE_DIR"/>
         <xsl:message select="'$PRM_MAP_URL=' || $PRM_MAP_URL"/>
-        <xsl:message select="'$topicref:name=' || $topicRef => name() || '@id=' || $topicRef/@id || ' @href=' || $topicRef/@href"/>
         
         <xsl:choose>
             <xsl:when test="$gpOutputAsXml">
