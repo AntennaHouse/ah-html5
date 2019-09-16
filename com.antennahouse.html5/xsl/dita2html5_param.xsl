@@ -40,17 +40,19 @@
     <xsl:param name="PRM_GEN_DEFAULT_META" as="xs:string" required="no" select="$cNo"/>
     <xsl:param name="gpGenDefaultMeta" as="xs:boolean" select="$PRM_GEN_DEFAULT_META eq $cYes"/>
     
+    <!-- Plug-in CSS Files Parameter -->
+    <xsl:param name="PRM_PLUGIN_CSS_FILES" as="xs:string" required="yes"/>
+    <xsl:variable name="gpPluginCssFiles" as="xs:string*" select="tokenize($PRM_PLUGIN_CSS_FILES,'[\s]+')"/>
+    
     <!-- Standard CSS File Parameter -->
     <xsl:param name="PRM_DITA_CSS_FILE" as="xs:string" required="no" select="'commonltr.css'"/>
+    <xsl:variable name="gpDitaCssFile" as="xs:string" select="$PRM_DITA_CSS_FILE"/>
     <xsl:param name="PRM_DITA_BIDI_CSS_FILE" as="xs:string" required="no" select="'commonrtl.css'"/>
-
+    <xsl:variable name="gpDitaBidiCssFile" as="xs:string" select="$PRM_DITA_BIDI_CSS_FILE"/>
+    
     <!-- CSS file path in output directory (relative) -->
     <xsl:param name="PRM_OUTPUT_CSS_PATH_RELATIVE" as="xs:string" required="no" select="''"/>
     <xsl:variable name="gpOutputCssPathRelative" as="xs:string" select="$PRM_OUTPUT_CSS_PATH_RELATIVE"/>
-
-    <!-- AH CSS (For extended class attribute) --> 
-    <xsl:param name="PRM_AH_CSS_FILE" as="xs:string" required="no" select="'ah-extended.css'"/>
-    <xsl:variable name="gpAhCssFile" as="xs:string" select="$PRM_AH_CSS_FILE"/>
     
     <!-- User Supplied CSS path -->
     <xsl:param name="PRM_USER_CSS_FILE" as="xs:string" select="''"/>

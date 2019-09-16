@@ -27,6 +27,21 @@
             </not>
         </condition>
 
+        <!-- Plug-in CSS files -->
+        <condition property="plugin.css.folder" value="${basedir}${file.separator}css">
+            <not>
+                <isset property="plugin.css.folder"/>
+            </not>
+        </condition>
+        
+        <path id="plugin.css.folder.id">
+            <fileset dir="${plugin.css.folder}" includes="*.css"/>
+        </path>
+        
+        <pathconvert property="plugin.css.files" refid="plugin.css.folder.id" dirsep="/" pathsep=" ">
+            <map from="${plugin.css.folder}${file.separator}" to="" />
+        </pathconvert>
+
         <!-- User CSS path -->
         <condition property="user.css.path" value="${args.cssroot}${file.separator}${args.css}" else="${args.css}">
             <isset property="args.cssroot"/>
@@ -95,6 +110,7 @@
             <param name="PRM_MAP_URL" expression="${ahhtml5.map.url}" if:set="ahhtml5.map.url"/>
             <param name="PRM_USER_CSS_FILE" expression="${user.css.file}" if:set="user.css.file"/>
             <param name="PRM_OUTPUT_CSS_PATH_RELATIVE" expression="${output.css.path.relative}" if:set="output.css.path.relative"/>
+            <param name="PRM_PLUGIN_CSS_FILES" expression="${plugin.css.files}" if:set="plugin.css.files"/>
             <dita:extension id="dita.conductor.ahhtml5.param" behavior="org.dita.dost.platform.InsertAction"/>
             <xmlcatalog>
                 <catalogpath path="${dita.plugin.org.dita.base.dir}/catalog-dita.xml"/>
@@ -150,6 +166,7 @@
             <param name="PRM_OUTPUT_AS_XML" expression="${output.as.xml}" if:set="output.as.xml"/>
             <param name="PRM_USER_CSS_FILE" expression="${user.css.file}" if:set="user.css.file"/>
             <param name="PRM_OUTPUT_CSS_PATH_RELATIVE" expression="${output.css.path.relative}" if:set="output.css.path.relative"/>
+            <param name="PRM_PLUGIN_CSS_FILES" expression="${plugin.css.files}" if:set="plugin.css.files"/>
             <dita:extension id="dita.conductor.ahhtml5.param" behavior="org.dita.dost.platform.InsertAction"/>
             <xmlcatalog>
                 <catalogpath path="${dita.plugin.org.dita.base.dir}/catalog-dita.xml"/>
@@ -233,7 +250,7 @@
     <!-- Copy Default Sytem CSS File -->
     <target name="ahhtml5.copy.system.css.file" if="${copy.system.default.css.file}">
         <copy todir="${output.css.dir}">
-            <fileset dir="${plugin.dir}/css" includes="*.css"/>
+            <fileset dir="${plugin.css.folder}" includes="*.css"/>
         </copy>
     </target>
 

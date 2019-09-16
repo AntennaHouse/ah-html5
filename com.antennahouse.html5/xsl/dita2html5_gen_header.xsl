@@ -25,24 +25,30 @@
     -->
     <xsl:template name="genCssLink">
        
-        <!-- Preserved CSS -->
-        <xsl:choose>
-            <xsl:when test="$isRtl">
-                <xsl:copy-of select="ahf:getXmlObjectReplacing('xmlMetaCssLink','%css-path',concat($path2ProjUri,$gpOutputCssPathRelative,$PRM_DITA_BIDI_CSS_FILE))"/>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:copy-of select="ahf:getXmlObjectReplacing('xmlMetaCssLink','%css-path',concat($path2ProjUri,$gpOutputCssPathRelative,$PRM_DITA_CSS_FILE))"/>
-            </xsl:otherwise>
-        </xsl:choose>
-        
-        <!-- AH CSS -->
-        <xsl:copy-of select="ahf:getXmlObjectReplacing('xmlMetaCssLink','%css-path',concat($path2ProjUri,$gpOutputCssPathRelative,$gpAhCssFile))"/>
-        
+        <!-- Plug-in CSS files -->
+        <xsl:for-each select="$gpPluginCssFiles">
+            <xsl:variable name="cssFile" as="xs:string" select="."/>
+            <xsl:choose>
+                <xsl:when test="$cssFile eq $gpDitaCssFile">
+                    <xsl:if test="$isRtl => not()">
+                        <xsl:copy-of select="ahf:getXmlObjectReplacing('xmlMetaCssLink','%css-path',concat($path2ProjUri,$gpOutputCssPathRelative,$gpDitaCssFile))"/>
+                    </xsl:if>
+                </xsl:when>
+                <xsl:when test="$cssFile eq $gpDitaBidiCssFile">
+                    <xsl:if test="$isRtl">
+                        <xsl:copy-of select="ahf:getXmlObjectReplacing('xmlMetaCssLink','%css-path',concat($path2ProjUri,$gpOutputCssPathRelative,$gpDitaBidiCssFile))"/>
+                    </xsl:if>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:copy-of select="ahf:getXmlObjectReplacing('xmlMetaCssLink','%css-path',concat($path2ProjUri,$gpOutputCssPathRelative,$cssFile))"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:for-each>
+
         <!-- User CSS -->
         <xsl:if test="$gpUserCssFile => string() => boolean()">
             <xsl:copy-of select="ahf:getXmlObjectReplacing('xmlMetaCssLink','%css-path',concat($path2ProjUri,$gpOutputCssPathRelative,$gpUserCssFile))"/>
         </xsl:if>
     </xsl:template>
-
 
 </xsl:stylesheet>
