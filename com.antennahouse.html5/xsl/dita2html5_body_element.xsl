@@ -348,7 +348,7 @@
         
         <!-- href -->
         <xsl:if test="$prmImage/@href => exists()">
-            <xsl:attribute name="src" select="$prmImage/@href  => string()"/>
+            <xsl:copy-of select="ahf:getImageSrcAtt($prmImage)"/>
         </xsl:if>
 
         <!-- image size -->
@@ -414,7 +414,18 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    
+
+    <!-- 
+     function:  get img/@src attribute
+     param:     prmImage
+     return:    Simply generates @src from $prmImage/@href.
+     note:      
+     -->
+    <xsl:function name="ahf:getImageSrcAtt" as="attribute()">
+        <xsl:param name="prmImage" as="element()"/>
+        <xsl:attribute name="src" select="$prmImage/@href  => string()"/>
+    </xsl:function>
+
     <!-- 
      function:  return normalized length
      param:     prmLen
