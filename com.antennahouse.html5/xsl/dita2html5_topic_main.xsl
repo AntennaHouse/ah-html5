@@ -32,9 +32,9 @@
         <xsl:variable name="topic" as="element()" select="."/>
         <xsl:variable name="topicRef" as="element()?" select="ahf:getTopicref()"/>
         <xsl:message select="'*----------------------------------------------------*'"/>
-        <xsl:message select="'$PRM_PROCESSING_FILE_NAME=' || $PRM_PROCESSING_FILE_NAME"/>
-        <xsl:message select="'$PRM_PROCESSING_FILE_DIR=' || $PRM_PROCESSING_FILE_DIR"/>
-        <xsl:message select="'$PRM_MAP_URL=' || $PRM_MAP_URL"/>
+        <xsl:message select="'$gpProcessingFileName=' || $gpProcessingFileName"/>
+        <xsl:message select="'$gpProcessingFileDir=' || $gpProcessingFileDir"/>
+        <xsl:message select="'$gpMapUrl=' || $gpMapUrl"/>
         
         <xsl:choose>
             <xsl:when test="$gpOutputAsXml">

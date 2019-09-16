@@ -81,6 +81,7 @@
          This parameter will *NOT* referenced in map processing.
      -->
     <xsl:param name="PRM_MAP_URL" as="xs:string" required="yes"/>
+    <xsl:variable name="gpMapUrl" as="xs:string" select="$PRM_MAP_URL"/>
     <xsl:variable name="gpMapDoc" as="document-node()?" select="doc($PRM_MAP_URL)"/>
     
     <!-- Make Parent Link (from related-links) -->
