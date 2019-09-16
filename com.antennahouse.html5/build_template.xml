@@ -11,16 +11,12 @@
     <target name="dita2.ahhtml5.main" depends="disp_properties,ahhtml5.init,dita2.ahhtml5.map,dita2.ahhtml5.topic,dita2.ahhtml5.css"/>
     
     <target name="ahhtml5.init">
-        <condition property="args.xsl" value="${plugin.dir}/xsl/dita2html5_topic_shell.xsl">
-            <not>
-                <isset property="args.xsl"/>
-            </not>
-        </condition>
 
         <condition property="ahhtml5.nav.toc" value="${nav.toc}" else="none">
             <isset property="nav.toc"/>
         </condition>
         
+        <!-- Output extension (with ".") -->
         <condition property="out.ext" value=".html">
             <not>
                 <isset property="args.outext"/>
@@ -32,6 +28,21 @@
                 <isset property="ahhtml5.reloadstylesheet"/>
             </not>
         </condition>
+
+        <!-- User CSS path -->
+        <condition property="user.css.path" value="${args.cssroot}${file.separator}${args.css}" else="${args.css}">
+            <isset property="args.cssroot"/>
+        </condition>
+
+        <basename property="user.css.file" file="${user.css.path}"/>
+
+        <!-- CSS folder path in output folder (relative) -->
+        <condition property="output.css.path.relative" value="" else="${args.csspath}">
+            <not>
+                <isset property="args.csspath"/>
+            </not>
+        </condition>
+        
     </target>
     
     <!-- Map -->
@@ -74,12 +85,10 @@
             <param name="PRM_PROCESSING_FILE_DIR"  expression="${${dita.temp.dir}}" if:set="dita.temp.dir"/>
             <param name="PRM_FILTER_FILE" expression="${dita.input.valfile.url}" if:set="dita.input.valfile"/>
             <param name="PRM_OUTPUT_EXTENSION" expression="${out.ext}" if:set="out.ext"/>
-            <param name="contenttarget" expression="${args.html5.contenttarget}" if:set="args.html5.contenttarget"/>
-            <param name="CSS" expression="${args.css.file}" if:set="args.css.file"/>
-            <param name="CSSPATH" expression="${user.csspath}" if:set="user.csspath"/>
-            <param name="OUTPUTCLASS" expression="${args.html5.toc.class}" if:set="args.html5.toc.class"/>
             <param name="PRM_OUTPUT_AS_XML" expression="${output.as.xml}" if:set="output.as.xml"/>
             <param name="PRM_MAP_URL" expression="${map.url}" if:set="map.url"/>
+            <param name="PRM_USER_CSS_FILE" expression="${user.css.file}" if:set="user.css.file"/>
+            <param name="PRM_OUTPUT_CSS_PATH_RELATIVE" expression="${output.css.path.relative}" if:set="output.css.path.relative"/>
             <dita:extension id="dita.conductor.ahhtml5.param" behavior="org.dita.dost.platform.InsertAction"/>
             <xmlcatalog>
                 <catalogpath path="${dita.plugin.org.dita.base.dir}/catalog-dita.xml"/>
@@ -91,6 +100,11 @@
     <target name="dita2.ahhtml5.topic" depends="ahhtml5.topic.init, ahhtml5.image-metadata, ahhtml5.topics.common"/>
   
     <target name="ahhtml5.topic.init">
+        <condition property="args.topic.xsl" value="${plugin.dir}/xsl/dita2html5_topic_shell.xsl">
+            <not>
+                <isset property="args.topic.xsl"/>
+            </not>
+        </condition>
         <loadfile property="ahhtml5.map" srcfile="${dita.temp.dir}/${user.input.file.listfile}">
             <filterchain>
                 <headfilter lines="1"/>
@@ -114,7 +128,7 @@
             destdir="${dita.output.dir}"                               
             reloadstylesheet="${ahhtml5.reloadstylesheet}"
             extension="${out.ext}"
-            style="${args.xsl}"
+            style="${args.topic.xsl}"
             includesfile="${fullditatopic}"
             filenameparameter="PRM_PROCESSING_FILE_NAME"
             filedirparameter="PRM_PROCESSING_FILE_DIR"
@@ -132,22 +146,11 @@
             <param name="PRM_FILTER_FILE" expression="${dita.input.valfile.url}" if:set="dita.input.valfile"/>
             <param name="PRM_OUTPUT_EXTENSION" expression="${out.ext}" if:set="out.ext"/>
             <param name="PRM_USER_CSSPATH" expression="${user.csspath}" if:set="user.csspath"/>
-            <param name="HDF" expression="${args.hdf}" if:set="args.hdf"/>
-            <param name="HDR" expression="${args.hdr}" if:set="args.hdr"/>
-            <param name="FTR" expression="${args.ftr}" if:set="args.ftr"/>
-            <param name="DRAFT" expression="${args.draft}" if:set="args.draft"/>
-            <param name="ARTLBL" expression="${args.artlbl}" if:set="args.artlbl"/>
-            <param name="GENERATE-TASK-LABELS" expression="${args.gen.task.lbl}" if:set="args.gen.task.lbl"/>
-            <param name="PRESERVE-DITA-CLASS" expression="${args.html5.classattr}" if:set="args.html5.classattr"/>
-            <param name="NOPARENTLINK" expression="${args.hide.parent.link}" if:set="args.hide.parent.link"/>
-            <param name="include.rellinks" expression="${include.rellinks}"/>
-            <param name="INDEXSHOW" expression="${args.indexshow}" if:set="args.indexshow"/>
-            <param name="genDefMeta" expression="${args.gen.default.meta}" if:set="args.gen.default.meta"/>
-            <param name="BASEDIR" expression="${dita.dir}"/>
             <param name="OUTPUTDIR" expression="${dita.output.dir}"/>
-            <param name="defaultLanguage" expression="${default.language}"/>
             <param name="PRM_OUTPUT_AS_XML" expression="${output.as.xml}" if:set="output.as.xml"/>
             <param name="PRM_MAP_URL" expression="${map.url}" if:set="map.url"/>
+            <param name="PRM_USER_CSS_FILE" expression="${user.css.file}" if:set="user.css.file"/>
+            <param name="PRM_OUTPUT_CSS_PATH_RELATIVE" expression="${output.css.path.relative}" if:set="output.css.path.relative"/>
             <dita:extension id="dita.conductor.ahhtml5.param" behavior="org.dita.dost.platform.InsertAction"/>
             <xmlcatalog>
                 <catalogpath path="${dita.plugin.org.dita.base.dir}/catalog-dita.xml"/>
@@ -160,62 +163,25 @@
           Specifies the name of a custom .css file.
           The value of this parameter should be only the file name (or an absolute path to the file). A relative
           path can be specified with args.cssroot.
-          
-        args.csspath
-          Specifies the destination directory to which .css files are copied (relative to the output directory).
-          Corresponds to the XSLT parameter CSSPATH.
-          DITA-OT will copy the file to this location.
-          Tip: If args.csspath is not set, the custom CSS file (and the default CSS files) will be copied
-            to the root level of the output folder. To copy CSS files to an output subfolder named css, set
-            args.csspath to css.
             
         args.cssroot
           Specifies the source directory that contains the custom .css file.
-          DITA-OT will copy the file from this location.
-          DITA Open Toolkit | DITA-OT parameters | 64
-          Tip: The value you enter here will be interpreted relative to the location of the input map file. If
-            your map is stored at the root level of your project folder and the CSS file is stored in a subfolder
-            named resources, set args.cssroot to resources.
-            
+
+        args.csspath
+          Specifies the destination directory to which .css files are copied (relative to the output directory).
+
         args.build.css.always
           Always build CSS file from sass/*.scss file into output CSS folder CSS file.
           The plugin-dir/css folder is not used.
      -->
     <target name="dita2.ahhtml5.css" description="Build &amp; Copy CSS files">
-
-        <condition property="user.csspath.url" value="yes" else="no">
-            <or>
-                <contains string="${args.csspath}" substring="http://"/>
-                <contains string="${args.csspath}" substring="https://"/>
-            </or>
-        </condition>
-        
-        <condition property="user.csspath" value="" else="${args.csspath}">
-            <or>
-                <not>
-                    <isset property="args.csspath"/>
-                </not>
-                <isabsolute path="${args.csspath}"/>
-            </or>
-        </condition>
-        
-        <condition property="user.css.real" value="${args.cssroot}${file.separator}${args.css}" else="${args.css}">
-            <isset property="args.cssroot"/>
-        </condition>
-        
-        <local name="user.css.basename"/>
-        <basename property="user.css.basename" file="${args.css}"/>
-        <condition property="args.css.file" value="${user.css.basename}">
-            <or>
-                <available file="${user.css.real}" type="file"/>
-                <isset property="user.csspath.url"/>
-            </or>
-        </condition>
         
         <condition property="user.copycss.yes" value="yes" else="no">
             <and>
-                <equals arg1="${args.copycss}" arg2="yes"/>
-                <available file="${user.css.real}" type="file"/>
+                <not>
+                    <equals arg1="${args.copycss}" arg2="no"/>
+                </not>
+                <available file="${user.css.path}" type="file"/>
             </and>
         </condition>
         
@@ -235,16 +201,17 @@
             </not>
         </condition>
 
-        <property name="user.csspath.real" location="${dita.output.dir}/${user.csspath}"/>
-        <mkdir dir="${user.csspath.real}"/>
+        <property name="output.css.dir" location="${dita.output.dir}${file.separator}${output.css.path.relative}"/>
+        <mkdir dir="${output.css.dir}"/>
 
         <echo message="user.copycss.yes=${user.copycss.yes}"/>
         <echo message="build.css.from.scss.always=${build.css.from.scss.always}"/>
         <echo message="copy.system.default.css.file=${copy.system.default.css.file}"/>
+        <echo message="output.css.dir=${output.css.dir}"/>
         
         <!-- Build CSS file from SASS -->
         <antcall target="ahhtml5.build.css.from.scss">
-            <param name="prmOutputDir" value="${user.csspath.real}"/>
+            <param name="prmOutputDir" value="${output.css.dir}"/>
         </antcall>
         
         <!-- Copy System CSS file -->
@@ -266,14 +233,14 @@
 
     <!-- Copy Default Sytem CSS File -->
     <target name="ahhtml5.copy.system.css.file" if="${copy.system.default.css.file}">
-        <copy todir="${user.csspath.real}">
+        <copy todir="${output.css.dir}">
             <fileset dir="${plugin.dir}/css" includes="*.css"/>
         </copy>
     </target>
 
     <!-- Copy User CSS File -->
     <target name="ahhtml5.copy.css.user" if="${user.copycss.yes}">
-        <copy file="${user.css.real}" todir="${user.csspath.real}"/>
+        <copy file="${user.css.path}" todir="${output.css.dir}"/>
     </target>
     
 </project>

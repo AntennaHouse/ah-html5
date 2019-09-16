@@ -1,5 +1,3 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <params xmlns:if="ant:if">
-  <param name="PRM_INPUT_MAP_URL" expression="${ahhtml5.map.url}" if:set="ahhtml5.map.url"/>
-  <param name="PRM_NAVI_TOC" expression="${ahhtml5.navi.toc}" if:set="ahhtml5.navi.toc"/>
 </params>
