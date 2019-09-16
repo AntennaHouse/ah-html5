@@ -21,6 +21,7 @@
             </not>
         </condition>
 
+        <!-- Stylesheet load control -->
         <condition property="ahhtml5.reloadstylesheet" value="false">
             <not>
                 <isset property="ahhtml5.reloadstylesheet"/>
@@ -199,12 +200,6 @@
                 </not>
                 <available file="${user.css.path}" type="file"/>
             </and>
-        </condition>
-        
-        <condition property="build.css.default.yes" value="yes" else="no">
-            <not>
-                <equals arg1="${args.build.css}" arg2="no"/>
-            </not>
         </condition>
 
         <condition property="build.css.from.scss.always" value="yes" else="no">
