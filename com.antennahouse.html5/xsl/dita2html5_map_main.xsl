@@ -165,6 +165,9 @@
         </xsl:choose>
     </xsl:template>
 
+    <xsl:template match="*[ahf:outputTopicref(.) => not()]" mode="MODE_NAV_PAGE">
+    </xsl:template>
+
     <xsl:template match="*[contains-token(@class, 'mapgroup-d/topicgroup')]" priority="5" mode="MODE_NAV_PAGE">
         <xsl:apply-templates select="*[contains-token(@class, 'map/topicref')]" mode="#current"/>
     </xsl:template>
