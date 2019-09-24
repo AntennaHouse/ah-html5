@@ -31,22 +31,18 @@
     -->
     <xsl:template match="*[contains-token(@class, 'task/steps')]" priority="5">
         <xsl:variable name="stepExpand" as="xs:boolean" select="ahf:expandStep(.)"/>
-        <section>
-            <xsl:call-template name="genCommonAtts"/>
-            <xsl:choose>
-                <xsl:when test="*[contains-token(@class,'task/step')] => count() eq 1">
-                    <xsl:apply-templates select="*[contains-token(@class,'task/stepsection')]"/>
-                    <xsl:apply-templates select="*[contains-token(@class,'task/step')]" mode="MODE_ONE_STEP"/>
-                </xsl:when>
-                <xsl:when test="*[contains-token(@class,'task/stepsection')] => empty()">
-                    <ol>
-                        <xsl:call-template name="genCommonAtts"/>
-                        <xsl:apply-templates select="*[contains-token(@class,'task/step')]">
-                            <xsl:with-param name="prmExpand" select="$stepExpand"/>
-                        </xsl:apply-templates>                        
-                    </ol>
-                </xsl:when>
-                <xsl:otherwise>
+        <xsl:choose>
+            <xsl:when test="*[contains-token(@class,'task/stepsection')] => empty()">
+                <ol>
+                    <xsl:call-template name="genCommonAtts"/>
+                    <xsl:apply-templates select="*[contains-token(@class,'task/step')]">
+                        <xsl:with-param name="prmExpand" select="$stepExpand"/>
+                    </xsl:apply-templates>                        
+                </ol>
+            </xsl:when>
+            <xsl:otherwise>
+                <section>
+                    <xsl:call-template name="genCommonAtts"/>
                     <!-- group by step/stepsection -->
                     <xsl:for-each-group select="*[contains-token(@class,'topic/li')]" group-adjacent="ahf:isStep(.)">
                         <xsl:choose>
@@ -55,9 +51,7 @@
                                 <ol>
                                     <xsl:call-template name="genCommonAtts"/>
                                     <xsl:variable name="precedingStepCount" as="xs:integer" select="current-group()[1] => ahf:getStepNumber()"/>
-                                    <xsl:if test="$precedingStepCount gt 1">
-                                        <xsl:attribute name="start" select="$precedingStepCount + 1"/>
-                                    </xsl:if>
+                                    <xsl:attribute name="start" select="$precedingStepCount"/>
                                     <xsl:apply-templates select="current-group()">
                                         <xsl:with-param name="prmExpand" select="$stepExpand"/>
                                     </xsl:apply-templates>                        
@@ -69,9 +63,9 @@
                             </xsl:otherwise>
                         </xsl:choose>
                     </xsl:for-each-group>
-                </xsl:otherwise>
-            </xsl:choose>
-        </section>
+                </section>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
     <!-- 
@@ -93,22 +87,18 @@
     -->
     <xsl:template match="*[contains-token(@class, 'task/steps-unordered')]" priority="5">
         <xsl:variable name="stepExpand" as="xs:boolean" select="ahf:expandStep(.)"/>
-        <section>
-            <xsl:call-template name="genCommonAtts"/>
-            <xsl:choose>
-                <xsl:when test="*[contains-token(@class,'task/step')] => count() eq 1">
-                    <xsl:apply-templates select="*[contains-token(@class,'task/stepsection')]"/>
-                    <xsl:apply-templates select="*[contains-token(@class,'task/step')]" mode="MODE_ONE_STEP"/>
-                </xsl:when>
-                <xsl:when test="*[contains-token(@class,'task/stepsection')] => empty()">
-                    <ul>
-                        <xsl:call-template name="genCommonAtts"/>
-                        <xsl:apply-templates select="*[contains-token(@class,'task/step')]">
-                            <xsl:with-param name="prmExpand" select="$stepExpand"/>
-                        </xsl:apply-templates>                        
-                    </ul>
-                </xsl:when>
-                <xsl:otherwise>
+        <xsl:choose>
+            <xsl:when test="*[contains-token(@class,'task/stepsection')] => empty()">
+                <ul>
+                    <xsl:call-template name="genCommonAtts"/>
+                    <xsl:apply-templates select="*[contains-token(@class,'task/step')]">
+                        <xsl:with-param name="prmExpand" select="$stepExpand"/>
+                    </xsl:apply-templates>                        
+                </ul>
+            </xsl:when>
+            <xsl:otherwise>
+                <section>
+                    <xsl:call-template name="genCommonAtts"/>
                     <!-- group by step/stepsection -->
                     <xsl:for-each-group select="*[contains-token(@class,'topic/li')]" group-adjacent="ahf:isStep(.)">
                         <xsl:choose>
@@ -127,9 +117,9 @@
                             </xsl:otherwise>
                         </xsl:choose>
                     </xsl:for-each-group>
-                </xsl:otherwise>
-            </xsl:choose>
-        </section>
+                </section>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
     
     <!--
