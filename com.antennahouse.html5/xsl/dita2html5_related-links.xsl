@@ -347,7 +347,9 @@
     -->
     <xsl:template name="genLinkAtt">
         <xsl:param name="prmLinkElem" as="element()" required="no" select="."/>
-        <xsl:copy-of select="ahf:genHrefAtt($prmLinkElem)"/>
+        <xsl:call-template name="ahf:genHrefAtt">
+            <xsl:with-param name="prmLinkElem" select="$prmLinkElem"/>
+        </xsl:call-template>
         <xsl:copy-of select="ahf:genLinkTargetAtt($prmLinkElem)"/>
     </xsl:template>
 

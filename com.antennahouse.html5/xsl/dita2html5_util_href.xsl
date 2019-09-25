@@ -25,8 +25,8 @@
     return:     attribute()?
     note:       format @href attribute based on target feature
     -->
-    <xsl:function name="ahf:genHrefAtt" as="attribute()?">
-        <xsl:param name="prmLinkElem" as="element()"/>
+    <xsl:template name="ahf:genHrefAtt" as="attribute()?">
+        <xsl:param name="prmLinkElem" as="element()" required="yes"/>
         <xsl:variable name="href" as="xs:string" select="$prmLinkElem/@href => string()"/>
         <xsl:choose>
             <xsl:when test="string($href)">
@@ -66,7 +66,7 @@
                 <xsl:sequence select="()"/>
             </xsl:otherwise>
         </xsl:choose>
-    </xsl:function>
+    </xsl:template>
 
     <!-- 
      function:  Determine whether the target is DITA or non-DITA
@@ -122,7 +122,9 @@
     -->
     <xsl:template name="getDestinationAttr" as="attribute()?">
         <xsl:param name="prmElem" as="element()" required="yes"/>
-        <xsl:sequence select="ahf:genHrefAtt($prmElem)"/>
+        <xsl:call-template name="ahf:genHrefAtt">
+            <xsl:with-param name="prmLinkElem" select="$prmElem"/>
+        </xsl:call-template>
     </xsl:template>
 
     <!-- 
