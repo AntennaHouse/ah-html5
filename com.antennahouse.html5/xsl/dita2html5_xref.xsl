@@ -441,13 +441,13 @@
             <xsl:when test="$prmDestElement[contains-token(@class, 'topic/fn')]">
                 <xsl:variable name="outputClass" as="xs:string" select="'fn-ref'"/>
                 <xsl:variable name="fnRefStr" as="xs:string" select="ahf:getFnRefStr($prmDestElement)"/>
-                <sapn>
+                <span>
                     <xsl:call-template name="genCommonAtts">
                         <xsl:with-param name="prmElement" select="$prmXref"/>
                         <xsl:with-param name="prmDefaultOutputClass" select="$outputClass"/>
                     </xsl:call-template>
                     <xsl:value-of select="$fnRefStr"/>
-                </sapn>
+                </span>
             </xsl:when>
             
             <!-- Other elements that have title -->
