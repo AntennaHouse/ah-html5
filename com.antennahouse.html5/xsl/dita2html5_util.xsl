@@ -473,5 +473,34 @@ URL : http://www.antennahouse.co.jp/
         </xsl:choose>
     </xsl:function>
     
+    <!--
+    function:   Processing instruction output template
+    param:      prmPiName, prmPiContent
+    return:     text()+
+    note:       Saxon does not outputs processing instruction correctly in HTML5 output.
+                <?php ～ ?> is converted into <?php ～ >
+                To avoid this error, use xsl:text instead.
+    -->
+    <xsl:template name="outputPI" as="text()+">
+        <xsl:param name="prmPiName" as="xs:string"/>
+        <xsl:param name="prmPiContent" as="xs:string"/>
+        
+        <xsl:text disable-output-escaping="yes">&lt;?</xsl:text>
+        <xsl:value-of select="$prmPiName"/>
+        <xsl:text> </xsl:text>
+        <xsl:value-of select="$prmPiContent" disable-output-escaping="yes"/>
+        <xsl:text></xsl:text>
+        <xsl:text disable-output-escaping="yes">?&gt;</xsl:text>
+    </xsl:template>
+
+    <xsl:function name="ahf:outputPI" as="text()+">
+        <xsl:param name="prmPiName" as="xs:string"/>
+        <xsl:param name="prmPiContent" as="xs:string"/>
+        <xsl:call-template name="outputPI">
+            <xsl:with-param name="prmPiName" select="$prmPiName"/>
+            <xsl:with-param name="prmPiContent" select="$prmPiContent"/>
+        </xsl:call-template>        
+    </xsl:function>
+    
     <!-- end of stylesheet -->
 </xsl:stylesheet>
