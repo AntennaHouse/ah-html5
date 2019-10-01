@@ -1094,6 +1094,72 @@
     </xsl:template>
 
     <!-- 
+         getVarValueAsBoolean template
+         function: Get variable value specified by $prmVarName as xs:boolean
+         parameter: prmVarName：Variable name
+                    prmXmlLang: Target xml:lang
+                    prmDocType: Document type
+                    prmPaperSize: Paper size
+                    prmOutputType: Output type
+                    prmBrandType: Brand type
+                    prmDelim: Delimiter character
+         note: 
+    -->
+    <xsl:function name="ahf:getVarValueAsBoolean" as="xs:boolean">
+        <xsl:param name="prmVarName" as="xs:string"/>
+        
+        <xsl:call-template name="getVarValueAsBoolean">
+            <xsl:with-param name="prmVarName" select="$prmVarName"/>
+        </xsl:call-template>
+    </xsl:function>
+
+    <xsl:template name="getVarValueWithLangAsBoolean" as="xs:boolean">
+        <xsl:param name="prmVarName" as="xs:string" required="yes"/>
+        <xsl:param name="prmElem" as="element()" required="no" select="."/>
+        <xsl:param name="prmDocType" as="xs:string?" required="no" select="$defaultDocType"/>
+        <xsl:param name="prmPaperSize" as="xs:string?" required="no" select="$defaultPaperSize"/>
+        <xsl:param name="prmOutputType" as="xs:string?" required="no" select="$defaultOutputType"/>
+        <xsl:param name="prmBrandType" as="xs:string?" required="no" select="$defaultBrandType"/>
+        
+        <xsl:variable name="curXmlLang" as="xs:string" select="ahf:getCurrentXmlLang($prmElem)"/>
+        
+        <xsl:variable name="varValue" as="xs:boolean">
+            <xsl:call-template name="getVarValueAsBoolean">
+                <xsl:with-param name="prmVarName" select="$prmVarName"/>
+                <xsl:with-param name="prmXmlLang" select="$curXmlLang"/>
+                <xsl:with-param name="prmDocType" select="$prmDocType"/>
+                <xsl:with-param name="prmPaperSize" select="$prmPaperSize"/>
+                <xsl:with-param name="prmOutputType" select="$prmOutputType"/>
+                <xsl:with-param name="prmBrandType" select="$prmBrandType"/>
+            </xsl:call-template>
+        </xsl:variable>
+        
+        <xsl:sequence select="$varValue"/>
+    </xsl:template>
+
+    <xsl:template name="getVarValueAsBoolean" as="xs:boolean">
+        <xsl:param name="prmVarName" as="xs:string" required="yes"/>
+        <xsl:param name="prmXmlLang" as="xs:string" required="no" select="$defaultXmlLang"/>
+        <xsl:param name="prmDocType" as="xs:string?" required="no" select="$defaultDocType"/>
+        <xsl:param name="prmPaperSize" as="xs:string?" required="no" select="$defaultPaperSize"/>
+        <xsl:param name="prmOutputType" as="xs:string?" required="no" select="$defaultOutputType"/>
+        <xsl:param name="prmBrandType" as="xs:string?" required="no" select="$defaultBrandType"/>
+        
+        <xsl:variable name="varValue" as="xs:string">
+            <xsl:call-template name="getVarValue">
+                <xsl:with-param name="prmVarName" select="$prmVarName"/>
+                <xsl:with-param name="prmXmlLang" select="$prmXmlLang"/>
+                <xsl:with-param name="prmDocType" select="$prmDocType"/>
+                <xsl:with-param name="prmPaperSize" select="$prmPaperSize"/>
+                <xsl:with-param name="prmOutputType" select="$prmOutputType"/>
+                <xsl:with-param name="prmBrandType" select="$prmBrandType"/>
+            </xsl:call-template>
+        </xsl:variable>
+        
+        <xsl:sequence select="$varValue = ('1','true','yes')"/>
+    </xsl:template>
+
+    <!-- 
          getInstreamObject tempalte
          function: Get instream object specified by $prmObjName as node()*.
          parameter: prmObjName: Object name
