@@ -40,9 +40,7 @@
                 </a>
             </xsl:when>
             <xsl:otherwise>
-                <span>
-                    <xsl:apply-templates select="$xref/child::node() except $xref/child::*[contains-token(@class,'topic/desc')]"/>
-                </span>
+                <xsl:apply-templates select="$xref/child::node() except $xref/child::*[contains-token(@class,'topic/desc')]" mode="MODE_GET_CONTENTS"/>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
@@ -84,6 +82,7 @@
         <xsl:param name="prmDestElement"   required="yes" as="element()?"/>
         
         <xsl:variable name="hasUserText" as="xs:boolean" select="$prmXref/node()[1][self::processing-instruction(ditaot)][string(.) eq 'usertext'] => exists()"/>
+        <xsl:variable name="targetUserText" as="node()*" select="$prmXref/node() except *[contains-token(@class,'topic/desc')]"/>
         
         <xsl:choose>
             <!-- external link or no destination element
@@ -96,7 +95,7 @@
                             <xsl:call-template name="genCommonAtts">
                                 <xsl:with-param name="prmElement" select="$prmXref"/>
                             </xsl:call-template>
-                            <xsl:apply-templates select="$prmXref/node()" mode="MODE_GET_CONTENTS"/>
+                            <xsl:apply-templates select="$targetUserText" mode="MODE_GET_CONTENTS"/>
                         </span>
                     </xsl:when>
                     <xsl:otherwise>
@@ -124,7 +123,7 @@
                                 <xsl:with-param name="prmElement" select="$prmXref"/>
                                 <xsl:with-param name="prmDefaultOutputClass" select="$outputClass"/>
                             </xsl:call-template>
-                            <xsl:apply-templates select="$prmXref/node() except *[contains-token(@class,'topic/desc')]" mode="MODE_GET_CONTENTS"/>
+                            <xsl:apply-templates select="$targetUserText" mode="MODE_GET_CONTENTS"/>
                         </span>
                     </xsl:when>
                     <xsl:otherwise>
@@ -149,7 +148,7 @@
                                 <xsl:with-param name="prmElement" select="$prmXref"/>
                                 <xsl:with-param name="prmDefaultOutputClass" select="$outputClass"/>
                             </xsl:call-template>
-                            <xsl:apply-templates select="$prmXref/node() except *[contains-token(@class,'topic/desc')]" mode="MODE_GET_CONTENTS"/>
+                            <xsl:apply-templates select="$targetUserText" mode="MODE_GET_CONTENTS"/>
                         </span>
                     </xsl:when>
                     <xsl:when test="$prmDestElement/*[contains-token(@class, 'topic/title')]">
@@ -184,7 +183,7 @@
                                 <xsl:with-param name="prmElement" select="$prmXref"/>
                                 <xsl:with-param name="prmDefaultOutputClass" select="$outputClass"/>
                             </xsl:call-template>
-                            <xsl:apply-templates select="$prmXref/node() except *[contains-token(@class,'topic/desc')]" mode="MODE_GET_CONTENTS"/>
+                            <xsl:apply-templates select="$targetUserText" mode="MODE_GET_CONTENTS"/>
                         </span>
                     </xsl:when>
                     <xsl:when test="$prmDestElement/*[contains-token(@class, 'topic/title')]">
@@ -219,7 +218,7 @@
                                 <xsl:with-param name="prmElement" select="$prmXref"/>
                                 <xsl:with-param name="prmDefaultOutputClass" select="$outputClass"/>
                             </xsl:call-template>
-                            <xsl:apply-templates select="$prmXref/node() except *[contains-token(@class,'topic/desc')]" mode="MODE_GET_CONTENTS"/>
+                            <xsl:apply-templates select="$targetUserText" mode="MODE_GET_CONTENTS"/>
                         </span>
                     </xsl:when>
                     <xsl:otherwise>
@@ -257,7 +256,7 @@
                                 <xsl:with-param name="prmElement" select="$prmXref"/>
                                 <xsl:with-param name="prmDefaultOutputClass" select="$outputClass"/>
                             </xsl:call-template>
-                            <xsl:apply-templates select="$prmXref/node() except *[contains-token(@class,'topic/desc')]" mode="MODE_GET_CONTENTS"/>
+                            <xsl:apply-templates select="$targetUserText" mode="MODE_GET_CONTENTS"/>
                         </span>
                     </xsl:when>
                     <xsl:otherwise>
@@ -305,7 +304,7 @@
                                 <xsl:with-param name="prmElement" select="$prmXref"/>
                                 <xsl:with-param name="prmDefaultOutputClass" select="$outputClass"/>
                             </xsl:call-template>
-                            <xsl:apply-templates select="$prmXref/node() except *[contains-token(@class,'topic/desc')]" mode="MODE_GET_CONTENTS"/>
+                            <xsl:apply-templates select="$targetUserText" mode="MODE_GET_CONTENTS"/>
                         </span>
                     </xsl:when>
                     <xsl:otherwise>
@@ -338,7 +337,7 @@
                                 <xsl:with-param name="prmElement" select="$prmXref"/>
                                 <xsl:with-param name="prmDefaultOutputClass" select="$outputClass"/>
                             </xsl:call-template>
-                            <xsl:apply-templates select="$prmXref/node() except *[contains-token(@class,'topic/desc')]" mode="MODE_GET_CONTENTS"/>
+                            <xsl:apply-templates select="$targetUserText" mode="MODE_GET_CONTENTS"/>
                         </span>
                     </xsl:when>
                     <xsl:when test="$prmDestElement/*[contains-token(@class, 'topic/title')]">
@@ -373,7 +372,7 @@
                                 <xsl:with-param name="prmElement" select="$prmXref"/>
                                 <xsl:with-param name="prmDefaultOutputClass" select="$outputClass"/>
                             </xsl:call-template>
-                            <xsl:apply-templates select="$prmXref/node() except *[contains-token(@class,'topic/desc')]" mode="MODE_GET_CONTENTS"/>
+                            <xsl:apply-templates select="$targetUserText" mode="MODE_GET_CONTENTS"/>
                         </span>
                     </xsl:when>
                     <xsl:when test="$prmDestElement/*[contains-token(@class, 'topic/title')]">
@@ -405,7 +404,7 @@
                 <xsl:variable name="equtionNumberResult" as="node()*">
                     <xsl:choose>
                         <xsl:when test="$hasUserText">
-                            <xsl:apply-templates select="$prmXref/node() except *[contains-token(@class,'topic/desc')]" mode="MODE_GET_CONTENTS"/>
+                            <xsl:apply-templates select="$targetUserText" mode="MODE_GET_CONTENTS"/>
                         </xsl:when>
                         <xsl:when test="$equationNumber => exists()">
                             <xsl:call-template name="getVarValueWithLangAsText">
@@ -424,7 +423,7 @@
                         </xsl:when>
                         <xsl:otherwise>
                             <!-- equation-block without equation-number -->
-                            <xsl:apply-templates select="$prmXref/node() except *[contains-token(@class,'topic/desc')]" mode="MODE_GET_CONTENTS"/>
+                            <xsl:apply-templates select="$targetUserText" mode="MODE_GET_CONTENTS"/>
                         </xsl:otherwise>
                     </xsl:choose>    
                 </xsl:variable>
@@ -460,7 +459,7 @@
                                 <xsl:with-param name="prmElement" select="$prmXref"/>
                                 <xsl:with-param name="prmDefaultOutputClass" select="$outputClass"/>
                             </xsl:call-template>
-                            <xsl:apply-templates select="$prmXref/node() except *[contains-token(@class,'topic/desc')]" mode="MODE_GET_CONTENTS"/>
+                            <xsl:apply-templates select="$targetUserText" mode="MODE_GET_CONTENTS"/>
                         </span>
                     </xsl:when>
                     <xsl:otherwise>
@@ -489,7 +488,7 @@
                                 <xsl:with-param name="prmElement" select="$prmXref"/>
                                 <xsl:with-param name="prmDefaultOutputClass" select="$outputClass"/>
                             </xsl:call-template>
-                            <xsl:apply-templates select="$prmXref/node() except *[contains-token(@class,'topic/desc')]" mode="MODE_GET_CONTENTS"/>
+                            <xsl:apply-templates select="$targetUserText" mode="MODE_GET_CONTENTS"/>
                         </span>
                     </xsl:when>
                     <xsl:otherwise>

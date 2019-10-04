@@ -31,6 +31,8 @@
     <xsl:include href="dita2html5_gen_header.xsl"/>
     <xsl:include href="dita2html5_gen_metadata.xsl"/>
     <xsl:include href="dita2html5_text_mode.xsl"/>
+    <xsl:include href="dita2html5_dita_class.xsl"/>
+    <xsl:include href="dita2html5_common.xsl"/>
     <xsl:include href="dita2html5_html_common.xsl"/>
     <xsl:include href="dita2html5_style_set.xsl"/>
     <xsl:include href="dita2html5_style_get.xsl"/>

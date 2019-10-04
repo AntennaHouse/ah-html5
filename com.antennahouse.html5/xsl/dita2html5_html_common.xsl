@@ -147,18 +147,5 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-
-    <!--
-    function:   Get content mode template
-    param:      none
-    return:     see probe
-    note:       
-    -->
-    <xsl:template match="node()" mode="MODE_GET_CONTENTS">
-        <xsl:apply-templates select="node()">
-            <xsl:with-param name="prmWithNoId" tunnel="yes" select="true()"/>
-            <xsl:with-param name="prmWithNoFn" tunnel="yes" select="true()"/>
-        </xsl:apply-templates>
-    </xsl:template>
-
+    
 </xsl:stylesheet>
