@@ -243,6 +243,22 @@ URL : http://www.antennahouse.co.jp/
         <xsl:sequence select="$prmDocumentNode/node()"/>
     </xsl:function>
     
+    <!--
+    function:   check empty element
+    param:      element()
+    return:     xs:boolean
+    note:       return true if parameter has no child elements and the string value is ''.
+                2019-09-17 t.makita
+    -->
+    <xsl:function name="ahf:isEmptyElem" as="xs:boolean">
+        <xsl:param name="prmElem" as="element()"/>
+        <xsl:sequence select="empty($prmElem/*) and string($prmElem) => normalize-space() eq ''"/>
+    </xsl:function>
+    
+    <xsl:function name="ahf:isNotEmptyElem" as="xs:boolean">
+        <xsl:param name="prmElem" as="element()"/>
+        <xsl:sequence select="ahf:isEmptyElem($prmElem) => not()"/>
+    </xsl:function>
 
     <!-- 
       ============================================
