@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 	****************************************************************
-	DITA to XSL-FO Stylesheet
+	DITA to HTML5 Stylesheet
 	Module: Stylesheet for expanding style definition file.
 	Copyright © 2009-2015 Antenna House, Inc. All rights reserved.
 	Antenna House is a trademark of Antenna House, Inc.
@@ -16,7 +16,6 @@
 <xsl:stylesheet version="3.0" 
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xmlns:axf="http://www.antennahouse.com/names/XSL/Extensions"
     xmlns:ahf="http://www.antennahouse.com/names/XSLT/Functions/Document"
     xmlns:ahp="http://www.antennahouse.com/names/XSLT/Document/PageControl"
     xmlns:svg="http://www.w3.org/2000/svg"
