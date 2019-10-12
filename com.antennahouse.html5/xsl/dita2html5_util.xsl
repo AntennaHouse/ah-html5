@@ -146,90 +146,6 @@ URL : http://www.antennahouse.co.jp/
          Node functions
       ============================================
     -->
-    <!-- 
-     function:	Get leading white-space only text node of the given node()*
-     param:		prmNode
-     return:	leading white-space nodes
-     note:		
-     -->
-    <xsl:function name="ahf:getLeadingUnusedNodes" as="node()*">
-        <xsl:param name="prmNode" as="node()*"/>
-        
-        <xsl:variable name="firstNode" as="node()?" select="$prmNode[1]"/>
-        <xsl:variable name="isLeadingUnusedNode" as="xs:boolean" select="exists($firstNode[self::text()][not(string(normalize-space(string(.))))]) or 
-                                                                         exists($firstNode[self::processing-instruction()]) or
-                                                                         exists($firstNode[self::comment()])"/>
-        <xsl:choose>
-            <xsl:when test="$isLeadingUnusedNode">
-                <xsl:sequence select="$prmNode[1] | ahf:getLeadingUnusedNodes($prmNode[position() gt 1])"/>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:sequence select="()"/>
-            </xsl:otherwise>
-        </xsl:choose>
-    </xsl:function>
-
-    <!-- 
-     function:	Get trailing white-space only text node or processing instruction or comment of the given node()*
-     param:		prmNode
-     return:	trailing white-space nodes
-     note:		
-     -->
-    <xsl:function name="ahf:getTrailingUnusedNodes" as="node()*">
-        <xsl:param name="prmNode" as="node()*"/>
-        
-        <xsl:variable name="lastNode" as="node()?" select="$prmNode[position() eq last()]"/>
-        <xsl:variable name="isTrailingUnusedNode" as="xs:boolean" select="exists($lastNode[self::text()][not(string(normalize-space(string(.))))]) or 
-                                                                          exists($lastNode[self::processing-instruction()]) or
-                                                                          exists($lastNode[self::comment()])"/>
-        <xsl:choose>
-            <xsl:when test="$isTrailingUnusedNode">
-                <xsl:sequence select="$prmNode[position() eq last()] | ahf:getTrailingUnusedNodes($prmNode[position() lt last()])"/>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:sequence select="()"/>
-            </xsl:otherwise>
-        </xsl:choose>
-    </xsl:function>
-
-    <!-- 
-     function:	Remove leading white-space only text node or processing-instruction or comment of the given node()*
-     param:		prmNode
-     return:	result nodes
-     note:		
-     -->
-    <xsl:function name="ahf:removeLeadingUnusedNodes" as="node()*">
-        <xsl:param name="prmNode" as="node()*"/>
-        
-        <xsl:variable name="leadingUnusedNodes" as="node()*" select="ahf:getLeadingUnusedNodes($prmNode)"/>
-        <xsl:sequence select="$prmNode except $leadingUnusedNodes"/>
-    </xsl:function>
-
-    <!-- 
-     function:	Remove trailing white-space only text node or processing-instruction or comment of the given node()*
-     param:		prmNode
-     return:	result nodes
-     note:		
-     -->
-    <xsl:function name="ahf:removeTrailingUnusedNodes" as="node()*">
-        <xsl:param name="prmNode" as="node()*"/>
-        
-        <xsl:variable name="trailingUnusedNodes" as="node()*" select="ahf:getTrailingUnusedNodes($prmNode)"/>
-        <xsl:sequence select="$prmNode except $trailingUnusedNodes"/>
-    </xsl:function>
-    
-    <!-- 
-     function:	Remove leading & trailing white-space only text node or processing-instruction or comment of the given node()*
-     param:		prmNode
-     return:	result nodes
-     note:		
-     -->
-    <xsl:function name="ahf:removeLtUnusedNodes" as="node()*">
-        <xsl:param name="prmNode" as="node()*"/>
-        
-        <xsl:variable name="unusedNodes" as="node()*" select="ahf:getLeadingUnusedNodes($prmNode) | ahf:getTrailingUnusedNodes($prmNode)"/>
-        <xsl:sequence select="$prmNode except $unusedNodes"/>
-    </xsl:function>
 
     <!-- 
      function:  Select top level nodes from document-node
@@ -242,21 +158,72 @@ URL : http://www.antennahouse.co.jp/
         <xsl:sequence select="$prmDocumentNode/node()"/>
     </xsl:function>
     
-    <!--
-    function:   check empty element
-    param:      element()
-    return:     xs:boolean
-    note:       return true if parameter has no child elements and the string value is ''.
-                2019-09-17 t.makita
-    -->
-    <xsl:function name="ahf:isEmptyElem" as="xs:boolean">
+    <!-- 
+     function:  determine empty element
+     param:     prmElem
+     return:    xs:boolean
+     note:		
+     -->
+    <xsl:function name="ahf:isNotEmptyElement" as="xs:boolean">
         <xsl:param name="prmElem" as="element()"/>
-        <xsl:sequence select="empty($prmElem/*) and string($prmElem) => normalize-space() eq ''"/>
+        <xsl:sequence select="not(ahf:isEmptyElement($prmElem))"/>
+    </xsl:function>        
+    
+    <xsl:function name="ahf:isEmptyElement" as="xs:boolean">
+        <xsl:param name="prmElem" as="element()"/>
+        <xsl:choose>
+            <xsl:when test="empty($prmElem/node())">
+                <xsl:sequence select="true()"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:sequence select="every $node in $prmElem/node() satisfies ahf:isRedundantNode($node)"/>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:function>
     
-    <xsl:function name="ahf:isNotEmptyElem" as="xs:boolean">
-        <xsl:param name="prmElem" as="element()"/>
-        <xsl:sequence select="ahf:isEmptyElem($prmElem) => not()"/>
+    <!-- 
+     function:  determine redundant node
+     param:     prmNode
+     return:    xs:boolean
+     note:		
+     -->
+    <xsl:function name="ahf:isRedundantNode" as="xs:boolean">
+        <xsl:param name="prmNode" as="node()"/>
+        <xsl:choose>
+            <xsl:when test="$prmNode/self::comment()">
+                <xsl:sequence select="true()"/>
+            </xsl:when>
+            <xsl:when test="$prmNode/self::processing-instruction()">
+                <xsl:sequence select="true()"/>
+            </xsl:when>
+            <xsl:when test="$prmNode/self::text()">
+                <xsl:choose>
+                    <xsl:when test="string(normalize-space($prmNode)) eq ''">
+                        <xsl:sequence select="true()"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:sequence select="false()"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:when>
+            <xsl:when test="$prmNode/self::element()">
+                <xsl:sequence select="false()"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:sequence select="true()"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:function>
+
+    <!-- 
+     function:  determine redundant nodes
+     param:     prmNodes
+     return:    xs:boolean
+     note:		
+     -->
+    <xsl:function name="ahf:isRedundantNodes" as="xs:boolean">
+        <xsl:param name="prmNodes" as="node()+"/>
+        <xsl:sequence select="some $node in $prmNodes satisfies ahf:isRedundantNode($node)"/>
     </xsl:function>
 
     <!-- 
