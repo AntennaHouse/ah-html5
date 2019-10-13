@@ -158,7 +158,7 @@
     note:              
     -->
     <xsl:template match="*[contains-token(@class, 'topic/dl')]">
-        <xsl:variable name="compactOutputClass" as="xs:string" select="ahf:getCompactOutputClass(.)"/>
+        <xsl:variable name="compactOutputClass" as="xs:string" select=". => ahf:getCompactOutputClass()"/>
         <dl>
             <xsl:call-template name="genCommonAtts">
                 <xsl:with-param name="prmDefaultOutputClass" select="$compactOutputClass"/>
@@ -329,8 +329,8 @@
     note:              
     -->
     <xsl:template match="*[contains-token(@class, 'topic/dt')]" mode="MODE_DL_AS_TABLE">
-        <xsl:param name="prmIsCompact" tunnel="yes" as="xs:boolean"/>
-        <xsl:if test="preceding-sibling::*[contains-token(@class,'topic/dt')] => exists()">
+        <xsl:variable name="dt" as="element()" select="."/>
+        <xsl:if test="$dt/preceding-sibling::*[contains-token(@class,'topic/dt')] => exists()">
             <br/>
         </xsl:if>
         <span>
@@ -348,16 +348,15 @@
     note:              
     -->
     <xsl:template match="*[contains-token(@class, 'topic/dd')]" mode="MODE_DL_AS_TABLE">
-        <xsl:param name="prmIsCompact" tunnel="yes" as="xs:boolean"/>
-        <xsl:if test="preceding-sibling::*[contains-token(@class,'topic/dd')] => exists()">
+        <xsl:variable name="dd" as="element()" select="."/>
+        <xsl:if test="$dd/preceding-sibling::*[@class => contains-token('topic/dd')] => exists()">
             <br/>
         </xsl:if>
-        <span>
-            <xsl:call-template name="genCommonAtts">
-                <xsl:with-param name="prmDefaultOutputClass" select="ahf:getVarValue('DL_Dd_Span')"/>
-            </xsl:call-template>
+        <a>
+            <xsl:call-template name="genCommonAtts"/>
+            <xsl:call-template name="genIdAtt"/>
             <xsl:apply-templates/>
-        </span>
+        </a>
     </xsl:template>
 
     <!--

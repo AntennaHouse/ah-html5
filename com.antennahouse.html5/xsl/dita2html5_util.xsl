@@ -227,6 +227,78 @@ URL : http://www.antennahouse.co.jp/
     </xsl:function>
 
     <!-- 
+     function:  Get first preceding elememnt
+     param:     prmElem
+     return:    element()?
+     note:		
+     -->
+    <xsl:function name="ahf:getFirstPrecedingSiblingElemWoWh" as="element()?">
+        <xsl:param name="prmElem" as="element()?"/>
+        <xsl:variable name="precedingFirstElem" as="element()?" select="$prmElem/preceding-sibling::*[1]"/>
+        <xsl:choose>
+            <xsl:when test="empty($precedingFirstElem)">
+                <xsl:sequence select="()"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:variable name="nodesBetween" as="node()*" select="$prmElem/preceding-sibling::node()[. &gt;&gt; $precedingFirstElem]"/>
+                <xsl:choose>
+                    <xsl:when test="empty($nodesBetween)">
+                        <xsl:sequence select="$precedingFirstElem"/>
+                    </xsl:when>
+                    <xsl:when test="every $node in $nodesBetween satisfies ahf:isRedundantNode($node)">
+                        <xsl:sequence select="$precedingFirstElem"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:sequence select="()"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:function>
+
+    <!-- 
+     function:  Get first following elememnt
+     param:     prmElem
+     return:    element()?
+     note:		
+     -->
+    <xsl:function name="ahf:getFirstFollowingSiblingElemWoWh" as="element()?">
+        <xsl:param name="prmElem" as="element()?"/>
+        <xsl:variable name="followingFirstElem" as="element()?" select="$prmElem/following-sibling::*[1]"/>
+        <xsl:choose>
+            <xsl:when test="empty($followingFirstElem)">
+                <xsl:sequence select="()"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:variable name="nodesBetween" as="node()*" select="$prmElem/following-sibling::node()[. &lt;&lt; $followingFirstElem]"/>
+                <xsl:choose>
+                    <xsl:when test="empty($nodesBetween)">
+                        <xsl:sequence select="$followingFirstElem"/>
+                    </xsl:when>
+                    <xsl:when test="every $node in $nodesBetween satisfies ahf:isRedundantNode($node)">
+                        <xsl:sequence select="$followingFirstElem"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:sequence select="()"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:function>
+
+    <!-- 
+     function:  Determine the first child of parent
+     param:     prmElem
+     return:    xs:boolean
+     note:		
+     -->
+    <xsl:function name="ahf:isFirstChildOfParent" as="xs:boolean">
+        <xsl:param name="prmElem" as="element()?"/>
+        <xsl:sequence select="$prmElem[parent::*/*[1] is $prmElem] => exists()"/>
+    </xsl:function>
+    
+
+    <!-- 
       ============================================
          Tree Functions
       ============================================

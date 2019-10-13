@@ -100,11 +100,112 @@
     function:   p template
     param:      none
     return:     p or div
-    note:              
+    note:       Add special consideration when <p> is the first child element of parent.              
     -->
     <xsl:template match="*[contains-token(@class, 'topic/p')]">
+        <xsl:variable name="p" as="element()" select="."/>
+        <xsl:variable name="isFirstChildOfParent" as="xs:boolean" select="$p => ahf:isFirstChildOfParent()"/>
+        <!-- Has no preceding-sibling nodes or they are all ignoreble text nodes, processing-instructions or comments -->
+        <xsl:variable name="hasRedundantPrecedingSiblingNodes" as="xs:boolean">
+            <xsl:variable name="precedingSiblingNodes" as="node()*" select="$p/preceding-sibling::node()"/>
+            <xsl:choose>
+                <xsl:when test="$precedingSiblingNodes => empty()">
+                    <xsl:sequence select="true()"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:sequence select="$precedingSiblingNodes => ahf:isRedundantNodes()"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+        <xsl:variable name="followingSiblingNodes" as="node()*">
+            <xsl:variable name="followingSiblingNodes" as="node()*" select="$p/following-sibling::node()"/>
+            <xsl:variable name="firstFollowingSiblingElement" as="element()?" select="ahf:getFirstFollowingSiblingElemWoWh($p)"/>
+            <xsl:choose>
+                <xsl:when test="$firstFollowingSiblingElement => empty()">
+                    <xsl:sequence select="$followingSiblingNodes"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:sequence select="$followingSiblingNodes[. &lt;&lt; $firstFollowingSiblingElement]"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+        <!-- Has effective following-sibling nodes -->
+        <xsl:variable name="hasEffectiveFollowingSiblingNodes" as="xs:boolean">
+            <xsl:choose>
+                <xsl:when test="$followingSiblingNodes => empty()">
+                    <xsl:sequence select="false()"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:sequence select="$followingSiblingNodes => ahf:isRedundantNodes() => not()"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
         <xsl:choose>
-            <xsl:when test="descendant::*[ahf:isBlockLevelElement(.)] => exists()">
+            <xsl:when test="$isFirstChildOfParent">
+                <xsl:choose>
+                    <xsl:when test="$hasRedundantPrecedingSiblingNodes">
+                        <xsl:choose>
+                            <xsl:when test="$hasEffectiveFollowingSiblingNodes">
+                                <xsl:choose>
+                                    <xsl:when test="child::*[. => ahf:isBlockLevelElement()] => exists()">
+                                        <a>
+                                            <xsl:call-template name="genCommonAtts"/>
+                                            <xsl:call-template name="genIdAtt"/>
+                                            <xsl:for-each select="node()">
+                                                <xsl:variable name="node" as="node()" select="."/>
+                                                <xsl:choose>
+                                                    <xsl:when test="$node/self::text()">
+                                                        <span>
+                                                            <xsl:value-of select="."/>
+                                                        </span>
+                                                    </xsl:when>
+                                                    <xsl:when test="$node/self::element()">
+                                                        <xsl:apply-templates select="$node"/>
+                                                    </xsl:when>
+                                                </xsl:choose>
+                                            </xsl:for-each>
+                                        </a>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <span>
+                                            <xsl:call-template name="genCommonAtts"/>
+                                            <xsl:call-template name="genIdAtt"/>
+                                            <xsl:apply-templates/>
+                                        </span>
+                                        <br/>
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <span>
+                                    <xsl:call-template name="genCommonAtts"/>
+                                    <xsl:call-template name="genIdAtt"/>
+                                    <xsl:apply-templates/>
+                                </span>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:choose>
+                            <xsl:when test="child::*[. => ahf:isBlockLevelElement()] => exists()">
+                                <div>
+                                    <xsl:call-template name="genCommonAtts"/>
+                                    <xsl:call-template name="genIdAtt"/>
+                                    <xsl:apply-templates/>
+                                </div>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <p>
+                                    <xsl:call-template name="genCommonAtts"/>
+                                    <xsl:call-template name="genIdAtt"/>
+                                    <xsl:apply-templates/>
+                                </p>
+                            </xsl:otherwise>
+                        </xsl:choose>                        
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:when>
+            <xsl:when test="child::*[. => ahf:isBlockLevelElement()] => exists()">
                 <div>
                     <xsl:call-template name="genCommonAtts"/>
                     <xsl:call-template name="genIdAtt"/>
