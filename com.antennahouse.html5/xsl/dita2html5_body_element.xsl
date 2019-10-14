@@ -100,11 +100,13 @@
     function:   p template
     param:      none
     return:     p or div
-    note:       Add special consideration when <p> is the first child element of parent.              
+    note:       Add special consideration when <p> is the first child element of parent li or fn.              
     -->
+    <xsl:variable name="pToSpanParentsClasses" as="xs:string*" static="yes" select="('topic/li','topic/fn')"/>
+    
     <xsl:template match="*[contains-token(@class, 'topic/p')]">
         <xsl:variable name="p" as="element()" select="."/>
-        <xsl:variable name="isFirstChildOfParent" as="xs:boolean" select="$p => ahf:isFirstChildOfParent()"/>
+        <xsl:variable name="isFirstChildOfParent" as="xs:boolean" select="($p => ahf:isFirstChildOfParent()) and ($p/parent::*[@class => ahf:seqContains($pToSpanParentsClasses)] => exists())"/>
         <!-- Has no preceding-sibling nodes or they are all ignoreble text nodes, processing-instructions or comments -->
         <xsl:variable name="hasRedundantPrecedingSiblingNodes" as="xs:boolean">
             <xsl:variable name="precedingSiblingNodes" as="node()*" select="$p/preceding-sibling::node()"/>
@@ -147,9 +149,9 @@
                         <xsl:choose>
                             <xsl:when test="$hasEffectiveFollowingSiblingNodes">
                                 <xsl:choose>
-                                    <xsl:when test="child::*[. => ahf:isBlockLevelElement()] => exists()">
+                                    <xsl:when test="$p/child::*[. => ahf:isBlockLevelElement()] => exists()">
                                         <a>
-                                            <xsl:call-template name="genCommonAtts"/>
+                                            <xsl:call-template name="genCommonAttsWoClass"/>
                                             <xsl:call-template name="genIdAtt"/>
                                             <xsl:for-each select="node()">
                                                 <xsl:variable name="node" as="node()" select="."/>
@@ -168,7 +170,7 @@
                                     </xsl:when>
                                     <xsl:otherwise>
                                         <span>
-                                            <xsl:call-template name="genCommonAtts"/>
+                                            <xsl:call-template name="genCommonAttsWoClass"/>
                                             <xsl:call-template name="genIdAtt"/>
                                             <xsl:apply-templates/>
                                         </span>
@@ -178,7 +180,7 @@
                             </xsl:when>
                             <xsl:otherwise>
                                 <span>
-                                    <xsl:call-template name="genCommonAtts"/>
+                                    <xsl:call-template name="genCommonAttsWoClass"/>
                                     <xsl:call-template name="genIdAtt"/>
                                     <xsl:apply-templates/>
                                 </span>
