@@ -144,16 +144,17 @@
         </xsl:variable>
         <xsl:choose>
             <xsl:when test="$isFirstChildOfParent">
+                <!--
                 <xsl:choose>
                     <xsl:when test="$hasRedundantPrecedingSiblingNodes">
                         <xsl:choose>
                             <xsl:when test="$hasEffectiveFollowingSiblingNodes">
                                 <xsl:choose>
                                     <xsl:when test="$p/child::*[. => ahf:isBlockLevelElement()] => exists()">
-                                        <a>
+                                        <div>
                                             <xsl:call-template name="genCommonAttsWoClass"/>
                                             <xsl:call-template name="genIdAtt"/>
-                                            <xsl:for-each select="node()">
+                                            <xsl:for-each select="$p/node()">
                                                 <xsl:variable name="node" as="node()" select="."/>
                                                 <xsl:choose>
                                                     <xsl:when test="$node/self::text()">
@@ -166,7 +167,7 @@
                                                     </xsl:when>
                                                 </xsl:choose>
                                             </xsl:for-each>
-                                        </a>
+                                        </div>
                                     </xsl:when>
                                     <xsl:otherwise>
                                         <span>
@@ -206,6 +207,12 @@
                         </xsl:choose>                        
                     </xsl:otherwise>
                 </xsl:choose>
+                -->
+                <div>
+                    <xsl:call-template name="genCommonAtts"/>
+                    <xsl:call-template name="genIdAtt"/>
+                    <xsl:apply-templates/>
+                </div>
             </xsl:when>
             <xsl:when test="child::*[. => ahf:isBlockLevelElement()] => exists()">
                 <div>
