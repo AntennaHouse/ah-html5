@@ -113,33 +113,36 @@
      return;    xs:boolean
      note:      
     -->
+    <xsl:variable name="blockElementClasses" as="xs:string+">
+        <xsl:sequence select="'topic/body'"/>
+        <xsl:sequence select="'topic/shortdesc'"/>
+        <xsl:sequence select="'topic/abstract'"/>
+        <xsl:sequence select="'topic/title'"/>
+        <xsl:sequence select="'topic/section'"/>
+        <xsl:sequence select="'task/info'"/>
+        <xsl:sequence select="'topic/p'"/>
+        <xsl:sequence select="'topic/pre'"/>
+        <xsl:sequence select="'topic/note'"/>
+        <xsl:sequence select="'topic/fig'"/>
+        <xsl:sequence select="'topic/dl'"/>
+        <xsl:sequence select="'topic/sl'"/>
+        <xsl:sequence select="'topic/ol'"/>
+        <xsl:sequence select="'topic/ul'"/>
+        <xsl:sequence select="'topic/li'"/>
+        <xsl:sequence select="'topic/sli'"/>
+        <xsl:sequence select="'topic/itemgroup'"/>
+        <xsl:sequence select="'topic/section'"/>
+        <xsl:sequence select="'topic/table'"/>
+        <xsl:sequence select="'topic/entry'"/>
+        <xsl:sequence select="'topic/simpletable'"/>
+        <xsl:sequence select="'topic/stentry'"/>
+        <xsl:sequence select="'topic/example'"/>
+    </xsl:variable>
+
     <xsl:function name="ahf:isBlockLevelElement" as="xs:boolean">
         <xsl:param name="prmElem" as="element()?"/>
-        <xsl:variable name="class" as="xs:string" select="string($prmElem/@class)"/>
-        <xsl:sequence select="contains-token($class, 'topic/body') or
-            contains-token($class,'topic/shortdesc') or
-            contains-token($class,'topic/abstract') or
-            contains-token($class,'topic/title') or
-            contains-token($class,'topic/section') or 
-            contains-token($class,'task/info') or
-            contains-token($class,'topic/p') or
-            (contains-token($class,'topic/image') and string($prmElem/@placement) eq 'break') or
-            contains-token($class,'topic/pre') or
-            contains-token($class,'topic/note') or
-            contains-token($class,'topic/fig') or
-            contains-token($class,'topic/dl') or
-            contains-token($class,'topic/sl') or
-            contains-token($class,'topic/ol') or
-            contains-token($class,'topic/ul') or
-            contains-token($class,'topic/li') or
-            contains-token($class,'topic/sli') or
-            contains-token($class,'topic/itemgroup') or
-            contains-token($class,'topic/section') or
-            contains-token($class,'topic/table') or
-            contains-token($class,'topic/entry') or
-            contains-token($class,'topic/simpletable') or
-            contains-token($class,'topic/stentry') or
-            contains-token($class,'topic/example')"/>
+        <xsl:variable name="class" as="xs:string*" select="($prmElem/@class =>string() => tokenize())[. ne '-']"/>
+        <xsl:sequence select="($class = $blockElementClasses) or (contains-token($class,'topic/image') and string($prmElem/@placement) eq 'break')" />
     </xsl:function>
     
     <!-- 
