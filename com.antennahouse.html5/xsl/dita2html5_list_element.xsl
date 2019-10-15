@@ -24,14 +24,21 @@
     return:     ul
     note:              
     -->
-    <xsl:template match="*[contains-token(@class, 'topic/ul')]">
+    <xsl:template match="*[@class => contains-token('topic/ul')]">
+        <xsl:variable name="ul" as="element()" select="."/>
         <xsl:variable name="compactOutputClass" as="xs:string" select="ahf:getCompactOutputClass(.)"/>
+        <xsl:variable name="ulStyleClass" as="xs:string+">
+            <xsl:call-template name="getVarValueAsStringSequence">
+                <xsl:with-param name="prmVarName" select="'Ul_Style_Class_Html'"/>
+            </xsl:call-template>
+        </xsl:variable>
+        <xsl:variable name="ulStyleClass" as="xs:string" select="ahf:getUlStyleClass($ul, $ulStyleClass)"/>
         <ul>
             <xsl:call-template name="genCommonAtts">
-                <xsl:with-param name="prmDefaultOutputClass" select="$compactOutputClass"/>
+                <xsl:with-param name="prmDefaultOutputClass" select="$compactOutputClass || ' ' || $ulStyleClass"/>
             </xsl:call-template>
             <xsl:call-template name="genIdAtt"/>
-            <xsl:apply-templates select="*[contains-token(@class,'topic/li')]">
+            <xsl:apply-templates select="*[@class => contains-token('topic/li')]">
                 <xsl:with-param name="prmCompactOutputClass" select="$compactOutputClass"/>
             </xsl:apply-templates>
         </ul>
@@ -41,6 +48,55 @@
             </xsl:call-template>
         </xsl:if>
     </xsl:template>
+
+    <!-- 
+     function:  Get ul bullet format
+     param:     prmUl, prmUlStyleStype
+     return:    @class attribute string
+     note:      
+     -->
+    <xsl:function name="ahf:getUlStyleClass" as="xs:string">
+        <xsl:param name="prmUl" as="element()"/>
+        <xsl:param name="prmUlStyleClass" as="xs:string+"/>
+        
+        <xsl:variable name="ulStyleClassCount" as="xs:integer" select="count($prmUlStyleClass)"/>
+        <xsl:variable name="ulNestLevel" select="ahf:countUl($prmUl,0)" as="xs:integer"/>
+        <xsl:variable name="styleOrder" as="xs:integer">
+            <xsl:variable name="tempStyleOrder" as="xs:integer" select="$ulNestLevel mod $ulStyleClassCount"/>
+            <xsl:sequence select="if ($tempStyleOrder eq 0) then $ulStyleClassCount else $tempStyleOrder"/>
+        </xsl:variable>
+        <xsl:sequence select="$prmUlStyleClass[$styleOrder]"/>
+    </xsl:function>
+
+    <!--
+    function:   count ul
+    param:      prmElement, prmCount
+    return:     xs:integer
+    note:              
+    -->
+    <xsl:function name="ahf:countUl" as="xs:integer">
+        <xsl:param name="prmElement" as="element()"/>
+        <xsl:param name="prmCount" as="xs:integer"/>
+        
+        <xsl:variable name="count" select="if ($prmElement[@class => contains-token('topic/ul')]) then ($prmCount + 1) else $prmCount"/>
+        <xsl:choose>
+            <xsl:when test="$prmElement[@class => ahf:seqContainsToken(('topic/entry','topic/stentry'))]">
+                <xsl:sequence select="$count"/>
+            </xsl:when>
+            <xsl:when test="$prmElement[@class => contains-token('topic/note')]">
+                <xsl:sequence select="$count"/>
+            </xsl:when>
+            <xsl:when test="$prmElement[@class => contains-token('topic/topic')]">
+                <xsl:sequence select="$count"/>
+            </xsl:when>
+            <xsl:when test="$prmElement/parent::*">
+                <xsl:sequence select="ahf:countUl($prmElement/parent::*, $count)"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:sequence select="$count"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:function>
     
     <!--
     function:   ol template
@@ -48,15 +104,21 @@
     return:     ol
     note:              
     -->
-    <xsl:template match="*[contains-token(@class, 'topic/ol')]">
+    <xsl:template match="*[@class => contains-token('topic/ol')]">
+        <xsl:variable name="ol" as="element()" select="."/>
         <xsl:variable name="compactOutputClass" as="xs:string" select="ahf:getCompactOutputClass(.)"/>
+        <xsl:variable name="olStyleClass" as="xs:string+">
+            <xsl:call-template name="getVarValueAsStringSequence">
+                <xsl:with-param name="prmVarName" select="'Ol_Style_Class_Html'"/>
+            </xsl:call-template>
+        </xsl:variable>
+        <xsl:variable name="olStyleClass" as="xs:string" select="ahf:getOlStyleClass($ol, $olStyleClass)"/>
         <ol>
             <xsl:call-template name="genCommonAtts">
-                <xsl:with-param name="prmDefaultOutputClass" select="$compactOutputClass"/>
+                <xsl:with-param name="prmDefaultOutputClass" select="$compactOutputClass || ' ' || $olStyleClass"/>
             </xsl:call-template>
             <xsl:call-template name="genIdAtt"/>
-            <xsl:call-template name="genOlTypeAtt"/>
-            <xsl:apply-templates select="*[contains-token(@class,'topic/li')]">
+            <xsl:apply-templates select="*[@class => contains-token('topic/li')]">
                 <xsl:with-param name="prmCompactOutputClass" select="$compactOutputClass"/>
             </xsl:apply-templates>
         </ol>
@@ -68,20 +130,20 @@
     </xsl:template>
 
     <!--
-    function:   get ol type
+    function:   get ol style class
     param:      prmOl
-    return:     @type
-    note:       FIXME: The list-type is hard-corded.       
+    return:     xs:string
+    note:              
     -->
-    <xsl:template name="genOlTypeAtt" as="attribute()?">
+    <xsl:template name="getOlStyleClass" as="xs:string">
         <xsl:param name="prmOl" as="element()" required="no" select="."/>
-        <xsl:variable name="olNumberFormats" as="xs:string+">
+        <xsl:variable name="olStyleClass" as="xs:string+">
             <xsl:call-template name="getVarValueWithLangAsStringSequence">
-                <xsl:with-param name="prmVarName" select="'Ol_Number_Formats'"/>
+                <xsl:with-param name="prmVarName" select="'Ol_Style_Class_Html'"/>
             </xsl:call-template>
         </xsl:variable>
-        <xsl:variable name="olNumberFormat" as="xs:string" select="ahf:getOlNumberFormat($prmOl,$olNumberFormats)"/>
-        <xsl:attribute name="type" select="$olNumberFormat"/>
+        <xsl:variable name="olStyleClass" as="xs:string" select="ahf:getOlStyleClass($prmOl,$olStyleClass)"/>
+        <xsl:sequence select="$olStyleClass"/>
     </xsl:template>
     
     <!-- 
@@ -96,13 +158,25 @@
         
         <xsl:variable name="olNumberFormatCount" as="xs:integer" select="count($prmOlNumberFormat)"/>
         <xsl:variable name="olNestLevel" select="ahf:countOl($prmOl,0)" as="xs:integer"/>
-        <xsl:variable name="formatOrder" as="xs:integer">
-            <xsl:variable name="tempFormatOrder" as="xs:integer" select="$olNestLevel mod $olNumberFormatCount"/>
-            <xsl:sequence select="if ($tempFormatOrder eq 0) then $olNumberFormatCount else $tempFormatOrder"/>
+        <xsl:variable name="numberOrder" as="xs:integer">
+            <xsl:variable name="tempNumberOrder" as="xs:integer" select="$olNestLevel mod $olNumberFormatCount"/>
+            <xsl:sequence select="if ($tempNumberOrder eq 0) then $olNumberFormatCount else $tempNumberOrder"/>
         </xsl:variable>
-        <xsl:sequence select="$prmOlNumberFormat[$formatOrder]"/>
+        <xsl:sequence select="$prmOlNumberFormat[$numberOrder]"/>
     </xsl:function>
     
+    <xsl:function name="ahf:getOlStyleClass" as="xs:string">
+        <xsl:param name="prmOl" as="element()"/>
+        <xsl:param name="prmOlStyleClass" as="xs:string+"/>
+        
+        <xsl:variable name="olStyleClassCount" as="xs:integer" select="count($prmOlStyleClass)"/>
+        <xsl:variable name="olNestLevel" select="ahf:countOl($prmOl,0)" as="xs:integer"/>
+        <xsl:variable name="styleOrder" as="xs:integer">
+            <xsl:variable name="tempStyleOrder" as="xs:integer" select="$olNestLevel mod $olStyleClassCount"/>
+            <xsl:sequence select="if ($tempStyleOrder eq 0) then $olStyleClassCount else $tempStyleOrder"/>
+        </xsl:variable>
+        <xsl:sequence select="$prmOlStyleClass[$styleOrder]"/>
+    </xsl:function>
 
     <!--
     function:   count ol

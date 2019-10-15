@@ -251,6 +251,13 @@
         <!-- No list style -->
         <variable name="List_Style_None">list-style-none</variable>
         
+        <!-- ul list style type class -->
+        <variable name="Ul_Style_Class_Html" delim="[,\s]+">list-style-disc list-style-circle list-style-square</variable>
+        
+        <!-- ol list style type class -->
+        <variable name="Ol_Style_Class_Html" delim="[,\s]+">list-style-decimal list-style-lower-alpha list-style-lower-roman</variable>
+        <variable name="Ol_Number_Formats" delim="[,\s]+">1. a. i.</variable>
+        
         <!-- Note -->
         <variable name="Note_Title">note-title</variable>
         

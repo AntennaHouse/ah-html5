@@ -1,2 +1,4 @@
 
 com.antennahouse.html5/build.xml
+/com.antennahouse.html5/node_modules
+/com.antennahouse.html5/package-lock.json

@@ -23,6 +23,31 @@ ul.list-style-none li::before {
   content: "\200B";
 }
 
+/* list style type */
+ul.list-style-disc{
+  list-style: disc;
+}
+
+ul.list-style-circle{
+  list-style: circle;
+}
+
+ul.list-style-square{
+  list-style: square;
+}
+
+ol.list-style-decimal{
+  list-style:decimal;
+}
+
+ol.list-style-lower-alpha{
+  list-style:lower-alpha;
+}
+
+ol.list-style-lower-roman{
+  list-style:lower-roman;
+}
+
 /* Default of bold for definition list terms */
 .dt {
   font-weight: bold;
