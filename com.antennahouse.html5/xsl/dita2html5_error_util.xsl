@@ -27,10 +27,10 @@
     ===============================================
     -->
     <!-- 
-     function:	Error Exit routine
-     param:		prmMes: message body
-     return:	none
-     note:		none
+     function:  Error Exit routine
+     param:     prmMes: message body
+     return:    none
+     note:      none
     -->
     <xsl:template name="errorExit">
     	<xsl:param name="prmMes" required="yes" as="xs:string"/>
@@ -38,15 +38,30 @@
     </xsl:template>
     
     <!-- 
-     function:	Warning display routine
-     param:		prmMes: message body
-     return:	none
-     note:		none
+     function:  Warning display routine
+     param:     prmMes: message body
+     return:    none
+     note:      none
     -->
     <xsl:template name="warningContinue">
     	<xsl:param name="prmMes" required="yes" as="xs:string"/>
     	<xsl:message terminate="no"><xsl:value-of select="$prmMes"/></xsl:message>
     </xsl:template>
+    
+    <!-- 
+     function:  Message generation
+     param:     prmMes: message body
+                prmSrc: Replacement source
+                prmDst: Replacement destination
+     return:    xs:string
+     note:      for xsl:assert instruction
+    -->
+    <xsl:function name="ahf:genMsg" as="xs:string">
+        <xsl:param name="prmMes" as="xs:string"/>
+        <xsl:param name="prmSrc" as="xs:string*"/>
+        <xsl:param name="prmDst" as="xs:string*"/>
+        <xsl:sequence select="ahf:safeReplace($prmMes,$prmSrc,$prmDst)"/>        
+    </xsl:function>
     
     <!-- end of stylesheet -->
 </xsl:stylesheet>
