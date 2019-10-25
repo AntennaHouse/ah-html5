@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-**************************************************************
-DITA to HTML5 Stylesheet
-Utility Templates
-**************************************************************
-File Name : dita2html5_util.xsl
-**************************************************************
-Copyright © 2009-2019 Antenna House, Inc. All rights reserved.
-Antenna House is a trademark of Antenna House, Inc.
-URL : http://www.antennahouse.co.jp/
-**************************************************************
+    **************************************************************
+    DITA to HTML5 Stylesheet
+    Utility Templates
+    **************************************************************
+    File Name : dita2html5_util.xsl
+    **************************************************************
+    Copyright © 2009-2019 Antenna House, Inc. All rights reserved.
+    Antenna House is a trademark of Antenna House, Inc.
+    URL : http://www.antennahouse.com/
+    **************************************************************
 -->
 
 <xsl:stylesheet version="3.0" 
@@ -452,20 +452,21 @@ URL : http://www.antennahouse.co.jp/
     </xsl:function>
 
     <!-- 
-        function:   Return true() if torkinized $prmDstStr contains one of the given token $prmTokens.
+        function:   Return true() if tokenized $prmDstStr contains one of the given token $prmTokens.
         param:      prmDstStr, prmTokens
         return:     xs:boolean
-        note:	
+        note:	   Change $prmDstStr occurrence indicator from ? to *.
+                    2019-10-26 t.makita
     -->
     <xsl:function name="ahf:seqContainsToken" as="xs:boolean">
-        <xsl:param name="prmDstStr" as="xs:string?"/>
+        <xsl:param name="prmDstStr" as="xs:string*"/>
         <xsl:param name="prmTokens" as="xs:string*"/>
         <xsl:choose>
             <xsl:when test="empty($prmDstStr) or empty($prmTokens)">
                 <xsl:sequence select="false()"/>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:variable name="dstStrs" as="xs:string*" select="tokenize($prmDstStr,'\s')"/>
+                <xsl:variable name="dstStrs" as="xs:string*" select="$prmDstStr ! tokenize(.,'\s')"/>
                 <xsl:sequence select="$dstStrs = $prmTokens"/>
             </xsl:otherwise>
         </xsl:choose>
