@@ -44,8 +44,8 @@
     <xsl:variable name="gpOutputChildLinks" as="xs:boolean" select="$PRM_OUTPUT_CHILD_LINKS eq $cYes"/>
     <xsl:param name="PRM_OUTPUT_PARENT_LINK" as="xs:string" required="no" select="$cYes"/>
     <xsl:variable name="gpOutputParentLink" as="xs:boolean" select="$PRM_OUTPUT_PARENT_LINK eq $cYes"/>
-    <xsl:param name="PRM_OUTPUT_NEXT_PREVIOUS_LINK" as="xs:string" required="no" select="$cYes"/>
-    <xsl:variable name="gpOutputNextPreviousLink" as="xs:boolean" select="$PRM_OUTPUT_NEXT_PREVIOUS_LINK eq $cYes"/>
+    <xsl:param name="PRM_OUTPUT_NEXT_PREVIOUS_LINKS" as="xs:string" required="no" select="$cYes"/>
+    <xsl:variable name="gpOutputNextPreviousLinks" as="xs:boolean" select="$PRM_OUTPUT_NEXT_PREVIOUS_LINKS eq $cYes"/>
     
     <!--
     function:   Related-links Template
@@ -68,7 +68,7 @@
                  -->
                 <xsl:call-template name="genOlChildLinks"/>
             </xsl:if>
-            <xsl:if test="$gpOutputParentLink or $gpOutputNextPreviousLink">
+            <xsl:if test="$gpOutputParentLink or $gpOutputNextPreviousLinks">
                 <!--Output next, previous and parent links
                  -->
                 <xsl:call-template name="genNextPrevParentLinks"/>
@@ -160,10 +160,10 @@
                 [$gpOutputParentLink]"/>
             <xsl:sequence select="descendant::*[contains-token(@class, 'topic/link')]
                 [@role => string() eq 'next']
-                [$gpOutputNextPreviousLink]"/>
+                [$gpOutputNextPreviousLinks]"/>
             <xsl:sequence select="descendant::*[contains-token(@class, 'topic/link')]
                 [@role => string() eq 'previous']
-                [$gpOutputNextPreviousLink]"/>
+                [$gpOutputNextPreviousLinks]"/>
         </xsl:variable>
         <xsl:if test="$nextPrevParentLinks => exists()">
             <div>
