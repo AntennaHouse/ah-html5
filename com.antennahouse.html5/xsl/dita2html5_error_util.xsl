@@ -60,7 +60,7 @@
         <xsl:param name="prmMes" as="xs:string"/>
         <xsl:param name="prmSrc" as="xs:string*"/>
         <xsl:param name="prmDst" as="xs:string*"/>
-        <xsl:sequence select="ahf:safeReplace($prmMes,$prmSrc,$prmDst)"/>        
+        <xsl:sequence select="ahf:replace($prmMes,$prmSrc,$prmDst)"/>        
     </xsl:function>
     
     <!-- end of stylesheet -->
