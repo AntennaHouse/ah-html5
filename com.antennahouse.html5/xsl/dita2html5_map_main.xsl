@@ -201,7 +201,7 @@
     -->
     <xsl:function name="ahf:outputTopicref" as="xs:boolean">
         <xsl:param name="prmTopicref" as="element()"/>
-        <xsl:sequence select="$prmTopicref[contains-token(@class, 'map/topicref')][ahf:isToc(.)][not(ahf:isResourceOnly(.))] => exists()"/>
+        <xsl:sequence select="$prmTopicref[@class => contains-token('map/topicref')][. => ahf:isToc()][. => ahf:isResourceOnly() => not()] => exists()"/>
     </xsl:function>
     <!--
     function:   Generate Navtitle Template

@@ -79,7 +79,7 @@
     -->
     <xsl:function name="ahf:isResourceOnly" as="xs:boolean">
         <xsl:param name="prmTopicRef" as ="element()"/>
-        <xsl:sequence select="string($prmTopicRef/@processing-role) eq 'resouce-only'"/>
+        <xsl:sequence select="string($prmTopicRef/@processing-role) eq 'resource-only'"/>
     </xsl:function>
 
     <!--
