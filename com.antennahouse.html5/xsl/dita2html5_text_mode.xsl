@@ -46,20 +46,7 @@ E-mail : info@antennahouse.com
 
     <!-- text -->
     <xsl:template match="text()" mode="TEXT_ONLY">
-        <xsl:param name="prmGetIndextermKey" required="no" tunnel="yes" as="xs:boolean" select="false()"/>
-        <xsl:param name="prmGetIndexSeeKey" required="no" tunnel="yes" as="xs:boolean" select="false()"/>
-        <xsl:choose>
-            <xsl:when test="$prmGetIndextermKey">
-                <!--xsl:value-of select="normalize-space(.)"/-->
-                <xsl:value-of select="."/>
-            </xsl:when>
-            <xsl:when test="$prmGetIndexSeeKey">
-                <xsl:value-of select="normalize-space(.)"/>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:value-of select="."/>
-            </xsl:otherwise>
-        </xsl:choose>
+        <xsl:value-of select="."/>
     </xsl:template>
     
     <!-- shortdesc -->
