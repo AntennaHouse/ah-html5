@@ -19,7 +19,8 @@
     xmlns:mml="http://www.w3.org/1998/Math/MathML"
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:style="http://www.antennahouse.com/names/XSLT/Document/Layout"
-    exclude-result-prefixes="xs style"
+    xmlns:saxon="http://saxon.sf.net/" 
+    exclude-result-prefixes="xs style xlink ahf saxon"
     >
     <!--============================================
 	     External dependencies:
@@ -1156,6 +1157,57 @@
         </xsl:variable>
         
         <xsl:sequence select="$varValue = ('1','true','yes')"/>
+    </xsl:template>
+
+    <!-- 
+         enumVariable template
+         function: Get series of variable & value pair that satisfies criteria $prmSelectFunc.
+         parameter: prmFilterFunc: Function that selects variable.
+                    prmXmlLang: Target xml:lang
+                    prmDocType: Document type
+                    prmPaperSize: Paper size
+                    prmOutputType: Output Type
+                    prmBrandType: Brand Type
+         note: 
+      -->
+    <xsl:function name="ahf:enumVariable" saxon:as="tuple(name: xs:string, value: xs:string)*">
+        <xsl:call-template name="enumVariable"/>
+    </xsl:function>
+    
+    <xsl:template name="enumVariable" saxon:as="tuple(name: xs:string, value: xs:string)*">
+        <xsl:param name="prmFilterFunc" as="function(xs:string) as xs:boolean"/>
+        <xsl:param name="prmXmlLang" as="xs:string?" required="no" select="$defaultXmlLang"/>
+        <xsl:param name="prmDocType" as="xs:string?" required="no" select="$defaultDocType"/>
+        <xsl:param name="prmPaperSize" as="xs:string?" required="no" select="$defaultPaperSize"/>
+        <xsl:param name="prmOutputType" as="xs:string?" required="no" select="$defaultOutputType"/>
+        <xsl:param name="prmBrandType" as="xs:string?" required="no" select="$defaultBrandType"/>
+        
+        <xsl:variable name="varNames" as="xs:string*" select="$glVarDefs/*/@name ! string(.) => distinct-values()"/>
+        <xsl:for-each select="$varNames">
+            <xsl:variable name="varName" as="xs:string" select="."/>
+            <xsl:if test="$prmFilterFunc($varName)">
+                <xsl:variable name="vars" as="element()*" select="$glVarDefs/*[string(@name) eq $varName]"/>
+                <xsl:if test="empty($vars)">
+                    <xsl:call-template name="errorExit">
+                        <xsl:with-param name="prmMes">
+                            <xsl:value-of select="ahf:replace($stMes008,('%var','%file'),($varName,$allStyleDefFile))"/>
+                        </xsl:with-param>
+                    </xsl:call-template>
+                </xsl:if>
+                <xsl:variable name="filteredVars" as="element()+">
+                    <xsl:call-template name="filterElements">
+                        <xsl:with-param name="prmTargetElem" select="$vars"/>
+                        <xsl:with-param name="prmXmlLang" select="$prmXmlLang"/>
+                        <xsl:with-param name="prmDocType" select="$prmDocType"/>
+                        <xsl:with-param name="prmPaperSize" select="$prmPaperSize"/>
+                        <xsl:with-param name="prmOutputType" select="$prmOutputType"/>
+                        <xsl:with-param name="prmBrandType" select="$prmBrandType"/>
+                    </xsl:call-template>
+                </xsl:variable>
+                <xsl:variable name="filteredVar" as="element()" select="$filteredVars[last()]"/>
+                <xsl:sequence select="map{'name':$filteredVar => name(), 'value':$filteredVar => string()}"/>
+            </xsl:if>
+        </xsl:for-each>
     </xsl:template>
 
     <!-- 
