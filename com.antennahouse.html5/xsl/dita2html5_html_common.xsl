@@ -34,6 +34,7 @@
         <xsl:param name="prmDefaultOutputClass" as="xs:string?" required="no" select="()"/>
         <xsl:param name="prmApplyDefaultFrameAtt" as="xs:boolean" required="no" select="true()"/>
         <xsl:param name="prmApplyClassAtt" as="xs:boolean" required="no" select="true()"/>
+        <xsl:param name="prmAdditionalClassAtt" as="xs:string*" required="no" select="()"></xsl:param>
         
         <!-- @lang -->
         <xsl:variable name="xmlLang" as="attribute()?" select="$prmElement/@xml:lang"/>
@@ -52,6 +53,7 @@
                 <xsl:with-param name="prmElement" select="$prmElement"/>
                 <xsl:with-param name="prmDefaultOutputClass" select="$prmDefaultOutputClass"/>
                 <xsl:with-param name="prmApplyDefaultFrameAtt" select="$prmApplyDefaultFrameAtt"/>
+                <xsl:with-param name="prmAdditionalClassAtt" select="$prmAdditionalClassAtt"/>
             </xsl:call-template>
         </xsl:if>
 
@@ -76,7 +78,8 @@
         <xsl:param name="prmElement" as="element()?" required="no" select="."/>
         <xsl:param name="prmDefaultOutputClass" as="xs:string?" required="no" select="()"/>
         <xsl:param name="prmApplyDefaultFrameAtt" as="xs:boolean" required="no" select="true()"/>
-
+        <xsl:param name="prmAdditionalClassAtt" as="xs:string*" required="no" select="()"/>
+        
         <!-- @outputclass handling -->
         <xsl:variable name="outputClass" as="xs:string*">
             <xsl:variable name="outputClass" as="xs:string?" select="$prmElement/@outputclass/normalize-space(string())"/>
@@ -107,7 +110,7 @@
         </xsl:if>
         
         <!-- HTML @class attribute -->
-        <xsl:variable name="htmlClassAttr" as="xs:string" select="string-join(($tokenizedClassAtt, $scaleClass, $frameClass, $outputClass),' ')"/>
+        <xsl:variable name="htmlClassAttr" as="xs:string" select="string-join(($tokenizedClassAtt, $scaleClass, $frameClass, $outputClass, $prmAdditionalClassAtt),' ')"/>
         <xsl:attribute name="class" select="$htmlClassAttr"/>
     </xsl:template>
 
