@@ -1205,7 +1205,7 @@
                     </xsl:call-template>
                 </xsl:variable>
                 <xsl:variable name="filteredVar" as="element()" select="$filteredVars[last()]"/>
-                <xsl:sequence select="map{'name':$filteredVar => name(), 'value':$filteredVar => string()}"/>
+                <xsl:sequence select="map{'name':$filteredVar/@name => string(), 'value':$filteredVar => string()}"/>
             </xsl:if>
         </xsl:for-each>
     </xsl:template>
