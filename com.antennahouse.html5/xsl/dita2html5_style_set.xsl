@@ -500,6 +500,7 @@
 	<!-- 
 	     mode="MODE_FLATTERN" template
 	     Retain XML structure as escaped text format
+	     The double quote escaping is used on the assumption that the result string is used by PHP.
 	     2019-11-08 t.makita
 	  -->
 	<xsl:template match="*" mode="MODE_FLATTEN">
@@ -511,6 +512,7 @@
 				<xsl:text>/&gt;</xsl:text>
 			</xsl:when>
 			<xsl:otherwise>
+				<xsl:text>&gt;</xsl:text>
 				<xsl:apply-templates select="node()" mode="#current"/>
 				<xsl:text>&lt;/</xsl:text>
 				<xsl:value-of select="name()"/>
@@ -520,11 +522,12 @@
 	</xsl:template>
 	
 	<xsl:template match="@*" mode="MODE_FLATTEN">
+		<xsl:variable name="apos" as="xs:string">"</xsl:variable>
 		<xsl:text> </xsl:text>
 		<xsl:value-of select=". => name()"/>
-		<xsl:text>'</xsl:text>
-		<xsl:value-of select=". => string()"/>
-		<xsl:text>'</xsl:text>
+		<xsl:text>=\"</xsl:text>
+		<xsl:value-of select=". => string() => ahf:replace(($apos),('\' || $apos))"/>
+		<xsl:text>\"</xsl:text>
 	</xsl:template>
 	
 	<xsl:template match="text()" mode="MODE_FLATTEN">
@@ -564,7 +567,7 @@
 				If you insert a white-space, it will be processed normally.
 				<variable name="index_H_top">( $index_K_top + $index_K_height ) + 0.7mm</variable>
 	  -->
-	<xsl:variable name="expandExpRegX" as="xs:string" select="'[\s\(\),\*\+]+?'"/>
+	<xsl:variable name="expandExpRegX" as="xs:string">[\s\(\),\*\+&lt;&gt;:;'"&#x3000;\\]+?</xsl:variable>
 	
 	<xsl:template name="expandExp" as="xs:string">
 		<xsl:param name="prmExp" required="yes" as="xs:string"/>
