@@ -435,10 +435,26 @@
 	            will be converted into
 	            file:/D:/DITA-OT1.6.3/plugins/com.atennahouse.pdf5/common-graphic/hello.png
 	            (Variable references and stylesheet base path is exclusive.)
+	            If $varElem contains elements, escape < and > and retain element structure as text value.
+	            2019-11-07 t.makita
 	  -->
 	<xsl:template match="style:variable" mode="MAKE_DEFINITION">
 		<xsl:variable name="varElem" as="element()" select="."/>
-		<xsl:variable name="varValue" select="string(.)"/>
+		<xsl:variable name="varValue" as="xs:string">
+			<xsl:choose>
+				<xsl:when test="$varElem/descendant::element()">
+					<xsl:variable name="varStr" as="xs:string">
+						<xsl:value-of>
+							<xsl:apply-templates select="$varElem/node()" mode="MODE_FLATTEN"/>
+						</xsl:value-of>
+					</xsl:variable>
+					<xsl:sequence select="$varStr"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:sequence select="$varElem => string()"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		<!-- Logical check -->
 		<xsl:if test="@*[not(name() = $varAttrs)]">
 			<xsl:call-template name="errorExit">
@@ -479,6 +495,54 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:element>
+	</xsl:template>
+	
+	<!-- 
+	     mode="MODE_FLATTERN" template
+	     Retain XML structure as escaped text format
+	     2019-11-08 t.makita
+	  -->
+	<xsl:template match="*" mode="MODE_FLATTEN">
+		<xsl:text>&lt;</xsl:text>
+		<xsl:value-of select="name()"/>
+		<xsl:apply-templates select="@*" mode="MODE_FLATTEN"/>
+		<xsl:choose>
+			<xsl:when test="node() => empty()">
+				<xsl:text>/&gt;</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates select="node()" mode="#current"/>
+				<xsl:text>&lt;/</xsl:text>
+				<xsl:value-of select="name()"/>
+				<xsl:text>&gt;</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+	
+	<xsl:template match="@*" mode="MODE_FLATTEN">
+		<xsl:text> </xsl:text>
+		<xsl:value-of select=". => name()"/>
+		<xsl:text>'</xsl:text>
+		<xsl:value-of select=". => string()"/>
+		<xsl:text>'</xsl:text>
+	</xsl:template>
+	
+	<xsl:template match="text()" mode="MODE_FLATTEN">
+		<xsl:value-of select="."/>
+	</xsl:template>
+	
+	<xsl:template match="processing-instruction()" mode="MODE_FLATTEN">
+		<xsl:text>&lt;?</xsl:text>
+		<xsl:value-of select="name()"/>
+		<xsl:text> </xsl:text>
+		<xsl:value-of select="."/>
+		<xsl:text>?&gt;</xsl:text>
+	</xsl:template>
+	
+	<xsl:template match="processing-instruction()" mode="MODE_FLATTEN">
+		<xsl:text>&lt;!--</xsl:text>
+		<xsl:value-of select="."/>
+		<xsl:text> --&gt;</xsl:text>
 	</xsl:template>
 	
 	<!-- 
