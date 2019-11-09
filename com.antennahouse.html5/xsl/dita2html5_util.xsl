@@ -328,7 +328,7 @@
      function:    Generate element history string
      param:       prmElem
      return:      xs:string
-     note:        
+     note:        Added topid/@id
      -->
     <xsl:function name="ahf:getHistoryStr" as="xs:string">
         <xsl:param name="prmElem" as="element()"/>
@@ -341,6 +341,10 @@
                     <xsl:sequence select="'.'"/>
                 </xsl:if>
                 <xsl:sequence select="local-name()"/>
+                <xsl:if test="position() eq 1">
+                    <xsl:sequence select="'_'"/>
+                    <xsl:sequence select="$elem/@id => string()"/>
+                </xsl:if>
                 <xsl:sequence select="if (exists($elem/parent::*) or exists($elem/preceding-sibling::*|$elem/following-sibling::*)) then string(count($elem|$elem/preceding-sibling::*[name() eq $name])) else ''"/>
             </xsl:for-each>
         </xsl:variable>
