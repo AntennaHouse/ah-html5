@@ -27,9 +27,10 @@
     function:   stpes template
     param:      none
     return:     section, ol other
-    note:              
+    note:                     
     -->
     <xsl:template match="*[@class => contains-token('task/steps')]" priority="5">
+        <xsl:variable name="steps" as="element()" select="."/>
         <xsl:variable name="stepExpand" as="xs:boolean" select="ahf:expandStep(.)"/>
         <xsl:choose>
             <xsl:when test="*[@class => contains-token('task/stepsection')] => empty()">
@@ -49,7 +50,9 @@
                             <xsl:when test="current-grouping-key()">
                                 <!-- group of step -->
                                 <ol>
-                                    <xsl:call-template name="genCommonAtts"/>
+                                    <xsl:call-template name="genCommonAtts">
+                                        <xsl:with-param name="prmElement" select="$steps"/>
+                                    </xsl:call-template>
                                     <xsl:variable name="precedingStepCount" as="xs:integer" select="current-group()[1] => ahf:getStepNumber()"/>
                                     <xsl:attribute name="start" select="$precedingStepCount"/>
                                     <xsl:apply-templates select="current-group()">
