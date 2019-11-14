@@ -423,14 +423,11 @@
     -->
     <xsl:template match="*[contains-token(@class, 'topic/dd')]" mode="MODE_DL_AS_TABLE">
         <xsl:variable name="dd" as="element()" select="."/>
-        <xsl:if test="$dd/preceding-sibling::*[@class => contains-token('topic/dd')] => exists()">
-            <br/>
-        </xsl:if>
-        <a>
+        <div>
             <xsl:call-template name="genCommonAtts"/>
             <xsl:call-template name="genIdAtt"/>
             <xsl:apply-templates/>
-        </a>
+        </div>
     </xsl:template>
 
     <!--
