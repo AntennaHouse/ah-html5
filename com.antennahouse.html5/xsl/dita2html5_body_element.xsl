@@ -388,9 +388,9 @@
     return:     image
     note:              
     -->
-    <xsl:template name="processImage">
+    <xsl:template name="processImage" use-when="system-property('PROP_SIMPLE_NAV_PROC') ne 'yes'">
         <xsl:param name="prmImage" as="element()" required="no" select="."/>
-        <xsl:choose use-when="system-property('PROP_SIMPLE_NAV_PROC') ne 'yes'">
+        <xsl:choose>
             <xsl:when test="$prmImage/*[contains-token(@class,'topic/longdescref')]/@href => exists()">
                 <xsl:variable name="longDescRef" as="element()" select="$prmImage/*[contains-token(@class,'topic/longdescref')]"/>
                 <xsl:variable name="href" as="xs:string" select="$longDescRef/@href => string()"/>
@@ -432,7 +432,11 @@
                 </img>
             </xsl:otherwise>
         </xsl:choose>
-        <img xsl:use-when="system-property('PROP_SIMPLE_NAV_PROC') eq 'yes'">
+    </xsl:template>
+
+    <xsl:template name="processImage" use-when="system-property('PROP_SIMPLE_NAV_PROC') eq 'yes'">
+        <xsl:param name="prmImage" as="element()" required="no" select="."/>
+        <img>
             <xsl:call-template name="genCommonAtts">
                 <xsl:with-param name="prmElement" select="$prmImage"/>
             </xsl:call-template>
@@ -441,7 +445,7 @@
             </xsl:call-template>    
         </img>
     </xsl:template>
-    
+
     <xsl:template name="genImageAtts">
         <xsl:param name="prmImage" as="element()" required="no" select="."/>
         
@@ -850,9 +854,9 @@
     return:     a/dfn or dfn
     note:       
     -->
-    <xsl:template match="*[contains-token(@class, 'topic/term')]">
+    <xsl:template match="*[contains-token(@class, 'topic/term')]" use-when="system-property('PROP_SIMPLE_NAV_PROC') ne 'yes'">
         <xsl:variable name="term" as="element()" select="."/>
-        <xsl:choose use-when="system-property('PROP_SIMPLE_NAV_PROC') ne 'yes'">
+        <xsl:choose>
             <xsl:when test="$term/@href => exists()">
                 <xsl:variable name="destAttr" as="attribute()?">
                     <xsl:call-template name="getDestinationAttr">
@@ -888,13 +892,17 @@
                 </dfn>
             </xsl:otherwise>
         </xsl:choose>
-        <dfn xsl:use-when="system-property('PROP_SIMPLE_NAV_PROC') eq 'yes'">
+    </xsl:template>
+
+    <xsl:template match="*[contains-token(@class, 'topic/term')]" use-when="system-property('PROP_SIMPLE_NAV_PROC') eq 'yes'">
+        <xsl:variable name="term" as="element()" select="."/>
+        <dfn>
             <xsl:call-template name="genCommonAtts"/>
             <xsl:call-template name="genIdAtt"/>
             <xsl:apply-templates/>
         </dfn>
     </xsl:template>
-    
+
     <!--
     function:   text template
     param:      none
