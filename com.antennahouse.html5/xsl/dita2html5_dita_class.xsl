@@ -20,16 +20,24 @@
      -->
     <xsl:variable name="inlineElementClasses" as="xs:string+" select="
         (
-        ' topic/boolean ',
-        ' topic/cite ',
-        ' topic/keyword ',
-        ' topic/ph ',
-        ' topic/q ',
-        ' topic/term ',
-        ' topic/text ',
-        ' topic/tm ',
-        ' topic/xref ',
-        ' topic/state '
+        'topic/boolean',
+        'topic/cite',
+        'topic/keyword',
+        'topic/ph',
+        'topic/q',
+        'topic/term',
+        'topic/text',
+        'topic/tm',
+        'topic/xref',
+        'topic/state',
+        'hi-d/b',
+        'hi-d/i',
+        'hi-d/u',
+        'hi-d/tt',
+        'hi-d/sup',
+        'hi-d/sub',
+        'hi-d/line-through',
+        'hi-d/overline'
         )"/>
 
     <!-- 
@@ -40,32 +48,33 @@
      -->
     <xsl:function name="ahf:isInlineElement" as="xs:boolean">
         <xsl:param name="prmElem" as="element()"/>
-        <xsl:variable name="class" as="xs:string" select="string($prmElem/@class)"/>
-        <xsl:variable name="isOneOfInlineElement" as="xs:boolean" select="some $c in $inlineElementClasses satisfies contains($class,$c)"/>
-        <xsl:variable name="isInlineImage" as="xs:boolean" select="contains($class,' topic/image ') and (string($prmElem/@placement) eq 'inline')"/>
+        <xsl:variable name="class" as="xs:string" select="$prmElem/@class => string()"/>
+        <xsl:variable name="isOneOfInlineElement" as="xs:boolean" select="some $c in $inlineElementClasses satisfies $class => contains-token($c)"/>
+        <xsl:variable name="isInlineImage" as="xs:boolean" select="$class => contains-token('topic/image') and (string($prmElem/@placement) eq 'inline')"/>
         <xsl:sequence select="$isOneOfInlineElement or $isInlineImage"/>
+        <xsl:message select="'isInline=',$isOneOfInlineElement or $isInlineImage,' $elem=',$prmElem"></xsl:message>
     </xsl:function>
 
     <!-- Ignorable elements that is pointed from xref 
      -->
     <xsl:variable name="ignorebleElementClasses" as="xs:string+" select="
         (
-        ' topic/draft-comment ',
-        ' topic/required-cleanup ',
-        ' topic/related-links ',
-        ' topic/link ',
-        ' topic/linktext ',
-        ' topic/linklist ',
-        ' topic/linkinfo ',
-        ' topic/object ',
-        ' topic/indexterm ',
-        ' topic/index-base ',
-        ' topic/data ',
-        ' topic/data-about ',
-        ' topic/foreign ',
-        ' topic/unknown ',
-        ' topic/fn ',
-        ' topic/xref '
+        'topic/draft-comment',
+        'topic/required-cleanup',
+        'topic/related-links',
+        'topic/link',
+        'topic/linktext',
+        'topic/linklist',
+        'topic/linkinfo',
+        'topic/object',
+        'topic/indexterm',
+        'topic/index-base',
+        'topic/data',
+        'topic/data-about',
+        'topic/foreign',
+        'topic/unknown',
+        'topic/fn',
+        'topic/xref'
         )"/>
     
     <!-- 
@@ -77,7 +86,7 @@
     <xsl:function name="ahf:isIgnorebleElement" as="xs:boolean">
         <xsl:param name="prmElem" as="element()"/>
         <xsl:variable name="class" as="xs:string" select="string($prmElem/@class)"/>
-        <xsl:variable name="isOneOfIgnorebleElement" as="xs:boolean" select="some $c in $ignorebleElementClasses satisfies contains($class,$c)"/>
+        <xsl:variable name="isOneOfIgnorebleElement" as="xs:boolean" select="some $c in $ignorebleElementClasses satisfies $class => contains-token($c)"/>
         <xsl:sequence select="$isOneOfIgnorebleElement"/>
     </xsl:function>
 
