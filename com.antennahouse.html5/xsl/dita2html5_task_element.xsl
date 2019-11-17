@@ -26,20 +26,36 @@
     <!--
     function:   stpes template
     param:      none
-    return:     section, ol other
-    note:                     
+    return:     section, ol, ul 
+    note:       generate ul when count of steps/step equal to 1
     -->
     <xsl:template match="*[@class => contains-token('task/steps')]" priority="5">
         <xsl:variable name="steps" as="element()" select="."/>
+        <xsl:variable name="stepCount" as="xs:integer" select="ahf:getStepCount($steps)"/>
         <xsl:variable name="stepExpand" as="xs:boolean" select="ahf:expandStep(.)"/>
         <xsl:choose>
             <xsl:when test="*[@class => contains-token('task/stepsection')] => empty()">
-                <ol>
-                    <xsl:call-template name="genCommonAtts"/>
-                    <xsl:apply-templates select="*[@class => contains-token('task/step')]">
-                        <xsl:with-param name="prmExpand" select="$stepExpand"/>
-                    </xsl:apply-templates>                        
-                </ol>
+                <xsl:choose>
+                    <xsl:when test="$stepCount gt 1">
+                        <ol>
+                            <xsl:call-template name="genCommonAtts"/>
+                            <xsl:apply-templates select="*[@class => contains-token('task/step')]">
+                                <xsl:with-param name="prmExpand" select="$stepExpand"/>
+                            </xsl:apply-templates>                        
+                        </ol>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <ul>
+                            <xsl:call-template name="genCommonAtts">
+                                <xsl:with-param name="prmIgnoreDefaultClassAtt" select="true()"/>
+                                <xsl:with-param name="prmDefaultOutputClass" select="'steps-unordered ul'"/>
+                            </xsl:call-template>
+                            <xsl:apply-templates select="*[@class => contains-token('task/step')]">
+                                <xsl:with-param name="prmExpand" select="$stepExpand"/>
+                            </xsl:apply-templates>                        
+                        </ul>
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:when>
             <xsl:otherwise>
                 <section>
@@ -49,16 +65,31 @@
                         <xsl:choose>
                             <xsl:when test="current-grouping-key()">
                                 <!-- group of step -->
-                                <ol>
-                                    <xsl:call-template name="genCommonAtts">
-                                        <xsl:with-param name="prmElement" select="$steps"/>
-                                    </xsl:call-template>
-                                    <xsl:variable name="precedingStepCount" as="xs:integer" select="current-group()[1] => ahf:getStepNumber()"/>
-                                    <xsl:attribute name="start" select="$precedingStepCount"/>
-                                    <xsl:apply-templates select="current-group()">
-                                        <xsl:with-param name="prmExpand" select="$stepExpand"/>
-                                    </xsl:apply-templates>                        
-                                </ol>
+                                <xsl:choose>
+                                    <xsl:when test="$stepCount gt 1">
+                                        <ol>
+                                            <xsl:call-template name="genCommonAtts">
+                                                <xsl:with-param name="prmElement" select="$steps"/>
+                                            </xsl:call-template>
+                                            <xsl:variable name="precedingStepCount" as="xs:integer" select="current-group()[1] => ahf:getStepNumber()"/>
+                                            <xsl:attribute name="start" select="$precedingStepCount"/>
+                                            <xsl:apply-templates select="current-group()">
+                                                <xsl:with-param name="prmExpand" select="$stepExpand"/>
+                                            </xsl:apply-templates>                        
+                                        </ol>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <ul>
+                                            <xsl:call-template name="genCommonAtts">
+                                                <xsl:with-param name="prmIgnoreDefaultClassAtt" select="true()"/>
+                                                <xsl:with-param name="prmDefaultOutputClass" select="'steps-unordered ul'"/>
+                                            </xsl:call-template>
+                                            <xsl:apply-templates select="current-group()">
+                                                <xsl:with-param name="prmExpand" select="$stepExpand"/>
+                                            </xsl:apply-templates>                        
+                                        </ul>
+                                    </xsl:otherwise>
+                                </xsl:choose>
                             </xsl:when>
                             <xsl:otherwise>
                                 <!-- stepsection -->
@@ -70,6 +101,17 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
+
+    <!-- 
+     function:    get step count from steps
+     param:       prmSteps 
+     return:      xs:integer
+     note:        		
+     -->
+    <xsl:function name="ahf:getStepCount" as="xs:integer">
+        <xsl:param name="prmSteps" as="element()"/>
+        <xsl:sequence select="count($prmSteps/*[@class => contains-token('task/step')])"/>
+    </xsl:function>
 
     <!-- 
      function:    get step number

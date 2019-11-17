@@ -34,6 +34,7 @@
         <xsl:param name="prmDefaultOutputClass" as="xs:string?" required="no" select="()"/>
         <xsl:param name="prmApplyDefaultFrameAtt" as="xs:boolean" required="no" select="true()"/>
         <xsl:param name="prmApplyClassAtt" as="xs:boolean" required="no" select="true()"/>
+        <xsl:param name="prmIgnoreDefaultClassAtt" as="xs:boolean" required="no" select="false()"/>
         <xsl:param name="prmAdditionalClassAtt" as="xs:string*" required="no" select="()"></xsl:param>
         
         <!-- @lang -->
@@ -53,6 +54,7 @@
                 <xsl:with-param name="prmElement" select="$prmElement"/>
                 <xsl:with-param name="prmDefaultOutputClass" select="$prmDefaultOutputClass"/>
                 <xsl:with-param name="prmApplyDefaultFrameAtt" select="$prmApplyDefaultFrameAtt"/>
+                <xsl:with-param name="prmIgnoreDefaultClassAtt" select="$prmIgnoreDefaultClassAtt"/>
                 <xsl:with-param name="prmAdditionalClassAtt" select="$prmAdditionalClassAtt"/>
             </xsl:call-template>
         </xsl:if>
@@ -78,6 +80,7 @@
         <xsl:param name="prmElement" as="element()?" required="no" select="."/>
         <xsl:param name="prmDefaultOutputClass" as="xs:string?" required="no" select="()"/>
         <xsl:param name="prmApplyDefaultFrameAtt" as="xs:boolean" required="no" select="true()"/>
+        <xsl:param name="prmIgnoreDefaultClassAtt" as="xs:boolean" required="no" select="false()"/>
         <xsl:param name="prmAdditionalClassAtt" as="xs:string*" required="no" select="()"/>
         
         <!-- @outputclass handling -->
@@ -99,13 +102,21 @@
         <!-- DITA @class attribute of $prmElement -->
         <xsl:variable name="classAtt" as="xs:string" select="$prmElement/@class => string() => normalize-space()"/>
         <xsl:variable name="tokenizedClassAtt" as="xs:string*">
-            <xsl:for-each select="tokenize($classAtt,'[\s]+')">
-                <xsl:if test="contains(.,'/')">
-                    <xsl:sequence select="substring-after(.,'/')"/>
-                </xsl:if>
-            </xsl:for-each>
+            <xsl:choose>
+                <xsl:when test="$prmIgnoreDefaultClassAtt">
+                    <xsl:sequence select="()"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:for-each select="tokenize($classAtt,'[\s]+')">
+                        <xsl:if test="contains(.,'/')">
+                            <xsl:sequence select="substring-after(.,'/')"/>
+                        </xsl:if>
+                    </xsl:for-each>
+                </xsl:otherwise>
+            </xsl:choose>
         </xsl:variable>
-        <xsl:if test="empty($tokenizedClassAtt)">
+
+        <xsl:if test="empty($tokenizedClassAtt) and not($prmIgnoreDefaultClassAtt)">
             <xsl:message select="'[genClassAtt] element=',$prmElement"/>
         </xsl:if>
         
