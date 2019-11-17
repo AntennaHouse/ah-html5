@@ -165,14 +165,17 @@
      note:		
      -->
     <xsl:function name="ahf:isNotEmptyElement" as="xs:boolean">
-        <xsl:param name="prmElem" as="element()"/>
+        <xsl:param name="prmElem" as="element()?"/>
         <xsl:sequence select="not(ahf:isEmptyElement($prmElem))"/>
     </xsl:function>        
     
     <xsl:function name="ahf:isEmptyElement" as="xs:boolean">
-        <xsl:param name="prmElem" as="element()"/>
+        <xsl:param name="prmElem" as="element()?"/>
         <xsl:choose>
-            <xsl:when test="empty($prmElem/node())">
+            <xsl:when test="$prmElem => empty()">
+                <xsl:sequence select="true()"/>
+            </xsl:when>
+            <xsl:when test="$prmElem/node() => empty()">
                 <xsl:sequence select="true()"/>
             </xsl:when>
             <xsl:otherwise>
