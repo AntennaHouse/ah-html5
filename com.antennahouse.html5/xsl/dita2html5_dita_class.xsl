@@ -52,7 +52,6 @@
         <xsl:variable name="isOneOfInlineElement" as="xs:boolean" select="some $c in $inlineElementClasses satisfies $class => contains-token($c)"/>
         <xsl:variable name="isInlineImage" as="xs:boolean" select="$class => contains-token('topic/image') and (string($prmElem/@placement) eq 'inline')"/>
         <xsl:sequence select="$isOneOfInlineElement or $isInlineImage"/>
-        <xsl:message select="'isInline=',$isOneOfInlineElement or $isInlineImage,' $elem=',$prmElem"></xsl:message>
     </xsl:function>
 
     <!-- Ignorable elements that is pointed from xref 
