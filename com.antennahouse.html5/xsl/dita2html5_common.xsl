@@ -58,6 +58,7 @@
                                 <xsl:apply-templates select="$node">
                                     <xsl:with-param name="prmTopicRef" tunnel="yes" select="()"/>
                                     <xsl:with-param name="prmWithNoId" tunnel="yes" select="true()"/>
+                                    <xsl:with-param name="prmWithNoFn" tunnel="yes" select="true()"/>
                                     <xsl:with-param name="prmGetContent" tunnel="yes" select="true()"/>
                                 </xsl:apply-templates>
                             </xsl:when>
