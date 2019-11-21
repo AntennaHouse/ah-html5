@@ -1443,7 +1443,7 @@
     </xsl:template>
 
     <xsl:template match="text()" mode="GET_RESULT">
-        <xsl:value-of select="normalize-space(.)"/>
+        <xsl:value-of select="."/>
     </xsl:template>
 
     <xsl:template match="processing-instruction()|comment()" mode="GET_RESULT">

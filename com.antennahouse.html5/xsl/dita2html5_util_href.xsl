@@ -172,7 +172,7 @@
                 <xsl:variable name="elemId" as="xs:string" select="if (contains($href,'/')) then substring-after($href,'/') else ''"/>
                 <xsl:choose>
                     <xsl:when test="string($elemId)">
-                        <xsl:sequence select="$ditaFileDoc/descendant::*[contains-token(@class,'topic/topic')][@id => string() eq $topicId]/descendant::*[@id => string() eq $elemId]"/>
+                        <xsl:sequence select="$ditaFileDoc/descendant::*[contains-token(@class,'topic/topic')][@id => string() eq $topicId]/descendant::*[@id => string() eq $elemId][1]"/>
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:sequence select="$ditaFileDoc/descendant::*[contains-token(@class,'topic/topic')][@id => string() eq $topicId]"/>
