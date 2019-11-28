@@ -73,6 +73,16 @@
     </xsl:function>
 
     <!--
+     function:  isTopicRef Utility
+     param:     prmMapElem
+     note:      Return boolean if parameter is topiref element.
+    -->
+    <xsl:function name="ahf:isTopicRef" as="xs:boolean">
+        <xsl:param name="prmMapElem" as ="element()"/>
+        <xsl:sequence select="$prmMapElem/@class => contains-token('map/topicref')"/>
+    </xsl:function>
+ 
+    <!--
      function:  isResouceOnly Utility
      param:     prmTopicRef
      note:      Return boolean if parameter topiref is 'resource-only'.
