@@ -21,7 +21,7 @@
     
     <!-- Debug parameter -->
     <xsl:param name="PRM_DEBUG" required="no" as="xs:string" select="$cNo"/>
-    <xsl:variable name="pDebug" as="xs:boolean" select="$PRM_DEBUG eq $cYes"/>
+    <xsl:variable name="gpDebug" as="xs:boolean" select="$PRM_DEBUG eq $cYes"/>
 
     <!-- Langauge Tag -->
     <xsl:param name="PRM_LANG" required="no" as="xs:string" select="''"/>

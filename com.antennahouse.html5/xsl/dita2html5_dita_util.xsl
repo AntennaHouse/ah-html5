@@ -81,7 +81,17 @@
         <xsl:param name="prmMapElem" as ="element()"/>
         <xsl:sequence select="$prmMapElem/@class => contains-token('map/topicref')"/>
     </xsl:function>
- 
+
+    <!--
+     function:  isNotInRelTable Utility
+     param:     prmMapElem
+     note:      Return boolean if parameter is not in reltable element.
+    -->
+    <xsl:function name="ahf:isNotInRelTable" as="xs:boolean">
+        <xsl:param name="prmMapElem" as ="element()"/>
+        <xsl:sequence select="$prmMapElem/ancestor::*[@class => contains-token('map/reltable')] => empty()"/>
+    </xsl:function>
+    
     <!--
      function:  isResouceOnly Utility
      param:     prmTopicRef
