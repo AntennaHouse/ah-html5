@@ -96,6 +96,9 @@ E-mail : info@antennahouse.com
             <xsl:when test="$root/@xml:lang">
                 <xsl:sequence select="ahf:nomalizeXmlLang($root/@xml:lang)"/>
             </xsl:when>
+            <xsl:when test="$topic/@xml:lang">
+                <xsl:sequence select="ahf:nomalizeXmlLang($topic/@xml:lang)"/>
+            </xsl:when>
             <xsl:otherwise>
                 <xsl:call-template name="warningContinue">
                     <xsl:with-param name="prmMes">
