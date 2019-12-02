@@ -17,7 +17,7 @@
     
     <variables>
         <variable name="XmlDeclaration">&lt;?xml version="1.0" encoding="UTF-8"?&gt;&#x0A;</variable>
-        <variable name="Html5DocType">&lt;!DOCTYPE html"&gt;&#x0A;</variable>
+        <variable name="Html5DocType">&lt;!DOCTYPE HTML"&gt;&#x0A;</variable>
         
 
         <!-- User interface -->

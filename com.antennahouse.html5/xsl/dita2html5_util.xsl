@@ -563,6 +563,20 @@
             <xsl:with-param name="prmPiContent" select="$prmPiContent"/>
         </xsl:call-template>        
     </xsl:function>
-    
+
+    <!--
+    function:   HTML Document Type output template
+    param:      prmDocTypeContent
+    return:     text()+
+    note:       In some situations, PHP instructions must be written before HTML Document Type Declaration.
+                Use this function in this pattern.
+    -->
+    <xsl:template name="outputHtmlDocType" as="text()">
+        <xsl:variable name="html5DocType" as="xs:string">
+            <xsl:text>&lt;!DOCTYPE HTML&gt;&#x0A;</xsl:text>
+        </xsl:variable>
+        <xsl:value-of select="$html5DocType" disable-output-escaping="yes"/>
+    </xsl:template>
+
     <!-- end of stylesheet -->
 </xsl:stylesheet>
