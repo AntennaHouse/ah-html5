@@ -42,11 +42,12 @@
             <xsl:call-template name="genIdAtt"/>
             <xsl:call-template name="genAriaLabeledByAttr"/>
             <xsl:apply-templates select="*[contains-token(@class,'topic/title')]"/>
-            <xsl:if test="(*[contains-token(@class,'topic/body')] | *[contains-token(@class,'topic/related-links')]) => exists()">
+            <xsl:if test="(*[contains-token(@class,'topic/shortdesc')] |*[contains-token(@class,'topic/abstract')] |*[contains-token(@class,'topic/body')] | *[contains-token(@class,'topic/related-links')]) => exists()">
                 <div>
                     <xsl:call-template name="getAttributeSet">
                         <xsl:with-param name="prmAttrSetName" select="'atsTopicContent'"/>
                     </xsl:call-template>
+                    <xsl:apply-templates select="*[contains-token(@class,'topic/shortdesc')]|*[contains-token(@class,'topic/abstract')]"/>
                     <xsl:apply-templates select="*[contains-token(@class,'topic/body')]"/>
                     <xsl:if test="$gpOutputFnAtEndOfTopic">
                         <xsl:call-template name="genFootNoteList">
@@ -158,7 +159,6 @@
         <div>
             <xsl:call-template name="genCommonAtts"/>
             <xsl:call-template name="genIdAtt"/>
-            <xsl:apply-templates select="preceding-sibling::*[contains-token(@class,'topic/shortdesc')]|preceding-sibling::*[contains-token(@class,'topic/abstract')]"/>
             <xsl:apply-templates/>
         </div>
     </xsl:template>
