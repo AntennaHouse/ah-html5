@@ -165,19 +165,22 @@
                             <xsl:sequence select="if (contains($fragment,'/')) then substring-before($fragment,'/') else $fragment"/>
                         </xsl:when>
                         <xsl:otherwise>
-                            <xsl:sequence select="$ditaFileDoc/descendant::*[contains-token(@class,'topic/topic')][1]/@id => string()"/>
+                            <xsl:sequence select="($ditaFileDoc/descendant::*[contains-token(@class,'topic/topic')])[1]/@id => string()"/>
                         </xsl:otherwise>
                     </xsl:choose>
                 </xsl:variable>
-                <xsl:variable name="elemId" as="xs:string" select="if (contains($href,'/')) then substring-after($href,'/') else ''"/>
-                <xsl:choose>
-                    <xsl:when test="string($elemId)">
-                        <xsl:sequence select="$ditaFileDoc/descendant::*[contains-token(@class,'topic/topic')][@id => string() eq $topicId]/descendant::*[@id => string() eq $elemId][1]"/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:sequence select="$ditaFileDoc/descendant::*[contains-token(@class,'topic/topic')][@id => string() eq $topicId]"/>
-                    </xsl:otherwise>
-                </xsl:choose>
+                <xsl:variable name="elemId" as="xs:string" select="if (contains($href,'#') and contains($href,'/')) then ahf:substringAfterLast($href,'/') else ''"/>
+                <xsl:variable name="targetElem" as="element()?">
+                    <xsl:choose>
+                        <xsl:when test="string($elemId)">
+                            <xsl:sequence select="$ditaFileDoc/descendant::*[contains-token(@class,'topic/topic')][@id => string() eq $topicId]/descendant::*[@id => string() eq $elemId][1]"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:sequence select="$ditaFileDoc/descendant::*[contains-token(@class,'topic/topic')][@id => string() eq $topicId]"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:variable>
+                <xsl:sequence select="$targetElem"/>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:call-template name="warningContinue">
