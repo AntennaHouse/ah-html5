@@ -169,7 +169,7 @@
                         </xsl:otherwise>
                     </xsl:choose>
                 </xsl:variable>
-                <xsl:variable name="elemId" as="xs:string" select="if (contains($href,'#') and contains($href,'/')) then ahf:substringAfterLast($href,'/') else ''"/>
+                <xsl:variable name="elemId" as="xs:string" select="if (contains($href,'#') and contains($href,'/')) then $href => substring-after('#') => substring-after('/') else ''"/>
                 <xsl:variable name="targetElem" as="element()?">
                     <xsl:choose>
                         <xsl:when test="string($elemId)">
