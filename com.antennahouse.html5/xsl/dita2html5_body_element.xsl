@@ -782,6 +782,19 @@
     </xsl:template>
 
     <!--
+    function:   keyword template
+    param:      none
+    return:     span
+    note:              
+    -->
+    <xsl:template match="*[contains-token(@class, 'topic/keyword')]">
+        <span>
+            <xsl:call-template name="genCommonAtts"/>
+            <xsl:apply-templates/>
+        </span>
+    </xsl:template>
+
+    <!--
     function:   lines template
     param:      none
     return:     p
