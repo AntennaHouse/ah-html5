@@ -34,7 +34,7 @@
     -->
     <xsl:template name="errorExit">
     	<xsl:param name="prmMes" required="yes" as="xs:string"/>
-    	<xsl:message terminate="yes"><xsl:value-of select="$prmMes"/></xsl:message>
+        <xsl:message terminate="yes"><xsl:value-of select="'[ERROR]' || $prmMes"/></xsl:message>
     </xsl:template>
     
     <!-- 
@@ -45,7 +45,7 @@
     -->
     <xsl:template name="warningContinue">
     	<xsl:param name="prmMes" required="yes" as="xs:string"/>
-    	<xsl:message terminate="no"><xsl:value-of select="$prmMes"/></xsl:message>
+        <xsl:message terminate="no"><xsl:value-of select="'[WARNING]' || $prmMes"/></xsl:message>
     </xsl:template>
     
     <!-- 
@@ -54,14 +54,28 @@
                 prmSrc: Replacement source
                 prmDst: Replacement destination
      return:    xs:string
-     note:      for xsl:assert instruction
+     note:      for xsl:assert, xsl:message instruction
     -->
-    <xsl:function name="ahf:genMsg" as="xs:string">
+    <xsl:function name="ahf:genErrMsg" as="xs:string">
         <xsl:param name="prmMes" as="xs:string"/>
         <xsl:param name="prmSrc" as="xs:string*"/>
         <xsl:param name="prmDst" as="xs:string*"/>
-        <xsl:sequence select="ahf:replace($prmMes,$prmSrc,$prmDst)"/>        
+        <xsl:sequence select="'[ERROR]' || ahf:replace($prmMes,$prmSrc,$prmDst)"/>        
     </xsl:function>
-    
+
+    <xsl:function name="ahf:genWarnMsg" as="xs:string">
+        <xsl:param name="prmMes" as="xs:string"/>
+        <xsl:param name="prmSrc" as="xs:string*"/>
+        <xsl:param name="prmDst" as="xs:string*"/>
+        <xsl:sequence select="'[WARNING]' || ahf:replace($prmMes,$prmSrc,$prmDst)"/>        
+    </xsl:function>
+
+    <xsl:function name="ahf:genInfoMsg" as="xs:string">
+        <xsl:param name="prmMes" as="xs:string"/>
+        <xsl:param name="prmSrc" as="xs:string*"/>
+        <xsl:param name="prmDst" as="xs:string*"/>
+        <xsl:sequence select="'[INFO]' || ahf:replace($prmMes,$prmSrc,$prmDst)"/>        
+    </xsl:function>
+
     <!-- end of stylesheet -->
 </xsl:stylesheet>
