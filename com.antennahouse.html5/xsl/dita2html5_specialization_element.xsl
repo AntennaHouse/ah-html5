@@ -19,6 +19,15 @@
     version="3.0">
 
     <!--
+    function:   data template
+    param:      none
+    return:     none
+    note:              
+    -->
+    <xsl:template match="*[contains-token(@class, 'topic/data')]">
+    </xsl:template>
+
+    <!--
     function:   itemgroup template
     param:      none
     return:     div
