@@ -264,6 +264,22 @@
     </xsl:function>
 
     <!--
+    function:   figgroup template
+    param:      none
+    return:     figure
+    note:              
+    -->
+    <xsl:template match="*[contains-token(@class, 'topic/figgroup')]">
+        <figure>
+            <xsl:call-template name="genCommonAtts">
+            </xsl:call-template>
+            <xsl:call-template name="genIdAtt"/>
+            <xsl:call-template name="genFigTitle"/>
+            <xsl:apply-templates select="node() except (*[contains-token(@class, 'topic/title')])"/>
+        </figure>
+    </xsl:template>
+
+    <!--
     function:   fig title template
     param:      none
     return:     figcaption
@@ -274,7 +290,7 @@
         <xsl:choose>
             <xsl:when test="ahf:hasFigTitle($prmFig)">
                 <xsl:variable name="topic" as="element()" select="$prmFig/ancestor::*[contains-token(@class,'topic/topic')][last()]"/>
-                <xsl:variable name="figCount" as="xs:integer" select="count($prmFig[ahf:hasFigTitle(.)] | $topic/descendant::*[contains-token(@class, 'topic/fig')][ahf:hasFigTitle(.)][. &lt;&lt; $prmFig])"/>
+                <xsl:variable name="figCount" as="xs:integer" select="count($prmFig[ahf:hasFigTitle(.)] | $topic/descendant::*[ahf:seqContainsToken(@class, ('topic/fig','topic/figgroup'))][ahf:hasFigTitle(.)][. &lt;&lt; $prmFig])"/>
                 <figcaption>
                     <xsl:if test="$prmFig/*[contains-token(@class,'topic/title')]">
                         <xsl:call-template name="genCommonAtts">
