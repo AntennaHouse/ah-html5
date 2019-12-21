@@ -26,6 +26,11 @@
      Error processing
     ===============================================
     -->
+
+    <xsl:variable name="errorPrefix"   as="xs:string" select="'[ERROR]'"   visibility="private" static="yes"/>
+    <xsl:variable name="warningPrefix" as="xs:string" select="'[WARNING]'" visibility="private" static="yes"/>
+    <xsl:variable name="infoPrefix"    as="xs:string" select="'[INFO]'"    visibility="private" static="yes"/>
+
     <!-- 
      function:  Error Exit routine
      param:     prmMes: message body
@@ -34,7 +39,7 @@
     -->
     <xsl:template name="errorExit">
     	<xsl:param name="prmMes" required="yes" as="xs:string"/>
-        <xsl:message terminate="yes"><xsl:value-of select="'[ERROR]' || $prmMes"/></xsl:message>
+        <xsl:message terminate="yes" select="$errorPrefix || $prmMes"/>
     </xsl:template>
     
     <!-- 
@@ -45,7 +50,7 @@
     -->
     <xsl:template name="warningContinue">
     	<xsl:param name="prmMes" required="yes" as="xs:string"/>
-        <xsl:message terminate="no"><xsl:value-of select="'[WARNING]' || $prmMes"/></xsl:message>
+        <xsl:message terminate="no" select="$warningPrefix || $prmMes"/>
     </xsl:template>
     
     <!-- 
@@ -60,22 +65,37 @@
         <xsl:param name="prmMes" as="xs:string"/>
         <xsl:param name="prmSrc" as="xs:string*"/>
         <xsl:param name="prmDst" as="xs:string*"/>
-        <xsl:sequence select="'[ERROR]' || ahf:replace($prmMes,$prmSrc,$prmDst)"/>        
+        <xsl:sequence select="$errorPrefix || ahf:replace($prmMes,$prmSrc,$prmDst)"/>        
     </xsl:function>
 
+    <xsl:function name="ahf:genErrMsg" as="xs:string">
+        <xsl:param name="prmMes" as="xs:string"/>
+        <xsl:sequence select="$errorPrefix || $prmMes"/>        
+    </xsl:function>
+    
     <xsl:function name="ahf:genWarnMsg" as="xs:string">
         <xsl:param name="prmMes" as="xs:string"/>
         <xsl:param name="prmSrc" as="xs:string*"/>
         <xsl:param name="prmDst" as="xs:string*"/>
-        <xsl:sequence select="'[WARNING]' || ahf:replace($prmMes,$prmSrc,$prmDst)"/>        
+        <xsl:sequence select="$warningPrefix || ahf:replace($prmMes,$prmSrc,$prmDst)"/>        
     </xsl:function>
 
+    <xsl:function name="ahf:genWarnMsg" as="xs:string">
+        <xsl:param name="prmMes" as="xs:string"/>
+        <xsl:sequence select="$warningPrefix || $prmMes"/>        
+    </xsl:function>
+    
     <xsl:function name="ahf:genInfoMsg" as="xs:string">
         <xsl:param name="prmMes" as="xs:string"/>
         <xsl:param name="prmSrc" as="xs:string*"/>
         <xsl:param name="prmDst" as="xs:string*"/>
-        <xsl:sequence select="'[INFO]' || ahf:replace($prmMes,$prmSrc,$prmDst)"/>        
+        <xsl:sequence select="$infoPrefix || ahf:replace($prmMes,$prmSrc,$prmDst)"/>        
     </xsl:function>
 
+    <xsl:function name="ahf:genInfoMsg" as="xs:string">
+        <xsl:param name="prmMes" as="xs:string"/>
+        <xsl:sequence select="$infoPrefix || $prmMes"/>        
+    </xsl:function>
+    
     <!-- end of stylesheet -->
 </xsl:stylesheet>
