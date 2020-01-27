@@ -26,12 +26,29 @@ table caption {
 // @align
 // Remove "char" because it is not supported in all browsers
 
-$align: left right center justify;
+// Meaningless for LTR/RTL control: fixed.
+// 2019-01-27 t.makita
+//$align: left right center justify;
+//@each $value in $align {
+//  .align-#{$value} {
+//    text-align: $value;
+//  }
+//}
 
-@each $value in $align {
-  .align-#{$value} {
-    text-align: $value;
-  }
+.align-left{
+  text-align: $inlineStart;
+}
+
+.align-right{
+  text-align: $inlineEnd;
+}
+
+.align-center{
+  text-align: center;
+}
+
+.align-justify{
+  text-align: justify;
 }
 
 // @valign
@@ -69,11 +86,11 @@ $valign: top bottom middle;
 // Table cell padding
 
 .entry {
-  padding-left: 4px;
-  padding-right: 4px;
+  #{$paddingInlineStart}: 4px;
+  #{$paddingInlineEnd}: 4px;
 }
 
 .stentry {
-  padding-left: 4px;
-  padding-right: 4px;
+  #{$paddingInlineStart}: 4px;
+  #{$paddingInlineEnd}: 4px;
 }

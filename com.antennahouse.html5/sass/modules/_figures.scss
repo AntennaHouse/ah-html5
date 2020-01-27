@@ -30,11 +30,11 @@
   }
 
   &-frame-sides {
-    border-left: 2px solid silver;
-    border-right: 2px solid silver;
+    #{$borderInlineStart}: 2px solid silver;
+    #{$borderInlineEnd}: 2px solid silver;
     margin-top: 1em;
-    padding-left: 3px;
-    padding-right: 3px;
+    #{$paddingInlineStart}: 3px;
+    #{$paddingInlineEnd}: 3px;
   }
 
   &-frame-top {
@@ -59,9 +59,10 @@
 }
 
 /* Align block level images based on @align on topic/image */
-
+// Add LTR/RTL control.
+// 2020-01-27 t.makita
 .image-left {
-  text-align: left;
+  text-align: $inlineStart;
 }
 
 .image-center {
@@ -69,5 +70,5 @@
 }
 
 .image-right {
-  text-align: right;
+  text-align: $inlineEnd;
 }

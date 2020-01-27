@@ -25,7 +25,8 @@ gulp.task('sass', function(done){
     // Set scss directory
     gulp.src('./sass/*.scss')
     // Do compile
-    .pipe(sass({style : 'expanded'})) //Set output format　#nested, compact, compressed, expanded.
+    .pipe(sass().on('error', sass.logError))
+    .pipe(sass({outputstyle : 'expanded'})) //Set output format　#nested, compact, compressed, expanded.
     // Set output directory (passed from --destdir command-line parameter)
     .pipe(gulp.dest(arg.destdir));
     done();

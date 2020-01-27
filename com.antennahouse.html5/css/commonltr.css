@@ -9,6 +9,9 @@
  * Modified based on DITA-OT Apache 2.0 license
  *
  */
+body {
+  direction: ltr; }
+
 .hazardstatement td,
 .hazardstatement th {
   padding: 0.5rem; }
@@ -180,36 +183,43 @@
 .fig {
   /* Default of italics to set apart figure captions */
   /* Use @frame to create frames on figures */ }
-  .fig figcaption {
-    font-style: italic; }
-  .fig .desc {
-    font-style: normal; }
-  .fig-frame-all {
-    border-color: Silver;
-    border-style: solid;
-    border-width: 2px;
-    margin-top: 1em;
-    padding: 3px; }
-  .fig-frame-sides {
-    border-left: 2px solid silver;
-    border-right: 2px solid silver;
-    margin-top: 1em;
-    padding-left: 3px;
-    padding-right: 3px; }
-  .fig-frame-top {
-    border-top: 2px solid silver;
-    margin-top: 1em;
-    padding-top: 3px; }
-  .fig-frame-bottom {
-    border-bottom: 2px solid silver;
-    margin-top: 1em;
-    padding-bottom: 3px; }
-  .fig-frame-topbot {
-    border-top: 2px solid silver;
-    border-bottom: 2px solid silver;
-    margin-top: 1em;
-    padding-top: 3px;
-    padding-bottom: 3px; }
+
+.fig figcaption {
+  font-style: italic; }
+
+.fig .desc {
+  font-style: normal; }
+
+.fig-frame-all {
+  border-color: Silver;
+  border-style: solid;
+  border-width: 2px;
+  margin-top: 1em;
+  padding: 3px; }
+
+.fig-frame-sides {
+  border-left: 2px solid silver;
+  border-right: 2px solid silver;
+  margin-top: 1em;
+  padding-left: 3px;
+  padding-right: 3px; }
+
+.fig-frame-top {
+  border-top: 2px solid silver;
+  margin-top: 1em;
+  padding-top: 3px; }
+
+.fig-frame-bottom {
+  border-bottom: 2px solid silver;
+  margin-top: 1em;
+  padding-bottom: 3px; }
+
+.fig-frame-topbot {
+  border-top: 2px solid silver;
+  border-bottom: 2px solid silver;
+  margin-top: 1em;
+  padding-top: 3px;
+  padding-bottom: 3px; }
 
 /* Align block level images based on @align on topic/image */
 .image-left {
@@ -342,9 +352,10 @@ dd.compact-yes {
 .note {
   margin-bottom: 1em;
   margin-top: 1em; }
-  .note .notetitle, .note .notelisttitle,
-  .note .note__title {
-    font-weight: bold; }
+
+.note .notetitle, .note .notelisttitle,
+.note .note__title {
+  font-weight: bold; }
 
 /* Various basic phrase styles */
 .bold {

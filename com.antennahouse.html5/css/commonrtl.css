@@ -9,17 +9,9 @@
  * Modified based on DITA-OT Apache 2.0 license
  *
  */
-/*!
- * This file is part of the DITA Open Toolkit project. 
- *
- * Copyright 2004, 2005 IBM Corporation
- *
- * See the accompanying LICENSE file for applicable license.
- *
- * Copyright 2019 Antenna House, Inc.
- * Modified based on DITA-OT Apache 2.0 license
- *
- */
+body {
+  direction: rtl; }
+
 .hazardstatement td,
 .hazardstatement th {
   padding: 0.5rem; }
@@ -118,21 +110,21 @@
 
 .frame-top {
   border-top: solid 1px;
-  border-right: 0;
+  border-left: 0;
   border-bottom: 0;
-  border-left: 0; }
+  border-right: 0; }
 
 .frame-bottom {
   border-top: 0;
-  border-right: 0;
+  border-left: 0;
   border-bottom: solid 1px;
-  border-left: 0; }
+  border-right: 0; }
 
 .frame-topbot {
   border-top: solid 1px;
-  border-right: 0;
+  border-left: 0;
   border-bottom: solid 1px;
-  border-left: 0; }
+  border-right: 0; }
 
 .frame-all {
   border: solid 1px;
@@ -140,11 +132,11 @@
 
 .frame-sides {
   border-top: 0;
-  border-left: solid 1px;
   border-right: solid 1px;
+  border-left: solid 1px;
   border-bottom: 0;
-  padding-left: 4px;
-  padding-right: 4px; }
+  padding-right: 4px;
+  padding-left: 4px; }
 
 .frame-none {
   border: 0; }
@@ -191,46 +183,53 @@
 .fig {
   /* Default of italics to set apart figure captions */
   /* Use @frame to create frames on figures */ }
-  .fig figcaption {
-    font-style: italic; }
-  .fig .desc {
-    font-style: normal; }
-  .fig-frame-all {
-    border-color: Silver;
-    border-style: solid;
-    border-width: 2px;
-    margin-top: 1em;
-    padding: 3px; }
-  .fig-frame-sides {
-    border-left: 2px solid silver;
-    border-right: 2px solid silver;
-    margin-top: 1em;
-    padding-left: 3px;
-    padding-right: 3px; }
-  .fig-frame-top {
-    border-top: 2px solid silver;
-    margin-top: 1em;
-    padding-top: 3px; }
-  .fig-frame-bottom {
-    border-bottom: 2px solid silver;
-    margin-top: 1em;
-    padding-bottom: 3px; }
-  .fig-frame-topbot {
-    border-top: 2px solid silver;
-    border-bottom: 2px solid silver;
-    margin-top: 1em;
-    padding-top: 3px;
-    padding-bottom: 3px; }
+
+.fig figcaption {
+  font-style: italic; }
+
+.fig .desc {
+  font-style: normal; }
+
+.fig-frame-all {
+  border-color: Silver;
+  border-style: solid;
+  border-width: 2px;
+  margin-top: 1em;
+  padding: 3px; }
+
+.fig-frame-sides {
+  border-right: 2px solid silver;
+  border-left: 2px solid silver;
+  margin-top: 1em;
+  padding-right: 3px;
+  padding-left: 3px; }
+
+.fig-frame-top {
+  border-top: 2px solid silver;
+  margin-top: 1em;
+  padding-top: 3px; }
+
+.fig-frame-bottom {
+  border-bottom: 2px solid silver;
+  margin-top: 1em;
+  padding-bottom: 3px; }
+
+.fig-frame-topbot {
+  border-top: 2px solid silver;
+  border-bottom: 2px solid silver;
+  margin-top: 1em;
+  padding-top: 3px;
+  padding-bottom: 3px; }
 
 /* Align block level images based on @align on topic/image */
 .image-left {
-  text-align: left; }
+  text-align: right; }
 
 .image-center {
   text-align: center; }
 
 .image-right {
-  text-align: right; }
+  text-align: left; }
 
 /* Set heading sizes, getting smaller for deeper nesting */
 .topic-title-1 {
@@ -353,9 +352,10 @@ dd.compact-yes {
 .note {
   margin-bottom: 1em;
   margin-top: 1em; }
-  .note .notetitle, .note .notelisttitle,
-  .note .note__title {
-    font-weight: bold; }
+
+.note .notetitle, .note .notelisttitle,
+.note .note__title {
+  font-weight: bold; }
 
 /* Various basic phrase styles */
 .bold {
@@ -394,10 +394,10 @@ table caption {
   width: 100%; }
 
 .align-left {
-  text-align: left; }
+  text-align: right; }
 
 .align-right {
-  text-align: right; }
+  text-align: left; }
 
 .align-center {
   text-align: center; }
@@ -427,12 +427,12 @@ table caption {
   border-bottom: 1px solid; }
 
 .entry {
-  padding-left: 4px;
-  padding-right: 4px; }
+  padding-right: 4px;
+  padding-left: 4px; }
 
 .stentry {
-  padding-left: 4px;
-  padding-right: 4px; }
+  padding-right: 4px;
+  padding-left: 4px; }
 
 /* Add space for top level topics */
 .nested0 {
@@ -445,37 +445,3 @@ table caption {
 body {
   line-height: 1.42857;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
-
-.linklist {
-  margin-bottom: 1em; }
-
-ul.linklist {
-  margin-top: 0;
-  list-style-type: none;
-  padding-right: 0; }
-
-.linklistwithchild {
-  margin-right: 1.5em;
-  margin-top: 1em; }
-
-.sublinklist {
-  margin-right: 1.5em;
-  margin-top: 1em; }
-
-dt.prereq {
-  margin-right: 20px; }
-
-.cellrowborder {
-  border-left: solid 1px;
-  border-right: none; }
-
-.row-nocellborder {
-  border-left: hidden;
-  border-right: none; }
-
-.cell-norowborder {
-  border-left: solid 1px;
-  border-right: none; }
-
-.nocellnorowborder {
-  border-left: hidden; }

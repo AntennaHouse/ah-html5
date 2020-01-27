@@ -1,0 +1,53 @@
+//**************************************************************
+// DITA to HTML Sass Implementation
+// SCSS Variables For RTL 
+//**************************************************************
+// File Name : _variable-rtl.scss
+//**************************************************************
+// Copyright © 2019-2020 Antenna House, Inc. All rights reserved.
+// Antenna House is a trademark of Antenna House, Inc.
+// URL : http://www.antennahouse.com/
+//**************************************************************
+
+// Variables
+
+$inlineStart:right;
+$inlineEnd:left;
+$marginInlineStart:margin-right;
+$marginInlineEnd:margin-left;
+$paddingInlineStart:padding-right;
+$paddingInlineEnd:padding-left;
+$borderInlineStart:border-right;
+$borderInlineEnd:border-left;
+
+// Mixin
+
+@mixin padding ($top, $right, $bottom, $left){
+    padding: $top $left $bottom $right;
+}
+
+@mixin border-width ($top, $right, $bottom, $left){
+    border-width: $top $left $bottom $right;
+}
+
+@mixin border-color ($top, $right, $bottom, $left){
+    border-color: $top $left $bottom $right;
+}
+
+// Function
+
+@function translate-bidi ($tx, $ty){
+    @return translate( -1 * $tx , $ty );
+}
+
+@function rotate-bidi ($a){
+    @return rotate( -1 * $a );
+}
+
+@function lr-arrow-bidi (){
+    @return '←';
+}
+
+// Main BIDI Contrrol
+
+body { direction: rtl; }

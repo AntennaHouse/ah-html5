@@ -1,0 +1,53 @@
+//**************************************************************
+// DITA to HTML Sass Implementation
+// SCSS Variables For LTR 
+//**************************************************************
+// File Name : _variable-ltr.scss
+//**************************************************************
+// Copyright © 2019-2020 Antenna House, Inc. All rights reserved.
+// Antenna House is a trademark of Antenna House, Inc.
+// URL : http://www.antennahouse.com/
+//**************************************************************
+
+// Variables
+
+$inlineStart:left;
+$inlineEnd:right;
+$marginInlineStart:margin-left;
+$marginInlineEnd:margin-right;
+$paddingInlineStart:padding-left;
+$paddingInlineEnd:padding-right;
+$borderInlineStart:border-left;
+$borderInlineEnd:border-right;
+
+// Mixin
+
+@mixin padding ($top, $right, $bottom, $left){
+    padding: $top $right $bottom $left;
+}
+
+@mixin border-width ($top, $right, $bottom, $left){
+    border-width: $top $right $bottom $left;
+}
+
+@mixin border-color ($top, $right, $bottom, $left){
+    border-color: $top $right $bottom $left;
+}
+
+// Function
+
+@function translate-bidi ($tx, $ty){
+    @return translate( $tx, $ty );
+}
+
+@function rotate-bidi ($a){
+    @return rotate( $a );
+}
+
+@function lr-arrow-bidi (){
+    @return '→';
+}
+
+// Main BIDI Contrrol
+
+body { direction: ltr; }
