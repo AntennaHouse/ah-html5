@@ -34,6 +34,10 @@ $borderInlineEnd:border-right;
     border-color: $top $right $bottom $left;
 }
 
+@mixin margin ($top, $right, $bottom, $left){
+    margin: $top $right $bottom $left;
+}
+
 // Function
 
 @function translate-bidi ($tx, $ty){
