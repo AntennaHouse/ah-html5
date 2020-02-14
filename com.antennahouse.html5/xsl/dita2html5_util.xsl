@@ -147,7 +147,7 @@
       ============================================
     -->
     <!-- 
-     function:  Generate effective URL for both Windows and Linux
+     function:  Generate effective file URL for both Windows and Linux
      param:     prmUrl
      return:	Corrected URL
      note:      
@@ -157,7 +157,7 @@
                 This function corrects the above URL.
                 2020-02-14 t.makita
      -->
-    <xsl:function name="ahf:getEffectiveUrl" as="xs:string">
+    <xsl:function name="ahf:getEffectiveFileUrl" as="xs:string">
         <xsl:param name="prmUrl" as="xs:string"/>
         <xsl:choose>
             <xsl:when test="$prmUrl => starts-with('file://')">
