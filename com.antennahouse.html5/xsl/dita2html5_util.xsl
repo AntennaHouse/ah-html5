@@ -143,10 +143,41 @@
     
     <!-- 
       ============================================
+         URL function
+      ============================================
+    -->
+    <!-- 
+     function:  Generate effective URL for both Windows and Linux
+     param:     prmUrl
+     return:	Corrected URL
+     note:      
+                "file:/" is valid in Windows and Linux.
+                "file://" is generated via XSLT function in Linux.
+                But doc(file://～) returns empty() even if the local file exists.
+                This function corrects the above URL.
+                2020-02-14 t.makita
+     -->
+    <xsl:function name="ahf:getEffectiveUrl" as="xs:string">
+        <xsl:param name="prmUrl" as="xs:string"/>
+        <xsl:choose>
+            <xsl:when test="$prmUrl => starts-with('file://')">
+                <xsl:sequence select="'file:/' || $prmUrl => substring(8)"/>
+            </xsl:when>
+            <xsl:when test="$prmUrl => starts-with('file:/')">
+                <xsl:sequence select="$prmUrl"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:sequence select="'file:/' || ahf:bsToSlash($prmUrl)"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:function>
+
+    <!-- 
+      ============================================
          Node functions
       ============================================
     -->
-
+    
     <!-- 
      function:  Select top level nodes from document-node
      param:     prmDocumentNode
