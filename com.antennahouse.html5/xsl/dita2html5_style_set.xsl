@@ -440,21 +440,7 @@
 	  -->
 	<xsl:template match="style:variable" mode="MAKE_DEFINITION">
 		<xsl:variable name="varElem" as="element()" select="."/>
-		<xsl:variable name="varValue" as="xs:string">
-			<xsl:choose>
-				<xsl:when test="$varElem/descendant::element()">
-					<xsl:variable name="varStr" as="xs:string">
-						<xsl:value-of>
-							<xsl:apply-templates select="$varElem/node()" mode="MODE_FLATTEN"/>
-						</xsl:value-of>
-					</xsl:variable>
-					<xsl:sequence select="$varStr"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:sequence select="$varElem => string()"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
+		<xsl:variable name="varValue" as="xs:string" select="$varElem => string()"/>
 		<!-- Logical check -->
 		<xsl:if test="@*[not(name() = $varAttrs)]">
 			<xsl:call-template name="errorExit">
@@ -495,57 +481,6 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:element>
-	</xsl:template>
-	
-	<!-- 
-	     mode="MODE_FLATTERN" template
-	     Retain XML structure as escaped text format
-	     The double quote escaping is used on the assumption that the result string is used by PHP.
-	     2019-11-08 t.makita
-	  -->
-	<xsl:template match="*" mode="MODE_FLATTEN">
-		<xsl:text>&lt;</xsl:text>
-		<xsl:value-of select="name()"/>
-		<xsl:apply-templates select="@*" mode="MODE_FLATTEN"/>
-		<xsl:choose>
-			<xsl:when test="node() => empty()">
-				<xsl:text>/&gt;</xsl:text>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:text>&gt;</xsl:text>
-				<xsl:apply-templates select="node()" mode="#current"/>
-				<xsl:text>&lt;/</xsl:text>
-				<xsl:value-of select="name()"/>
-				<xsl:text>&gt;</xsl:text>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-	
-	<xsl:template match="@*" mode="MODE_FLATTEN">
-		<xsl:variable name="apos" as="xs:string">"</xsl:variable>
-		<xsl:text> </xsl:text>
-		<xsl:value-of select=". => name()"/>
-		<xsl:text>=\"</xsl:text>
-		<xsl:value-of select=". => string() => ahf:replace(($apos),('\' || $apos))"/>
-		<xsl:text>\"</xsl:text>
-	</xsl:template>
-	
-	<xsl:template match="text()" mode="MODE_FLATTEN">
-		<xsl:value-of select="."/>
-	</xsl:template>
-	
-	<xsl:template match="processing-instruction()" mode="MODE_FLATTEN">
-		<xsl:text>&lt;?</xsl:text>
-		<xsl:value-of select="name()"/>
-		<xsl:text> </xsl:text>
-		<xsl:value-of select="."/>
-		<xsl:text>?&gt;</xsl:text>
-	</xsl:template>
-	
-	<xsl:template match="processing-instruction()" mode="MODE_FLATTEN">
-		<xsl:text>&lt;!--</xsl:text>
-		<xsl:value-of select="."/>
-		<xsl:text> --&gt;</xsl:text>
 	</xsl:template>
 	
 	<!-- 
@@ -595,7 +530,7 @@
 						<xsl:when test="starts-with($token,$varRefChar)">
 							<xsl:variable name="varName" select="substring-after($token,$varRefChar)"/>
 							<xsl:variable name="varValueElements" as="element()*">
-								<xsl:variable name="targetElements" as="element()*" select="$glOrgVarDefs/style:variable[string(@name) eq $varName]"/>
+								<xsl:variable name="targetElements" as="element()*" select="$glOrgVarDefs/*[string(@name) eq $varName]"/>
 								<!-- Variable is not found -->
 								<xsl:if test="empty($targetElements)">
 									<xsl:call-template name="errorExit">
