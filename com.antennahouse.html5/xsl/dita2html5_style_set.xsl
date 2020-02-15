@@ -523,7 +523,7 @@
 				</xsl:matching-substring>
 				<!-- Token that is delimitered by white-space or symbol-->
 				<xsl:non-matching-substring>
-					<xsl:message select="'[expandExp] no-match='''||.||''''"/>
+					<!--xsl:message select="'[expandExp] no-match='''||.||''''"/-->
 					<xsl:variable name="token" as="xs:string" select="."/>
 					<xsl:choose>
 						<!-- Recursively resolve the variable reference -->
