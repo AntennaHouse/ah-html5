@@ -96,6 +96,29 @@
         <xsl:param name="prmMes" as="xs:string"/>
         <xsl:sequence select="$infoPrefix || $prmMes"/>        
     </xsl:function>
+
+    <xsl:function name="ahf:genInfoMsgFromSeq" as="xs:string">
+        <xsl:param name="prmMes" as="xs:string*"/>
+        <xsl:sequence select="$infoPrefix || $prmMes => string-join('')"/>        
+    </xsl:function>
+    
+    <!-- 
+     function:  Output stylesheet & XSLT processor information
+     param:     Stylesheet name and version
+     return:    none
+     note:
+     -->
+    <xsl:template name="outputStylesheetInfo">
+        <xsl:param name="prmStylesheetName" as="xs:string"/>
+        <xsl:param name="prmStylesheetVersion" as="xs:string"/>
+        <xsl:message select="(' ',$prmStylesheetName, ' Version: ', $prmStylesheetVersion) => ahf:genInfoMsgFromSeq()"/>
+        <!-- XSLT processor information -->
+        <xsl:variable name="vendor" as="xs:string" select="system-property('xsl:vendor')"/>
+        <xsl:variable name="vendorUrl" as="xs:string" select="system-property('xsl:vendor-url')"/>
+        <xsl:variable name="productName" as="xs:string" select="system-property('xsl:product-name')"/>
+        <xsl:variable name="productVersion" as="xs:string" select="system-property('xsl:product-version')"/>
+        <xsl:message select="(' ','Running on: ', $productName, ' (', $vendorUrl, ') Version: ', $productVersion) => ahf:genInfoMsgFromSeq()"/>
+    </xsl:template>
     
     <!-- end of stylesheet -->
 </xsl:stylesheet>
