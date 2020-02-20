@@ -111,7 +111,7 @@
     <xsl:template name="outputStylesheetInfo">
         <xsl:param name="prmStylesheetName" as="xs:string"/>
         <xsl:param name="prmStylesheetVersion" as="xs:string"/>
-        <xsl:message select="(' ',$prmStylesheetName, ' Version: ', $prmStylesheetVersion) => ahf:genInfoMsgFromSeq()"/>
+        <xsl:message select="(' Stylesheet: ',$prmStylesheetName, ' Version: ', $prmStylesheetVersion) => ahf:genInfoMsgFromSeq()"/>
         <!-- XSLT processor information -->
         <xsl:variable name="vendor" as="xs:string" select="system-property('xsl:vendor')"/>
         <xsl:variable name="vendorUrl" as="xs:string" select="system-property('xsl:vendor-url')"/>
