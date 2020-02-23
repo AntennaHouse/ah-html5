@@ -43,10 +43,15 @@
             <xsl:attribute name="lang" select="ahf:nomalizeXmlLang($xmlLang)"/>
         </xsl:if>
 
-        <!-- @dir -->
-        <xsl:if test="$prmElement/@dir">
+        <!-- @dir
+            HTML @dir attribute definition is incomple.
+            It supports ltr/rtl but does not support lro/rlo.
+            @dir attribute is handled by dita2html5_dir_attr.xsl.
+            2020-02-22 t.makita
+          -->
+        <!--xsl:if test="$prmElement/@dir">
             <xsl:copy select="$prmElement/@dir"/>
-        </xsl:if>
+        </xsl:if-->
 
         <!-- @class -->
         <xsl:if test="$prmApplyClassAtt">
