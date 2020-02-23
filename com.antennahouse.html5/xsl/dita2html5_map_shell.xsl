@@ -34,5 +34,6 @@
     <xsl:include href="dita2html5_html_common.xsl"/>
     <xsl:include href="dita2html5_style_set.xsl"/>
     <xsl:include href="dita2html5_style_get.xsl"/>
+    <xsl:include href="dita2html5_dir_attr.xsl"/>
     
 </xsl:stylesheet>

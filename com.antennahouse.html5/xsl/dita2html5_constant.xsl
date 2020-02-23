@@ -42,5 +42,12 @@
     
     <!-- HTML Heading Max -->
     <xsl:variable name="cHeadingLevelMax" as="xs:integer" select="9"/>
+
+    <!-- BIDI Control Characters -->
+    <xsl:variable name="cLeftToRightEmbedding"     as="xs:string" select="'&#x202A;'"/>
+    <xsl:variable name="cRightToLeftEmbedding"     as="xs:string" select="'&#x202B;'"/>
+    <xsl:variable name="cPopDirectionalFormatting" as="xs:string" select="'&#x202C;'"/>
+    <xsl:variable name="cLeftToRightOverride"      as="xs:string" select="'&#x202D;'"/>
+    <xsl:variable name="cRightToLeftOverride"      as="xs:string" select="'&#x202E;'"/>
     
 </xsl:stylesheet>

@@ -142,5 +142,52 @@ E-mail : info@antennahouse.com
         </xsl:choose>
     </xsl:template>
     
-
+    <!--
+    function:   ltr template
+    param:      none
+    return:     text node
+    note:       
+    -->
+    <xsl:template match="*[@dir => string() eq 'ltr']"  mode="TEXT_ONLY" priority="50">
+        <xsl:value-of select="$cLeftToRightEmbedding"/>
+        <xsl:next-match/>
+        <xsl:value-of select="$cPopDirectionalFormatting"/>
+    </xsl:template>
+    
+    <!--
+    function:   rtl template
+    param:      none
+    return:     text node
+    note:       
+    -->
+    <xsl:template match="*[@dir => string() eq 'rtl']" mode="TEXT_ONLY" priority="50">
+        <xsl:value-of select="$cRightToLeftEmbedding"/>
+        <xsl:next-match/>
+        <xsl:value-of select="$cPopDirectionalFormatting"/>
+    </xsl:template>
+    
+    <!--
+    function:   lro template
+    param:      none
+    return:     text node
+    note:       
+    -->
+    <xsl:template match="*[@dir => string() eq 'lro']" mode="TEXT_ONLY" priority="50">
+        <xsl:value-of select="$cLeftToRightOverride"/>
+        <xsl:next-match/>
+        <xsl:value-of select="$cPopDirectionalFormatting"/>
+    </xsl:template>
+    
+    <!--
+    function:   rlo template
+    param:      none
+    return:     text node
+    note:       
+    -->
+    <xsl:template match="*[@dir => string() eq 'rlo']" mode="TEXT_ONLY" priority="50">
+        <xsl:value-of select="$cRightToLeftOverride"/>
+        <xsl:next-match/>
+        <xsl:value-of select="$cPopDirectionalFormatting"/>
+    </xsl:template>
+    
 </xsl:stylesheet>
