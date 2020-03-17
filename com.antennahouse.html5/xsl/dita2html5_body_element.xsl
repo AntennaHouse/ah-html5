@@ -114,7 +114,7 @@
                     <xsl:variable name="precedingSiblingNodes" as="node()*" select="$p/preceding-sibling::node()"/>
                     <xsl:choose>
                         <xsl:when test="$precedingSiblingNodes => empty()">
-                            <xsl:sequence select="true()"/>
+                            <xsl:sequence select="false()"/>
                         </xsl:when>
                         <xsl:otherwise>
                             <xsl:sequence select="$precedingSiblingNodes => ahf:isRedundantNodes() => not()"/>
@@ -125,7 +125,7 @@
                     <xsl:variable name="follwoingSiblingNodes" as="node()*" select="$p/following-sibling::node()"/>
                     <xsl:choose>
                         <xsl:when test="$follwoingSiblingNodes => empty()">
-                            <xsl:sequence select="true()"/>
+                            <xsl:sequence select="false()"/>
                         </xsl:when>
                         <xsl:otherwise>
                             <xsl:sequence select="$follwoingSiblingNodes => ahf:isRedundantNodes() => not()"/>
