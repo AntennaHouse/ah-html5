@@ -121,8 +121,10 @@
             </xsl:choose>
         </xsl:variable>
 
+        <!-- Debug -->
         <xsl:if test="empty($tokenizedClassAtt) and not($prmIgnoreDefaultClassAtt)">
-            <xsl:message select="'[genClassAtt] element=',$prmElement"/>
+            <xsl:message select="'[genClassAtt] element name =',$prmElement => name()"/>
+            <xsl:message select="'[genClassAtt] element is empty:',$prmElement => empty()"/>
         </xsl:if>
         
         <!-- HTML @class attribute -->
