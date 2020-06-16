@@ -30,16 +30,17 @@
     <xsl:template match="*[contains-token(@class, 'ut-d/imagemap')]" priority="5">
         <xsl:variable name="imageMap" as="element()" select="."/>
         <xsl:apply-templates select="$imageMap/*[@class => contains-token('topic/image')]">
-            <xsl:with-param name="prmMapName" as="xs:string" tunnel="yes" select="ahf:getHistoryStr($imageMap)"/>
+            <xsl:with-param name="prmMapName" as="xs:string" tunnel="yes" select="(:ahf:getHistoryStr($imageMap):)generate-id($imageMap)"/>
         </xsl:apply-templates>
         <map>
             <xsl:call-template name="genCommonAtts"/>
             <!--xsl:call-template name="genIdAtt"/-->
-            <xsl:attribute name="name" select="ahf:getHistoryStr($imageMap)"/>
+            <xsl:attribute name="id" select="(:ahf:getHistoryStr($imageMap):)generate-id($imageMap)"/>
+            <xsl:attribute name="name" select="(:ahf:getHistoryStr($imageMap):)generate-id($imageMap)"/>
             <xsl:apply-templates select="node() except $imageMap/*[@class => contains-token('topic/image')]"/>
         </map>
     </xsl:template>
-
+    
     <!--
     function:   area for imagemap template
     param:      none
@@ -61,7 +62,5 @@
             <xsl:sequence select="$destAttr"/>
         </area>
     </xsl:template>
-
-
-
+    
 </xsl:stylesheet>
