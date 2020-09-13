@@ -211,14 +211,15 @@
     <!--
      function:  Get Element ID From Href Attribute
      param:     prmElem
-     return;    xs:ID
+     return:    xs:ID
      note:      
     -->
     <xsl:function name="ahf:getElementIdFromHref" as="xs:string">
         <xsl:param name="prmHref" as="xs:string"/>
+        <xsl:variable name="topicAndElementId" as="xs:string" select="$prmHref => substring-after('#')"/>
         <xsl:choose>
-            <xsl:when test="contains($prmHref, '/')">
-                <xsl:sequence select="substring-after($prmHref, '/')"/>
+            <xsl:when test="$topicAndElementId => contains('/')">
+                <xsl:sequence select="$topicAndElementId => substring-after('/')"/>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:sequence select="''"/>
