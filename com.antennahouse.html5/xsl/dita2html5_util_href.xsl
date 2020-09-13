@@ -37,7 +37,7 @@
                     </xsl:when>
                     <!-- DITA target (in same file) - process the internal href -->
                     <xsl:when test="ahf:isInnerLink($prmLinkElem)">
-                        <xsl:attribute name="href" select="concat('#',ahf:getIdFromTopicAndElementId(xs:ID(ahf:getTopicIdFromHref($href)),ahf:getElementIdFromHref($href)))"/>
+                        <xsl:attribute name="href" select="'#' || ahf:getIdFromTopicAndElementId(xs:ID(ahf:getTopicIdFromHref($href)),ahf:getElementIdFromHref($href))"/>
                     </xsl:when>
                     <!-- It's the link to a DITA file - process the file name (adding the html extension) and process the rest of the href -->
                     <xsl:when test="ahf:isDitaTarget($prmLinkElem)">
@@ -46,14 +46,14 @@
                             <xsl:variable name="fragment" as="xs:string">
                                 <xsl:choose>
                                     <xsl:when test="contains($href, '#')">
-                                        <xsl:sequence select="'#' || substring-after($href,'#')"/>
+                                        <xsl:sequence select="'#' || ahf:getIdFromTopicAndElementId(xs:ID(ahf:getTopicIdFromHref($href)),ahf:getElementIdFromHref($href))"/>
                                     </xsl:when>
                                     <xsl:otherwise>
                                         <xsl:sequence select="''"/>
                                     </xsl:otherwise>
                                 </xsl:choose>
                             </xsl:variable>
-                            <xsl:value-of select="concat($targetFilePath,$fragment)"/>
+                            <xsl:value-of select="$targetFilePath || $fragment"/>
                         </xsl:attribute>
                     </xsl:when>
                     <xsl:otherwise>
