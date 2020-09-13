@@ -173,7 +173,7 @@
     <!--
      function:  Get Topic ID From Topic Element
      param:     prmElem
-     return;    xs:ID
+     return:    xs:ID
      note:      
     -->
     <xsl:function name="ahf:getClosestTopicId" as="xs:ID">
@@ -184,10 +184,10 @@
     <!--
      function:  Get Topic ID From Href Attribute
      param:     prmElem
-     return;    xs:ID
+     return:    xs:ID
      note:      
     -->
-    <xsl:function name="ahf:getTopicIdFromHref" as="xs:string?">
+    <xsl:function name="ahf:getTopicIdFromHref" as="xs:ID?">
         <xsl:param name="prmHref" as="xs:string"/>
         <xsl:assert test="contains($prmHref,'#')" select="'[ahf:getTopicIdFromHref] Invalid $prmHref=',$prmHref"/>
         <xsl:variable name="fragment"  as="xs:string" select="substring-after($prmHref, '#')"/>
@@ -195,10 +195,10 @@
             <xsl:when test="string-length($fragment) gt 0">
                 <xsl:choose>
                     <xsl:when test="contains($fragment, '/')">
-                        <xsl:sequence select="substring-before($fragment, '/')"/>
+                        <xsl:sequence select="substring-before($fragment, '/') => xs:ID()"/>
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:sequence select="$fragment"/>
+                        <xsl:sequence select="$fragment => xs:ID()"/>
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:when>
@@ -211,7 +211,7 @@
     <!--
      function:  Get Element ID From Href Attribute
      param:     prmElem
-     return:    xs:ID
+     return:    xs:string
      note:      
     -->
     <xsl:function name="ahf:getElementIdFromHref" as="xs:string">
@@ -230,7 +230,7 @@
     <!--
      function:  Get ID from topic ID and element ID
      param:     prmTopicId, prmElementId
-     return;    xs:ID
+     return:    xs:ID
      note:      
     -->
     <xsl:function name="ahf:getIdFromTopicAndElementId" as="xs:ID">
