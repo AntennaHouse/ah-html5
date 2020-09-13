@@ -402,7 +402,8 @@
     function:   image processing template
     param:      none
     return:     image
-    note:              
+    note:       Add imagemap interface.
+                2020-06-16 t.makita
     -->
     <xsl:template name="processImage" use-when="system-property('PROP_SIMPLE_NAV_PROC') ne 'yes'">
         <xsl:param name="prmImage" as="element()" required="no" select="."/>
@@ -464,6 +465,7 @@
 
     <xsl:template name="genImageAtts">
         <xsl:param name="prmImage" as="element()" required="no" select="."/>
+        <xsl:param name="prmMapName" as="xs:string?" tunnel="yes" required="no" select="()"/>
         
         <!-- href -->
         <xsl:if test="$prmImage/@href => exists()">
@@ -532,6 +534,11 @@
                 <xsl:attribute name="alt" select="''"/>
             </xsl:otherwise>
         </xsl:choose>
+        
+        <!-- Map Name -->
+        <xsl:if test="$prmMapName => exists()">
+            <xsl:attribute name="usemap" select="'#' || $prmMapName"/>
+        </xsl:if>
     </xsl:template>
 
     <!-- 
