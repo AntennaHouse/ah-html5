@@ -231,14 +231,22 @@
      function:  Get ID from topic ID and element ID
      param:     prmTopicId, prmElementId
      return:    xs:ID
-     note:      
+     note:      Avoid possible DITA-OT bug:
+                Using @keyref for topic's @id generates href="[target file]#[topic id]/[topic id]"  
     -->
     <xsl:function name="ahf:getIdFromTopicAndElementId" as="xs:ID">
         <xsl:param name="prmTopicId" as="xs:ID"/>
         <xsl:param name="prmElementId" as="xs:string"/>
         <xsl:choose>
             <xsl:when test="string($prmElementId)">
-                <xsl:sequence select="concat($prmTopicId,$cIdSep,$prmElementId) => xs:ID()"/>
+                <xsl:choose>
+                    <xsl:when test="$prmTopicId => string() ne $prmElementId">
+                        <xsl:sequence select="concat($prmTopicId,$cIdSep,$prmElementId) => xs:ID()"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:sequence select="$prmTopicId"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:sequence select="$prmTopicId"/>
