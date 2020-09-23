@@ -405,7 +405,7 @@
     note:       Add imagemap interface.
                 2020-06-16 t.makita
     -->
-    <xsl:template name="processImage" use-when="system-property('PROP_SIMPLE_NAV_PROC') ne 'yes'">
+    <xsl:template name="processImage">
         <xsl:param name="prmImage" as="element()" required="no" select="."/>
         <xsl:choose>
             <xsl:when test="$prmImage/*[contains-token(@class,'topic/longdescref')]/@href => exists()">
@@ -449,18 +449,6 @@
                 </img>
             </xsl:otherwise>
         </xsl:choose>
-    </xsl:template>
-
-    <xsl:template name="processImage" use-when="system-property('PROP_SIMPLE_NAV_PROC') eq 'yes'">
-        <xsl:param name="prmImage" as="element()" required="no" select="."/>
-        <img>
-            <xsl:call-template name="genCommonAtts">
-                <xsl:with-param name="prmElement" select="$prmImage"/>
-            </xsl:call-template>
-            <xsl:call-template name="genImageAtts">
-                <xsl:with-param name="prmImage" select="$prmImage"/>
-            </xsl:call-template>    
-        </img>
     </xsl:template>
 
     <xsl:template name="genImageAtts">
@@ -701,7 +689,7 @@
                                         <xsl:sequence select="$prmFn/ancestor::*[ahf:seqContainsToken(@class,('topic/ul','topic/ol','topic/dl','topic/sl'))][last()]"/>
                                     </xsl:when>
                                     <xsl:otherwise>
-                                        <xsl:call-template name="warningContinue" use-when="system-property('PROP_SIMPLE_NAV_PROC') ne 'yes'">
+                                        <xsl:call-template name="warningContinue">
                                             <xsl:with-param name="prmMes" select="ahf:replace($stMes040,('%file','%xpath'),($gpProcessingFileName,ahf:getHistoryXpathStr($prmFn)))"/>
                                         </xsl:call-template>
                                         <xsl:sequence select="()"/>
@@ -890,7 +878,7 @@
     return:     a/dfn or dfn
     note:       
     -->
-    <xsl:template match="*[contains-token(@class, 'topic/term')]" use-when="system-property('PROP_SIMPLE_NAV_PROC') ne 'yes'">
+    <xsl:template match="*[contains-token(@class, 'topic/term')]">
         <xsl:variable name="term" as="element()" select="."/>
         <xsl:choose>
             <xsl:when test="$term/@href => exists()">
@@ -928,15 +916,6 @@
                 </dfn>
             </xsl:otherwise>
         </xsl:choose>
-    </xsl:template>
-
-    <xsl:template match="*[contains-token(@class, 'topic/term')]" use-when="system-property('PROP_SIMPLE_NAV_PROC') eq 'yes'">
-        <xsl:variable name="term" as="element()" select="."/>
-        <dfn>
-            <xsl:call-template name="genCommonAtts"/>
-            <xsl:call-template name="genIdAtt"/>
-            <xsl:apply-templates/>
-        </dfn>
     </xsl:template>
 
     <!--
