@@ -350,24 +350,25 @@
     <xml-objects>
         
         <xml-object name="xmlMetaCharset"><meta charset="UTF-8"/></xml-object>
+        
         <!-- Excluded because not recommended now and after: https://developer.mozilla.org/ja/docs/Web/HTML/Element/meta -->
         <!--meta http-equiv="Content-Type" content="text/html; charset=utf-8"/-->
         
         <xml-object name="xmlMetaDefaultCopyright"><meta name="copyright" content="(C) Copyright %year"/>
-            <meta name="DC.rights.owner" content="(C) Copyright %year"/></xml-object>
+<meta name="DC.rights.owner" content="(C) Copyright %year"/></xml-object>
         
-        <xml-object name="xmlMetaDefaultMeta"><meta name="security" content="public"/>
-            <meta name="robots" content="index,follow"/></xml-object>
+        <xml-object name="xmlMetaDefaultMeta"><meta name="security" content="public"/><meta name="robots" content="index,follow"/></xml-object>
         
         <xml-object name="xmlMetaCopyright"/>
         
         <xml-object name="xmlMetaCssLink"><link rel="stylesheet" type="text/css" href="%css-path"/></xml-object>
         
         <xml-object name="xmlMetaShortdesc"><meta name="shortdesc" content="%shortdesc"/>
-            <meta name="description" content="%shortdesc"/></xml-object>
+<meta name="description" content="%shortdesc"/>
+</xml-object>
         
         <xml-object name="xmlMetaAbstract"><meta name="abstract" content="%abstract"/>
-            <meta name="description" content="%shortdesc"/></xml-object>
+<meta name="description" content="%shortdesc"/></xml-object>
         
         <xml-object name="xmlMetaType"><meta name="DC.type" content="%type"/></xml-object>
         
