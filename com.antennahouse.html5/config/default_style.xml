@@ -76,6 +76,7 @@
         <variable name="Note_Warning">Warning</variable>
         <variable name="Note_Trouble">Trouble</variable>
         <variable name="Note_Other">Other</variable>
+        <variable name="Note_Information">Information</variable>
         <!-- if user use type="other", the coresponding variable with @othertype must be defined -->
 
         <!-- Publish date format string -->
