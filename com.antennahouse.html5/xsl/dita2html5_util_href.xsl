@@ -16,8 +16,7 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:ahf="http://www.antennahouse.com/names/XSLT/Functions/Document"
-    xmlns:saxon="http://saxon.sf.net/"
-    exclude-result-prefixes="xs ahf saxon" >
+    exclude-result-prefixes="xs ahf" >
 
     <!--
     function:   Link href attribute processing 
@@ -157,7 +156,7 @@
             <!-- It's the link to a DITA file - get element from external file -->
             <xsl:when test="ahf:isDitaTarget($prmLinkElem)">
                 <xsl:variable name="ditaFilePath" as="xs:string" select="if (contains($href,'#')) then substring-before($href,'#') else $href"/>
-                <xsl:variable name="ditaFileDoc" as="document-node()" select="saxon:discard-document(document($ditaFilePath,root($prmLinkElem)))"/>
+                <xsl:variable name="ditaFileDoc" as="document-node()" select="document($ditaFilePath,root($prmLinkElem))"/>
                 <xsl:variable name="topicId" as="xs:string">
                     <xsl:choose>
                         <xsl:when test="contains($href,'#')">

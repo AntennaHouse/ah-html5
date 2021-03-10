@@ -84,7 +84,7 @@
         <makeurl file="${dita.input.valfile}" property="dita.input.valfile.url" validate="no"/>    
     </target>
     
-    <target name="ahhtml5.map.impl" description="Build HTML5 Map file">
+    <!--target name="ahhtml5.map.impl" description="Build HTML5 Map file">
         <echo message="[ahhtml5.map.impl] Start converting map file!"/>
         <echo message="[ahhtml5.map.impl] Map=${dita.temp.dir}${file.separator}${dita.input.filename}"/>
         <property name="ahhtml5.map.output.dir" value="${dita.output.dir}"/>
@@ -93,6 +93,43 @@
             out="${ahhtml5.map.output.dir}${file.separator}${args.ahhtml5.map}${out.ext}"
             style="${args.ahhtml5.map.xsl}"
             force="true">
+            <factory name="net.sf.saxon.TransformerFactoryImpl">
+                <!-*- Output timing information -*->
+                <attribute name="http://saxon.sf.net/feature/timing" value="true"/>
+                <!-*- Suppress namespace warning -*->
+                <attribute name="http://saxon.sf.net/feature/suppressXsltNamespaceCheck" value="true"/>
+                <!-*-Assert-*->
+                <attribute name="http://saxon.sf.net/feature/enableAssertions" value="true"/>
+                <!-*- Trace -*->
+                <!-*-attribute name="http://saxon.sf.net/feature/traceListenerClass" value="net.sf.saxon.trace.XSLTTraceListener"/-*->
+            </factory>
+            <param name="PRM_PROCESSING_FILE_NAME" expression="${dita.input.filename}" if:set="dita.input.filename"/>
+            <param name="PRM_PROCESSING_FILE_DIR"  expression="${dita.temp.dir}" if:set="dita.temp.dir"/>
+            <param name="PRM_FILTER_FILE" expression="${dita.input.valfile.url}" if:set="dita.input.valfile"/>
+            <param name="PRM_OUTPUT_EXTENSION" expression="${out.ext}" if:set="out.ext"/>
+            <param name="PRM_OUTPUT_AS_XML" expression="${output.as.xml}" if:set="output.as.xml"/>
+            <param name="PRM_MAP_URL" expression="${ahhtml5.map.url}" if:set="ahhtml5.map.url"/>
+            <param name="PRM_USER_CSS_FILE" expression="${user.css.file}" if:set="user.css.file"/>
+            <param name="PRM_OUTPUT_CSS_PATH_RELATIVE" expression="${output.css.path.relative}" if:set="output.css.path.relative"/>
+            <param name="PRM_PLUGIN_CSS_FILES" expression="${plugin.css.files}" if:set="plugin.css.files"/>
+            <dita:extension id="dita.conductor.ahhtml5.param" behavior="org.dita.dost.platform.InsertAction"/>
+            <xmlcatalog>
+                <catalogpath path="${dita.plugin.org.dita.base.dir}/catalog-dita.xml"/>
+            </xmlcatalog>
+        </xslt>
+    </target-->
+
+    <target name="ahhtml5.map.impl" description="Build HTML5 Map file">
+        <echo message="[ahhtml5.map.impl] Start converting map file!"/>
+        <!--echo message="[ahhtml5.map.impl] Map=${dita.temp.dir}${file.separator}${dita.input.filename}"/-->
+        <property name="ahhtml5.map.output.dir" value="${dita.output.dir}"/>
+        <xslt basedir="${dita.temp.dir}"
+            in="${dita.temp.dir}${file.separator}${dita.input.filename}"
+            out="${ahhtml5.map.output.dir}${file.separator}${args.ahhtml5.map}${out.ext}"
+            style="${args.ahhtml5.map.xsl}"
+            extension="${out.ext}"
+            force="true">
+            <!--ditafileset input="true" format="ditamap"/-->
             <factory name="net.sf.saxon.TransformerFactoryImpl">
                 <!-- Output timing information -->
                 <attribute name="http://saxon.sf.net/feature/timing" value="true"/>
@@ -139,7 +176,7 @@
         </pipeline>
     </target>
     
-    <target name="ahhtml5.topics.common">
+    <!--target name="ahhtml5.topics.common">
         <property name="fullditatopic" value="${dita.temp.dir}/fullditatopic.list"/>
         <xslt basedir="${dita.temp.dir}" 
             destdir="${dita.output.dir}"                               
@@ -152,12 +189,12 @@
             force="true">
             <factory name="net.sf.saxon.TransformerFactoryImpl">
                 <attribute name="http://saxon.sf.net/feature/timing" value="true"/>
-                <!-- Suppress namespace warning -->
+                <!-*- Suppress namespace warning -*->
                 <attribute name="http://saxon.sf.net/feature/suppressXsltNamespaceCheck" value="true"/>
-                <!--Assert-->
+                <!-*-Assert-*->
                 <attribute name="http://saxon.sf.net/feature/enableAssertions" value="true"/>
-                <!-- Trace -->
-                <!--attribute name="http://saxon.sf.net/feature/traceListenerClass" value="net.sf.saxon.trace.XSLTTraceListener"/-->
+                <!-*- Trace -*->
+                <!-*-attribute name="http://saxon.sf.net/feature/traceListenerClass" value="net.sf.saxon.trace.XSLTTraceListener"/-*->
             </factory>
             <param name="PRM_MAP_URL" expression="${ahhtml5.map.url}" if:set="ahhtml5.map.url"/>
             <param name="PRM_FILTER_FILE" expression="${dita.input.valfile.url}" if:set="dita.input.valfile"/>
@@ -173,8 +210,42 @@
                 <catalogpath path="${dita.plugin.org.dita.base.dir}/catalog-dita.xml"/>
             </xmlcatalog>
         </xslt>
-    </target>
+    </target-->
 
+    <target name="ahhtml5.topics.common">
+        <!--property name="fullditatopic" value="${dita.temp.dir}/fullditatopic.list"/-->
+        <pipeline>
+        <xslt basedir="${dita.temp.dir}" 
+            destdir="${dita.output.dir}"                               
+            reloadstylesheet="${ahhtml5.reloadstylesheet}"
+            extension="${out.ext}"
+            style="${args.topic.xsl}"
+            filenameparameter="PRM_PROCESSING_FILE_NAME"
+            filedirparameter="PRM_PROCESSING_FILE_DIR">
+            <ditafileset format="dita" processingRole="normal"/>
+            <!--factory name="net.sf.saxon.TransformerFactoryImpl">
+                <attribute name="http://saxon.sf.net/feature/timing" value="true"/>
+                <attribute name="http://saxon.sf.net/feature/suppressXsltNamespaceCheck" value="true"/>
+                <attribute name="http://saxon.sf.net/feature/enableAssertions" value="true"/>
+                <attribute name="http://saxon.sf.net/feature/traceListenerClass" value="net.sf.saxon.trace.XSLTTraceListener"/>
+            </factory-->
+            <param name="PRM_MAP_URL" expression="${ahhtml5.map.url}" if:set="ahhtml5.map.url"/>
+            <param name="PRM_FILTER_FILE" expression="${dita.input.valfile.url}" if:set="dita.input.valfile"/>
+            <param name="PRM_OUTPUT_EXTENSION" expression="${out.ext}" if:set="out.ext"/>
+            <param name="PRM_USER_CSSPATH" expression="${user.csspath}" if:set="user.csspath"/>
+            <param name="OUTPUTDIR" expression="${dita.output.dir}"/>
+            <param name="PRM_OUTPUT_AS_XML" expression="${output.as.xml}" if:set="output.as.xml"/>
+            <param name="PRM_USER_CSS_FILE" expression="${user.css.file}" if:set="user.css.file"/>
+            <param name="PRM_OUTPUT_CSS_PATH_RELATIVE" expression="${output.css.path.relative}" if:set="output.css.path.relative"/>
+            <param name="PRM_PLUGIN_CSS_FILES" expression="${plugin.css.files}" if:set="plugin.css.files"/>
+            <dita:extension id="dita.conductor.ahhtml5.param" behavior="org.dita.dost.platform.InsertAction"/>
+            <xmlcatalog>
+                <catalogpath path="${dita.plugin.org.dita.base.dir}/catalog-dita.xml"/>
+            </xmlcatalog>
+        </xslt>
+        </pipeline>
+    </target>
+    
     <!-- CSS -->
     <!-- args.css
           Specifies the name of a custom .css file.
