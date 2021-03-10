@@ -1453,7 +1453,8 @@
     <!-- 
          getXmlObjectReplacing template
          function: Get XML object specified by $prmObjName as node()* 
-                   replacing text node from $prmSrcString by $prmDstString.
+                   replacing text node, attribute value, processing-instruction content, comment content
+                   from $prmSrcString by $prmDstString.
          parameter: prmObjName: Object name
                     prmXmlLang: Target xml:lang
                     prmDocType: Document type
@@ -1462,7 +1463,8 @@
                     prmBrandType: Brand type
                     prmSrcStr: Source string
                     prmDstStr: Destination string
-         note: 
+         note: Extend string replacement to processing-instruction, comment node.
+               2021-02-17 t.makita
       -->
     <xsl:function name="ahf:getXmlObjectReplacing" as="node()*">
         <xsl:param name="prmObjName" as="xs:string"/>
@@ -1548,6 +1550,36 @@
         </xsl:choose>
     </xsl:template>
 
+    <xsl:template match="processing-instruction()" mode="GET_XML_OBJECTS_REPLACING">
+        <xsl:param name="prmSrcStr" as="xs:string+" required="yes"/>
+        <xsl:param name="prmDstStr" as="xs:string+" required="yes"/>
+        <xsl:variable name="piContent" as="xs:string" select="string(.)"/>
+        <xsl:choose>
+            <xsl:when test="ahf:containsAnyOf($piContent,$prmSrcStr)">
+                <xsl:processing-instruction name="{name(.)}">
+                    <xsl:value-of select="ahf:replace($piContent,$prmSrcStr,$prmDstStr)"/>
+                </xsl:processing-instruction>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:processing-instruction name="{name(.)}" select="$piContent"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    
+    <xsl:template match="comment()" mode="GET_XML_OBJECTS_REPLACING">
+        <xsl:param name="prmSrcStr" as="xs:string+" required="yes"/>
+        <xsl:param name="prmDstStr" as="xs:string+" required="yes"/>
+        <xsl:variable name="commentContent" as="xs:string" select="string(.)"/>
+        <xsl:choose>
+            <xsl:when test="ahf:containsAnyOf($commentContent,$prmSrcStr)">
+                <xsl:comment select="ahf:replace($commentContent,$prmSrcStr,$prmDstStr)"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:comment select="$commentContent"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    
     <!-- 
          getXmlObjectReplacingNode template
          function: Get formatting object specified by $prmObjName as node()* 

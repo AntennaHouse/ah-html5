@@ -44,7 +44,7 @@
         </xsl:if>
 
         <!-- @dir
-            HTML @dir attribute definition is incomple.
+            HTML @dir attribute definition is incomplete.
             It supports ltr/rtl but does not support lro/rlo.
             @dir attribute is handled by dita2html5_dir_attr.xsl.
             2020-02-22 t.makita

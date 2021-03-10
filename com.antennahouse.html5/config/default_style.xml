@@ -76,6 +76,7 @@
         <variable name="Note_Warning">Warning</variable>
         <variable name="Note_Trouble">Trouble</variable>
         <variable name="Note_Other">Other</variable>
+        <variable name="Note_Information">Information</variable>
         <!-- if user use type="other", the coresponding variable with @othertype must be defined -->
 
         <!-- Publish date format string -->
@@ -349,170 +350,93 @@
 
     <xml-objects>
         
-        <xml-object name="xmlMetaCharset">
-            <meta charset="UTF-8"/>
-        </xml-object>
+        <xml-object name="xmlMetaCharset"><meta charset="UTF-8"/></xml-object>
+        
         <!-- Excluded because not recommended now and after: https://developer.mozilla.org/ja/docs/Web/HTML/Element/meta -->
         <!--meta http-equiv="Content-Type" content="text/html; charset=utf-8"/-->
         
-        <xml-object name="xmlMetaDefaultCopyright">
-            <meta name="copyright" content="(C) Copyright %year"/>
-            <meta name="DC.rights.owner" content="(C) Copyright %year"/>
-        </xml-object>
+        <xml-object name="xmlMetaDefaultCopyright"><meta name="copyright" content="(C) Copyright %year"/>
+<meta name="DC.rights.owner" content="(C) Copyright %year"/></xml-object>
         
-        <xml-object name="xmlMetaDefaultMeta">
-            <meta name="security" content="public"/>
-            <meta name="robots" content="index,follow"/>
-        </xml-object>
+        <xml-object name="xmlMetaDefaultMeta"><meta name="security" content="public"/><meta name="robots" content="index,follow"/></xml-object>
         
         <xml-object name="xmlMetaCopyright"/>
         
-        <xml-object name="xmlMetaCssLink">
-            <link rel="stylesheet" type="text/css" href="%css-path"/>
-        </xml-object>
+        <xml-object name="xmlMetaCssLink"><link rel="stylesheet" type="text/css" href="%css-path"/></xml-object>
         
-        <xml-object name="xmlMetaShortdesc">
-            <meta name="shortdesc" content="%shortdesc"/>
-            <meta name="description" content="%shortdesc"/>
-        </xml-object>
+        <xml-object name="xmlMetaShortdesc"><meta name="shortdesc" content="%shortdesc"/>
+<meta name="description" content="%shortdesc"/>
+</xml-object>
         
-        <xml-object name="xmlMetaAbstract">
-            <meta name="abstract" content="%abstract"/>
-            <meta name="description" content="%shortdesc"/>
-        </xml-object>
+        <xml-object name="xmlMetaAbstract"><meta name="abstract" content="%abstract"/>
+<meta name="description" content="%shortdesc"/></xml-object>
         
-        <xml-object name="xmlMetaType">
-            <meta name="DC.type" content="%type"/>
-        </xml-object>
+        <xml-object name="xmlMetaType"><meta name="DC.type" content="%type"/></xml-object>
         
-        <xml-object name="xmlMetaDescription">
-            <meta name="description" content="%desc"/>
-        </xml-object>
+        <xml-object name="xmlMetaDescription"><meta name="description" content="%desc"/></xml-object>
 
-        <xml-object name="xmlMetaContributor">
-            <meta name="DC.contributor" content="%contributor"/>        
-        </xml-object>
+        <xml-object name="xmlMetaContributor"><meta name="DC.contributor" content="%contributor"/></xml-object>
         
-        <xml-object name="xmlMetaCreator">
-            <meta name="DC.creator" content="%creator"/>        
-        </xml-object>
+        <xml-object name="xmlMetaCreator"><meta name="DC.creator" content="%creator"/></xml-object>
         
-        <xml-object name="xmlMetaSource">
-            <meta name="DC.source" content="%src"/>
-        </xml-object>
+        <xml-object name="xmlMetaSource"><meta name="DC.source" content="%src"/></xml-object>
 
-        <xml-object name="xmlMetaPublisher">
-            <meta name="DC.publisher" content="%publisher"/>        
-        </xml-object>
+        <xml-object name="xmlMetaPublisher"><meta name="DC.publisher" content="%publisher"/></xml-object>
 
-        <xml-object name="xmlMetaRights">
-            <meta name="rights" content="©%copy-year %copy-holder"/>        
-        </xml-object>
+        <xml-object name="xmlMetaRights"><meta name="rights" content="©%copy-year %copy-holder"/></xml-object>
 
-        <xml-object name="xmlMetaRightUsage">
-            <meta name="DC.rights.usage" content="%usage"/>        
-        </xml-object>
+        <xml-object name="xmlMetaRightUsage"><meta name="DC.rights.usage" content="%usage"/></xml-object>
         
-        <xml-object name="xmlMetaDateCreated">
-            <meta name="DC.date.created" content="%date"/>
-        </xml-object>
+        <xml-object name="xmlMetaDateCreated"><meta name="DC.date.created" content="%date"/></xml-object>
 
-        <xml-object name="xmlMetaDateModified">
-            <meta name="DC.date.modified" content="%date"/>
-        </xml-object>
+        <xml-object name="xmlMetaDateModified"><meta name="DC.date.modified" content="%date"/></xml-object>
 
-        <xml-object name="xmlMetaDateIssued">
-            <meta name="DC.date.issued" content="%date"/>
-            <meta name="DC.date.available" content="%date"/>
-        </xml-object>
+        <xml-object name="xmlMetaDateIssued"><meta name="DC.date.issued" content="%date"/>
+<meta name="DC.date.available" content="%date"/></xml-object>
 
-        <xml-object name="xmlMetaDateExpiry">
-            <meta name="DC.date.expiry" content="%date"/>
-        </xml-object>
+        <xml-object name="xmlMetaDateExpiry"><meta name="DC.date.expiry" content="%date"/></xml-object>
         
-        <xml-object name="xmlMetaCoverage">
-            <meta name="DC.coverage" content="%coverage"/>
-        </xml-object>
+        <xml-object name="xmlMetaCoverage"><meta name="DC.coverage" content="%coverage"/></xml-object>
         
-        <xml-object name="xmlMetaSubject">
-            <meta name="DC.subject" content="%subject"/>
-        </xml-object>
+        <xml-object name="xmlMetaSubject"><meta name="DC.subject" content="%subject"/></xml-object>
 
-        <xml-object name="xmlMetaKeywords">
-            <meta name="keywords" content="%keywords"/>
-        </xml-object>
+        <xml-object name="xmlMetaKeywords"><meta name="keywords" content="%keywords"/></xml-object>
         
-        <xml-object name="xmlMetaAudienceExperiencelevel">
-            <meta name="DC.audience.experiencelevel" content="%experiencelevel"/>
-        </xml-object>
+        <xml-object name="xmlMetaAudienceExperiencelevel"><meta name="DC.audience.experiencelevel" content="%experiencelevel"/></xml-object>
         
-        <xml-object name="xmlMetaAudienceImportance">
-            <meta name="DC.audience.importance" content="%importance"/>
-        </xml-object>
+        <xml-object name="xmlMetaAudienceImportance"><meta name="DC.audience.importance" content="%importance"/></xml-object>
         
-        <xml-object name="xmlMetaAudienceName">
-            <meta name="DC.audience.name" content="%name"/>
-        </xml-object>
+        <xml-object name="xmlMetaAudienceName"><meta name="DC.audience.name" content="%name"/></xml-object>
         
-        <xml-object name="xmlMetaAudienceJob">
-            <meta name="DC.audience.job" content="%job"/>
-        </xml-object>
+        <xml-object name="xmlMetaAudienceJob"><meta name="DC.audience.job" content="%job"/></xml-object>
 
-        <xml-object name="xmlMetaAudienceType">
-            <meta name="DC.audience.type" content="%type"/>
-        </xml-object>
+        <xml-object name="xmlMetaAudienceType"><meta name="DC.audience.type" content="%type"/></xml-object>
         
-        <xml-object name="xmlMetaProdName">
-            <meta name="prodname" content="%prod-name"/>
-        </xml-object>
+        <xml-object name="xmlMetaProdName"><meta name="prodname" content="%prod-name"/></xml-object>
 
-        <xml-object name="xmlMetaVersion">
-            <meta name="version" content="%version"/>
-        </xml-object>
+        <xml-object name="xmlMetaVersion"><meta name="version" content="%version"/></xml-object>
 
-        <xml-object name="xmlMetaRelease">
-            <meta name="release" content="%release"/>
-        </xml-object>
+        <xml-object name="xmlMetaRelease"><meta name="release" content="%release"/></xml-object>
 
-        <xml-object name="xmlMetaModification">
-            <meta name="modification" content="%modification"/>
-        </xml-object>
+        <xml-object name="xmlMetaModification"><meta name="modification" content="%modification"/></xml-object>
 
-        <xml-object name="xmlMetaBrand">
-            <meta name="brand" content="%brand"/>
-        </xml-object>
+        <xml-object name="xmlMetaBrand"><meta name="brand" content="%brand"/></xml-object>
 
-        <xml-object name="xmlMetaComponent">
-            <meta name="component" content="%component"/>
-        </xml-object>
+        <xml-object name="xmlMetaComponent"><meta name="component" content="%component"/></xml-object>
 
-        <xml-object name="xmlMetaFeatnum">
-            <meta name="featnum" content="%featnum"/>
-        </xml-object>
+        <xml-object name="xmlMetaFeatnum"><meta name="featnum" content="%featnum"/></xml-object>
 
-        <xml-object name="xmlMetaPlatform">
-            <meta name="platform" content="%platform"/>
-        </xml-object>
+        <xml-object name="xmlMetaPlatform"><meta name="platform" content="%platform"/></xml-object>
         
-        <xml-object name="xmlMetaPrognum">
-            <meta name="prognum" content="%prognum"/>
-        </xml-object>
+        <xml-object name="xmlMetaPrognum"><meta name="prognum" content="%prognum"/></xml-object>
 
-        <xml-object name="xmlMetaSeries">
-            <meta name="series" content="%series"/>
-        </xml-object>
+        <xml-object name="xmlMetaSeries"><meta name="series" content="%series"/></xml-object>
 
-        <xml-object name="xmlMetaOther">
-            <meta name="%name" content="%content"/>        
-        </xml-object>
+        <xml-object name="xmlMetaOther"><meta name="%name" content="%content"/></xml-object>
 
-        <xml-object name="xmlMetaIdentifier">
-            <meta name="DC.identifier" content="%id"/>
-        </xml-object>
+        <xml-object name="xmlMetaIdentifier"><meta name="DC.identifier" content="%id"/></xml-object>
         
-        <xml-object name="xmlMetaLanguage">
-            <meta name="DC.language" content="%lang"/>
-        </xml-object>
+        <xml-object name="xmlMetaLanguage"><meta name="DC.language" content="%lang"/></xml-object>
 
     </xml-objects>
 
