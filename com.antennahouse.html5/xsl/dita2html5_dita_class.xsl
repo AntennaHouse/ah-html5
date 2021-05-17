@@ -17,6 +17,8 @@
     >
     
     <!-- DITA elements that generates inline level formattting objects
+         Remove xref for make processing simple.
+         2021-04-16 t.makita
      -->
     <xsl:variable name="inlineElementClasses" as="xs:string+" select="
         (
@@ -28,7 +30,6 @@
         'topic/term',
         'topic/text',
         'topic/tm',
-        'topic/xref',
         'topic/state',
         'hi-d/b',
         'hi-d/i',
