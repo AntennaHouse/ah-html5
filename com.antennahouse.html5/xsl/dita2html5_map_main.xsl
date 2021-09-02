@@ -231,7 +231,7 @@
             <xsl:otherwise>
                 <xsl:sequence select="$prmTopicRef/@href => normalize-space()"/>
                 <xsl:call-template name="warningContinue">
-                    <xsl:with-param name="prmMes" select="ahf:replace($stMes200,('%xpath','%href'),(ahf:getHistoryXpathStr($prmTopicRef),$prmTopicRef/@href/string()))"/>
+                    <xsl:with-param name="prmMes" select="ahf:replace($stMes200,('%xpath','%href'),(ahf:getHistoryXpathStr($prmTopicRef),$prmTopicRef/@href => string()))"/>
                 </xsl:call-template>
             </xsl:otherwise>
         </xsl:choose>
