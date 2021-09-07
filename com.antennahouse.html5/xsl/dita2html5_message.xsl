@@ -14,7 +14,8 @@
 
 <xsl:stylesheet version="3.0" 
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
->
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	exclude-result-prefixes="xs">
     <!--
     ===============================================
     Message Definition
@@ -364,6 +365,10 @@
 
     <xsl:variable name="stMes906">
         <xsl:text>[variable 906F] Illegal attribute found in variable element in style definition. variable name='%variable-name' attribute='%attribute'.</xsl:text>
+    </xsl:variable>
+
+    <xsl:variable name="stMes1022" as="xs:string">
+        <xsl:text>[getColNumFromColName 1022F] colname='%colname' does not exists in table/tgroup/colspec. Probably table/tgroup/@cols='%cols' is not match actual column count. file=%file</xsl:text>
     </xsl:variable>
 
     <xsl:variable name="stMes1600">

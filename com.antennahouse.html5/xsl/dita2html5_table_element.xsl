@@ -242,11 +242,23 @@
      note:       
      -->
     <xsl:template match="*[contains-token(@class, 'topic/thead')]">
-        <xsl:param name="prmTgroup"     as="element()" tunnel="yes"/>
-        <xsl:param name="prmTgroupAttr" as="element()" tunnel="yes"/>
-        <xsl:param name="prmColSpec"    as="element()+" tunnel="yes"/>
+        <xsl:param name="prmTgroup"     as="element()" tunnel="yes" required="yes"/>
+        <xsl:param name="prmTgroupAttr" as="element()" tunnel="yes" required="yes"/>
+        <xsl:param name="prmColSpec"    as="element()+" tunnel="yes" required="yes"/>
         
         <xsl:variable name="thead" as="element()" select="."/>
+        <xsl:variable name="theadInfo" as="element()">
+            <xsl:call-template name="expandTheadOrTbodyWithSpanInfo">
+                <xsl:with-param name="prmColNumber" select="$prmTgroup/@cols => xs:integer()"/>
+                <xsl:with-param name="prmColSpec" select="$prmColSpec"/>
+                <xsl:with-param name="prmTableHeadOrBodyPart" select="$thead"/>
+            </xsl:call-template>
+        </xsl:variable>
+        
+        <xsl:result-document href="{ahf:getHistoryStr(.) || '.xml'}" encoding="UTF-8" byte-order-mark="no" indent="yes">
+            <xsl:copy-of select="$theadInfo"/>
+        </xsl:result-document>
+        
         <xsl:variable name="theadAttr" as="element()" select="ahf:addTheadAttr($thead,$prmTgroupAttr)"/>
         <thead>
             <xsl:call-template name="genCommonAtts"/>
@@ -281,10 +293,23 @@
      note:		
      -->
     <xsl:template match="*[contains-token(@class, 'topic/tbody')]">
-        <xsl:param name="prmTgroup"     as="element()"  required="yes"  tunnel="yes"/>
-        <xsl:param name="prmTgroupAttr" as="element()"  required="yes" tunnel="yes" />
-        
+        <xsl:param name="prmTgroup"     as="element()" tunnel="yes" required="yes"/>
+        <xsl:param name="prmTgroupAttr" as="element()" tunnel="yes" required="yes"/>
+        <xsl:param name="prmColSpec"    as="element()+" tunnel="yes" required="yes"/>
+
         <xsl:variable name="tbody" as="element()" select="."/>
+        <xsl:variable name="tbodyInfo" as="element()">
+            <xsl:call-template name="expandTheadOrTbodyWithSpanInfo">
+                <xsl:with-param name="prmColNumber" select="$prmTgroup/@cols => xs:integer()"/>
+                <xsl:with-param name="prmColSpec" select="$prmColSpec"/>
+                <xsl:with-param name="prmTableHeadOrBodyPart" select="$tbody"/>
+            </xsl:call-template>
+        </xsl:variable>
+        
+        <xsl:result-document href="{ahf:getHistoryStr($tbody) || '.xml'}" encoding="UTF-8" byte-order-mark="no" indent="yes">
+            <xsl:copy-of select="$tbodyInfo"/>
+        </xsl:result-document>
+
         <xsl:variable name="tbodyAttr"  as="element()" select="ahf:addTbodyAttr($tbody,$prmTgroupAttr)"/>
         <tbody>
             <xsl:apply-templates select="*[contains-token(@class, 'topic/row')]">
