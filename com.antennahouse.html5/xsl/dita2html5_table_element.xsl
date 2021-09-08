@@ -255,9 +255,11 @@
             </xsl:call-template>
         </xsl:variable>
         
-        <xsl:result-document href="{$gpOutputDirUrl || ahf:getHistoryStr(.) || '.xml'}" method="xml" encoding="UTF-8" byte-order-mark="no" indent="yes">
-            <xsl:copy-of select="$theadInfo"/>
-        </xsl:result-document>
+        <xsl:if test="$gpDebug">
+            <xsl:result-document href="{$gpOutputDirUrl || ahf:getHistoryStr(.) || '.xml'}" method="xml" encoding="UTF-8" byte-order-mark="no" indent="yes">
+                <xsl:copy-of select="$theadInfo"/>
+            </xsl:result-document>
+        </xsl:if>
         
         <xsl:variable name="theadAttr" as="element()" select="ahf:addTheadAttr($thead,$prmTgroupAttr)"/>
         <thead>
@@ -306,9 +308,11 @@
             </xsl:call-template>
         </xsl:variable>
         
-        <xsl:result-document href="{$gpOutputDirUrl || ahf:getHistoryStr($tbody) || '.xml'}" method="xml" encoding="UTF-8" byte-order-mark="no" indent="yes">
-            <xsl:copy-of select="$tbodyInfo"/>
-        </xsl:result-document>
+        <xsl:if test="$gpDebug">
+            <xsl:result-document href="{$gpOutputDirUrl || ahf:getHistoryStr($tbody) || '.xml'}" method="xml" encoding="UTF-8" byte-order-mark="no" indent="yes">
+                <xsl:copy-of select="$tbodyInfo"/>
+            </xsl:result-document>
+        </xsl:if>
 
         <xsl:variable name="tbodyAttr"  as="element()" select="ahf:addTbodyAttr($tbody,$prmTgroupAttr)"/>
         <tbody>

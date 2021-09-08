@@ -9,7 +9,10 @@
     <target name="dita2.ahhtml5.main" depends="disp_properties,ahhtml5.init,dita2.ahhtml5.map,dita2.ahhtml5.topic,dita2.ahhtml5.css"/>
     
     <target name="ahhtml5.init">
-
+        
+        <!-- デバッグ -->
+        <property name="args.debug" value="no"/>
+        
         <condition property="ahhtml5.nav.toc" value="${nav.toc}" else="none">
             <isset property="nav.toc"/>
         </condition>
@@ -152,6 +155,7 @@
             <param name="PRM_OUTPUT_CSS_PATH_RELATIVE" expression="${output.css.path.relative}" if:set="output.css.path.relative"/>
             <param name="PRM_PLUGIN_CSS_FILES" expression="${plugin.css.files}" if:set="plugin.css.files"/>
             <param name="PRM_OUTPUT_DIR_URL" expression="${dita.output.dir.url}" if:set="dita.output.dir.url"/>
+            <param name="PRM_DEBUG" expression="${args.debug}" if:set="args.debug"/>
             <dita:extension id="dita.conductor.ahhtml5.param" behavior="org.dita.dost.platform.InsertAction"/>
             <xmlcatalog>
                 <catalogpath path="${dita.plugin.org.dita.base.dir}/catalog-dita.xml"/>
@@ -241,6 +245,7 @@
             <param name="PRM_OUTPUT_CSS_PATH_RELATIVE" expression="${output.css.path.relative}" if:set="output.css.path.relative"/>
             <param name="PRM_PLUGIN_CSS_FILES" expression="${plugin.css.files}" if:set="plugin.css.files"/>
             <param name="PRM_OUTPUT_DIR_URL" expression="${dita.output.dir.url}" if:set="dita.output.dir.url"/>
+            <param name="PRM_DEBUG" expression="${args.debug}" if:set="args.debug"/>
             <dita:extension id="dita.conductor.ahhtml5.param" behavior="org.dita.dost.platform.InsertAction"/>
             <xmlcatalog>
                 <catalogpath path="${dita.plugin.org.dita.base.dir}/catalog-dita.xml"/>
