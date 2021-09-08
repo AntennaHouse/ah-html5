@@ -178,7 +178,7 @@
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:apply-templates select="$row/*[@class => contains-token('topic/entry')][position() eq ($colnum - $emptyColnum)]" mode="MODE_COPY_ENTRY">
-                            <xsl:with-param name="prmColnum" as="xs:integer" select="$colnum"/>
+                            <xsl:with-param name="prmColNum" as="xs:integer" select="$colnum"/>
                         </xsl:apply-templates>
                     </xsl:otherwise>
                 </xsl:choose>

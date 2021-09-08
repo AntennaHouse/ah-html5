@@ -97,4 +97,8 @@
     <xsl:variable name="gpOutputFnAtEndOfTopic" as="xs:boolean" select="$PRM_OUTPUT_FN_AT_END_OF_TOPIC eq $cYes"/>
     <xsl:variable name="gpOutputFnAtEndOfEachElement" as="xs:boolean" select="$gpOutputFnAtEndOfTopic => not()"/>
 
+    <!-- Output dir URL -->
+    <xsl:param name="PRM_OUTPUT_DIR_URL" as="xs:string" required="yes"/>
+    <xsl:variable name="gpOutputDirUrl" as="xs:string" select="$PRM_OUTPUT_DIR_URL"/>
+
 </xsl:stylesheet>

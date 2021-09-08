@@ -65,6 +65,8 @@
         </loadfile>
         <makeurl property="ahhtml5.map.url" file="${dita.temp.dir}${file.separator}${ahhtml5.map}" separator="/" validate="true"/>
 
+        <makeurl file="${dita.output.dir}" property="dita.output.dir.url" validate="yes"/>
+        
     </target>
     
     <!-- Map -->
@@ -149,6 +151,7 @@
             <param name="PRM_USER_CSS_FILE" expression="${user.css.file}" if:set="user.css.file"/>
             <param name="PRM_OUTPUT_CSS_PATH_RELATIVE" expression="${output.css.path.relative}" if:set="output.css.path.relative"/>
             <param name="PRM_PLUGIN_CSS_FILES" expression="${plugin.css.files}" if:set="plugin.css.files"/>
+            <param name="PRM_OUTPUT_DIR_URL" expression="${dita.output.dir.url}" if:set="dita.output.dir.url"/>
             <dita:extension id="dita.conductor.ahhtml5.param" behavior="org.dita.dost.platform.InsertAction"/>
             <xmlcatalog>
                 <catalogpath path="${dita.plugin.org.dita.base.dir}/catalog-dita.xml"/>
@@ -165,7 +168,7 @@
                 <isset property="args.topic.xsl"/>
             </not>
         </condition>
-        <makeurl file="${dita.input.valfile}" property="dita.input.valfile.url" validate="no"/>    
+        <makeurl file="${dita.input.valfile}" property="dita.input.valfile.url" validate="no"/>
     </target>
     
     <target name="ahhtml5.image-metadata" unless="ahhtml5.image-metadata.skip" description="Read image file and copy to output dir">
@@ -233,11 +236,11 @@
             <param name="PRM_FILTER_FILE" expression="${dita.input.valfile.url}" if:set="dita.input.valfile"/>
             <param name="PRM_OUTPUT_EXTENSION" expression="${out.ext}" if:set="out.ext"/>
             <param name="PRM_USER_CSSPATH" expression="${user.csspath}" if:set="user.csspath"/>
-            <param name="OUTPUTDIR" expression="${dita.output.dir}"/>
             <param name="PRM_OUTPUT_AS_XML" expression="${output.as.xml}" if:set="output.as.xml"/>
             <param name="PRM_USER_CSS_FILE" expression="${user.css.file}" if:set="user.css.file"/>
             <param name="PRM_OUTPUT_CSS_PATH_RELATIVE" expression="${output.css.path.relative}" if:set="output.css.path.relative"/>
             <param name="PRM_PLUGIN_CSS_FILES" expression="${plugin.css.files}" if:set="plugin.css.files"/>
+            <param name="PRM_OUTPUT_DIR_URL" expression="${dita.output.dir.url}" if:set="dita.output.dir.url"/>
             <dita:extension id="dita.conductor.ahhtml5.param" behavior="org.dita.dost.platform.InsertAction"/>
             <xmlcatalog>
                 <catalogpath path="${dita.plugin.org.dita.base.dir}/catalog-dita.xml"/>
