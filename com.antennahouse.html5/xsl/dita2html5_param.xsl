@@ -41,7 +41,7 @@
     <xsl:param name="gpGenDefaultMeta" as="xs:boolean" select="$PRM_GEN_DEFAULT_META eq $cYes"/>
     
     <!-- Plug-in CSS Files Parameter -->
-    <xsl:param name="PRM_PLUGIN_CSS_FILES" as="xs:string" required="yes"/>
+    <xsl:param name="PRM_PLUGIN_CSS_FILES" as="xs:string" required="no" select="''"/>
     <xsl:variable name="gpPluginCssFiles" as="xs:string*" select="tokenize($PRM_PLUGIN_CSS_FILES,'[\s]+')"/>
     
     <!-- Standard CSS File Parameter -->
