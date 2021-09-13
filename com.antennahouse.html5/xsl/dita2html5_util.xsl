@@ -547,7 +547,7 @@
      return:   Return xs:integer of string value of $prmNode
      note:     empty sequence is assumed as 0
     -->
-    <xsl:function name="ahf:nz">
+    <xsl:function name="ahf:nz" as="xs:integer">
         <xsl:param name="prmNode" as="node()?"/>
         <xsl:choose>
             <xsl:when test="$prmNode => empty()">

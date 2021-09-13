@@ -409,5 +409,16 @@
         <xsl:text>[toMm 2005F] Failed to convert to mm. Input value = '%value'.</xsl:text>
     </xsl:variable>
     
+    <xsl:variable name="stMes2007">
+        <xsl:text>[getEntryClassAttr 2007F] Failed to get entry information file='%file' entry='%path'.</xsl:text>
+    </xsl:variable>
+
+    <xsl:variable name="stMes2009">
+        <xsl:text>[getEntryClassAttr 2009F] $entryInfo/@ahf:colnum is empty. file='%file' entry='%path'.</xsl:text>
+    </xsl:variable>
+
+    <xsl:variable name="stMes2011">
+        <xsl:text>[expandTheadOrTbodyWithSpanInfo 2011W] Fixed DITA-OT entry/@colnum bug. file='%file' entry='%path' dita-ot:x='%dita-ot:x' ahf:column='%ahf:colnum'</xsl:text>
+    </xsl:variable>
     
 </xsl:stylesheet>

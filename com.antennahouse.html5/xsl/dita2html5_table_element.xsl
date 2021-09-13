@@ -269,6 +269,7 @@
                 <xsl:with-param name="prmRowUpperAttr" tunnel="yes" select="$theadAttr"/>
                 <xsl:with-param name="prmColSpec"      tunnel="yes" select="$prmColSpec"/>
                 <xsl:with-param name="prmIsInThead"    tunnel="yes" select="true()"/>
+                <xsl:with-param name="prmTheadOrTbodyInfo" tunnel="yes" as="element()" select="$theadInfo"/>
             </xsl:apply-templates>
         </thead>
     </xsl:template>
@@ -319,6 +320,7 @@
             <xsl:apply-templates select="*[contains-token(@class, 'topic/row')]">
                 <xsl:with-param name="prmTbody"        tunnel="yes" select="$tbody"/>
                 <xsl:with-param name="prmRowUpperAttr" tunnel="yes" select="$tbodyAttr"/>
+                <xsl:with-param name="prmTheadOrTbodyInfo" tunnel="yes" as="element()" select="$tbodyInfo"/>
             </xsl:apply-templates>
         </tbody>
     </xsl:template>
@@ -464,6 +466,8 @@
      param:     prmEntry, prmRowAttr, prmColSpec
      return:	xs:string*
      note:      generates class attribute candidate as xs:string*
+                Fix inheritance from colspec/@align DITA-OT bug:
+                https://github.com/dita-ot/dita-ot/pull/3538
      -->
     <xsl:template name="ahf:getEntryClassAttr" as="xs:string*">
         <xsl:param name="prmEntry"        as="element()"/>
@@ -471,8 +475,14 @@
         <xsl:param name="prmRow"          as="element()"  tunnel="yes" required="yes"/>
         <xsl:param name="prmColSpec"      as="element()+" tunnel="yes" required="yes"/>
         <xsl:param name="prmTgroup"       as="element()"  tunnel="yes" required="yes"/>
+        <xsl:param name="prmTheadOrTbodyInfo" as="element()" tunnel="yes" />
         
-        <xsl:variable name="colSpec" as="element()" select="$prmColSpec[$prmEntry/@dita-ot:x => ahf:nz()]"/>
+        <xsl:variable name="entrySigniture" as="xs:string" select="ahf:getHistoryStr($prmEntry)"/>
+        <xsl:variable name="entryInfo" as="element()?" select="$prmTheadOrTbodyInfo/descendant::entry[@ahf:signiture => string() eq $entrySigniture]"/>
+        <xsl:assert test="$entryInfo => exists()" select="ahf:replace($stMes2007,('%file','%path'),($prmEntry/@xtrf => string(), $entrySigniture))"/>
+        <xsl:variable name="colnum" as="xs:integer" select="$entryInfo/@ahf:colnum => ahf:nz()"/>
+        <xsl:assert test="$colnum gt 0" select="ahf:replace($stMes2009,('%file','%path'),($prmEntry/@xtrf => string(), $entrySigniture))"/>
+        <xsl:variable name="colSpec" as="element()" select="$prmColSpec[$colnum]"/>
         
         <!-- colsep -->
         <xsl:choose>
@@ -481,7 +491,7 @@
             </xsl:when>
             <xsl:when test="string($prmRowAttr/@colsep) eq '1'">
                 <xsl:variable name="cols" as="xs:integer" select="$prmRowAttr/@cols => xs:integer()"/>
-                <xsl:variable name="colPos" as="xs:integer" select="$prmEntry/@dita-ot:x => ahf:nz()"/>
+                <xsl:variable name="colPos" as="xs:integer" select="$colnum"/>
                 <xsl:variable name="colSpan" as="xs:integer" select="$prmEntry/@dita-ot:morecols => ahf:nz()"/>
                 <xsl:choose>
                     <xsl:when test="$colPos + $colSpan eq $cols">
