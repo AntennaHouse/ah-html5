@@ -101,6 +101,7 @@
         <xsl:param name="prmIsLastRow" tunnel="yes" required="yes" as="xs:boolean"/>
         <xsl:param name="prmColNumber" tunnel="yes" required="yes" as="xs:integer"/>
         <xsl:param name="prmTableHeadOrBodyPart" tunnel="yes" required="yes" as="element()"/>
+        <xsl:variable name="entry" as="element()" select="."/>
         <xsl:variable name="colnum" as="xs:integer" select="ahf:getColNumFromColName(if (exists(@namest)) then @namest else @colname ,$prmColSpec,$prmTableHeadOrBodyPart)"/>
         <xsl:variable name="colSpanCount" as="xs:integer" select="if (exists(@namest) and exists(@nameend)) then ahf:getColumSpanCount(@namest,@nameend,$prmColSpec,$prmTableHeadOrBodyPart) else 0"/>
         <xsl:variable name="rowSpanCount" as="xs:integer" select="if (exists(@morerows)) then xs:integer(@morerows) else 0"/>
@@ -124,8 +125,19 @@
             <xsl:attribute name="ahf:signiture" select="ahf:getHistoryStr(.)"/>
         </xsl:copy>
         <xsl:if test="$colSpanCount gt 0">
+            <!-- Compliment column spanned entry -->
             <xsl:for-each select="1 to $colSpanCount">
-                <entry class=" topic/entry " ahf:colnum="{string($colnum + position())}" ahf:col-spanned="yes">
+                <xsl:variable name="spanColNum" as="xs:string" select="string($colnum + position())"/>
+                <xsl:variable name="spanColName" as="xs:string" select="$gColNamePrefix || $spanColNum"/>
+                <entry>
+                    <xsl:attribute name="class" select="' topic/entry '"/>
+                    <xsl:attribute name="colnum" select="$spanColNum"/>
+                    <xsl:attribute name="colname" select="$spanColName"/>
+                    <xsl:attribute name="dita-ot:x" select="$spanColNum"/>
+                    <xsl:attribute name="dita-ot:y" select="string($entry/@dita-ot:y)"/>
+                    <xsl:attribute name="ahf:colnum" select="$spanColNum"/>
+                    <xsl:attribute name="ahf:colname" select="$spanColName"/>
+                    <xsl:attribute name="ahf:col-spanned" select="'yes'"/>
                     <xsl:if test="$rowSpanCount gt 0">
                         <xsl:attribute name="ahf:row-span-count" select="string($rowSpanCount)"/>
                     </xsl:if>
@@ -212,10 +224,14 @@
      -->
     <xsl:template match="*[@class => contains-token('topic/entry')]" mode="MODE_COPY_ENTRY">
         <xsl:param name="prmColNum" as="xs:integer" required="yes"/>
+        <xsl:variable name="entry" as="element()" select="."/>
         <xsl:copy>
             <xsl:copy-of select="@*"/>
             <xsl:attribute name="ahf:colnum" select="$prmColNum => string()"/>
             <xsl:attribute name="ahf:colname" select="$gColNamePrefix || $prmColNum => string()"/>
+            <xsl:if test="$prmColNum ne $entry/@dita-ot:x => ahf:nz()">
+                <xsl:message select="ahf:genWarnMsg($stMes2011,('%file', '%path', '%dita-ot:x', '%ahf:colnum'),($entry/@xtrf => string(), ahf:getHistoryStr($entry), $entry/@dita-ot:x => string(), $prmColNum => string()))"/>
+            </xsl:if>
         </xsl:copy>
     </xsl:template>
 
