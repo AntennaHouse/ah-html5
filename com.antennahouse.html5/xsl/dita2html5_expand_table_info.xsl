@@ -229,7 +229,7 @@
             <xsl:copy-of select="@*"/>
             <xsl:attribute name="ahf:colnum" select="$prmColNum => string()"/>
             <xsl:attribute name="ahf:colname" select="$gColNamePrefix || $prmColNum => string()"/>
-            <xsl:if test="$prmColNum ne $entry/@dita-ot:x => ahf:nz()">
+            <xsl:if test="($prmColNum ne $entry/@dita-ot:x => ahf:nz()) and $gpDebug">
                 <xsl:message select="ahf:genWarnMsg($stMes2011,('%file', '%path', '%dita-ot:x', '%ahf:colnum'),($entry/@xtrf => string(), ahf:getHistoryStr($entry), $entry/@dita-ot:x => string(), $prmColNum => string()))"/>
             </xsl:if>
         </xsl:copy>
