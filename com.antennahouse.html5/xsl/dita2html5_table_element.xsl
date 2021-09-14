@@ -479,9 +479,9 @@
         
         <xsl:variable name="entrySigniture" as="xs:string" select="ahf:getHistoryStr($prmEntry)"/>
         <xsl:variable name="entryInfo" as="element()?" select="$prmTheadOrTbodyInfo/descendant::entry[@ahf:signiture => string() eq $entrySigniture]"/>
-        <xsl:assert test="$entryInfo => exists()" select="ahf:replace($stMes2007,('%file','%path'),($prmEntry/@xtrf => string(), $entrySigniture))"/>
+        <xsl:assert test="$entryInfo => exists()" select="ahf:genErrMsg($stMes2007,('%file','%path'),($prmEntry/@xtrf => string(), $entrySigniture))"/>
         <xsl:variable name="colnum" as="xs:integer" select="$entryInfo/@ahf:colnum => ahf:nz()"/>
-        <xsl:assert test="$colnum gt 0" select="ahf:replace($stMes2009,('%file','%path'),($prmEntry/@xtrf => string(), $entrySigniture))"/>
+        <xsl:assert test="$colnum gt 0" select="ahf:genErrMsg($stMes2009,('%file','%path'),($prmEntry/@xtrf => string(), $entrySigniture))"/>
         <xsl:variable name="colSpec" as="element()" select="$prmColSpec[$colnum]"/>
         
         <!-- colsep -->

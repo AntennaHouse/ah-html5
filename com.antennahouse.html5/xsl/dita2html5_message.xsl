@@ -418,7 +418,7 @@
     </xsl:variable>
 
     <xsl:variable name="stMes2011">
-        <xsl:text>[expandTheadOrTbodyWithSpanInfo 2011W] Fixed DITA-OT entry/@colnum bug. file='%file' entry='%path' dita-ot:x='%dita-ot:x' ahf:column='%ahf:colnum'</xsl:text>
+        <xsl:text>[expandTheadOrTbodyWithSpanInfo 2011W] Fixed DITA-OT entry/@colnum bug. file='%file' entry='%path' dita-ot:x='%dita-ot:x' ahf:colnum='%ahf:colnum'</xsl:text>
     </xsl:variable>
     
 </xsl:stylesheet>
