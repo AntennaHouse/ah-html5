@@ -242,11 +242,25 @@
      note:       
      -->
     <xsl:template match="*[contains-token(@class, 'topic/thead')]">
-        <xsl:param name="prmTgroup"     as="element()" tunnel="yes"/>
-        <xsl:param name="prmTgroupAttr" as="element()" tunnel="yes"/>
-        <xsl:param name="prmColSpec"    as="element()+" tunnel="yes"/>
+        <xsl:param name="prmTgroup"     as="element()" tunnel="yes" required="yes"/>
+        <xsl:param name="prmTgroupAttr" as="element()" tunnel="yes" required="yes"/>
+        <xsl:param name="prmColSpec"    as="element()+" tunnel="yes" required="yes"/>
         
         <xsl:variable name="thead" as="element()" select="."/>
+        <xsl:variable name="theadInfo" as="element()">
+            <xsl:call-template name="expandTheadOrTbodyWithSpanInfo">
+                <xsl:with-param name="prmColNumber" select="$prmTgroup/@cols => xs:integer()"/>
+                <xsl:with-param name="prmColSpec" select="$prmColSpec"/>
+                <xsl:with-param name="prmTableHeadOrBodyPart" select="$thead"/>
+            </xsl:call-template>
+        </xsl:variable>
+        
+        <xsl:if test="$gpDebug">
+            <xsl:result-document href="{$gpOutputDirUrl || ahf:getHistoryStr(.) || '.xml'}" method="xml" encoding="UTF-8" byte-order-mark="no" indent="yes">
+                <xsl:copy-of select="$theadInfo"/>
+            </xsl:result-document>
+        </xsl:if>
+        
         <xsl:variable name="theadAttr" as="element()" select="ahf:addTheadAttr($thead,$prmTgroupAttr)"/>
         <thead>
             <xsl:call-template name="genCommonAtts"/>
@@ -255,6 +269,7 @@
                 <xsl:with-param name="prmRowUpperAttr" tunnel="yes" select="$theadAttr"/>
                 <xsl:with-param name="prmColSpec"      tunnel="yes" select="$prmColSpec"/>
                 <xsl:with-param name="prmIsInThead"    tunnel="yes" select="true()"/>
+                <xsl:with-param name="prmTheadOrTbodyInfo" tunnel="yes" as="element()" select="$theadInfo"/>
             </xsl:apply-templates>
         </thead>
     </xsl:template>
@@ -281,15 +296,31 @@
      note:		
      -->
     <xsl:template match="*[contains-token(@class, 'topic/tbody')]">
-        <xsl:param name="prmTgroup"     as="element()"  required="yes"  tunnel="yes"/>
-        <xsl:param name="prmTgroupAttr" as="element()"  required="yes" tunnel="yes" />
-        
+        <xsl:param name="prmTgroup"     as="element()" tunnel="yes" required="yes"/>
+        <xsl:param name="prmTgroupAttr" as="element()" tunnel="yes" required="yes"/>
+        <xsl:param name="prmColSpec"    as="element()+" tunnel="yes" required="yes"/>
+
         <xsl:variable name="tbody" as="element()" select="."/>
+        <xsl:variable name="tbodyInfo" as="element()">
+            <xsl:call-template name="expandTheadOrTbodyWithSpanInfo">
+                <xsl:with-param name="prmColNumber" select="$prmTgroup/@cols => xs:integer()"/>
+                <xsl:with-param name="prmColSpec" select="$prmColSpec"/>
+                <xsl:with-param name="prmTableHeadOrBodyPart" select="$tbody"/>
+            </xsl:call-template>
+        </xsl:variable>
+        
+        <xsl:if test="$gpDebug">
+            <xsl:result-document href="{$gpOutputDirUrl || ahf:getHistoryStr($tbody) || '.xml'}" method="xml" encoding="UTF-8" byte-order-mark="no" indent="yes">
+                <xsl:copy-of select="$tbodyInfo"/>
+            </xsl:result-document>
+        </xsl:if>
+
         <xsl:variable name="tbodyAttr"  as="element()" select="ahf:addTbodyAttr($tbody,$prmTgroupAttr)"/>
         <tbody>
             <xsl:apply-templates select="*[contains-token(@class, 'topic/row')]">
                 <xsl:with-param name="prmTbody"        tunnel="yes" select="$tbody"/>
                 <xsl:with-param name="prmRowUpperAttr" tunnel="yes" select="$tbodyAttr"/>
+                <xsl:with-param name="prmTheadOrTbodyInfo" tunnel="yes" as="element()" select="$tbodyInfo"/>
             </xsl:apply-templates>
         </tbody>
     </xsl:template>
@@ -435,6 +466,8 @@
      param:     prmEntry, prmRowAttr, prmColSpec
      return:	xs:string*
      note:      generates class attribute candidate as xs:string*
+                Fix inheritance from colspec/@align DITA-OT bug:
+                https://github.com/dita-ot/dita-ot/pull/3538
      -->
     <xsl:template name="ahf:getEntryClassAttr" as="xs:string*">
         <xsl:param name="prmEntry"        as="element()"/>
@@ -442,8 +475,14 @@
         <xsl:param name="prmRow"          as="element()"  tunnel="yes" required="yes"/>
         <xsl:param name="prmColSpec"      as="element()+" tunnel="yes" required="yes"/>
         <xsl:param name="prmTgroup"       as="element()"  tunnel="yes" required="yes"/>
+        <xsl:param name="prmTheadOrTbodyInfo" as="element()" tunnel="yes" />
         
-        <xsl:variable name="colSpec" as="element()" select="$prmColSpec[$prmEntry/@dita-ot:x => ahf:nz()]"/>
+        <xsl:variable name="entrySigniture" as="xs:string" select="ahf:getHistoryStr($prmEntry)"/>
+        <xsl:variable name="entryInfo" as="element()?" select="$prmTheadOrTbodyInfo/descendant::entry[@ahf:signiture => string() eq $entrySigniture]"/>
+        <xsl:assert test="$entryInfo => exists()" select="ahf:genErrMsg($stMes2007,('%file','%path'),($prmEntry/@xtrf => string(), $entrySigniture))"/>
+        <xsl:variable name="colnum" as="xs:integer" select="$entryInfo/@ahf:colnum => ahf:nz()"/>
+        <xsl:assert test="$colnum gt 0" select="ahf:genErrMsg($stMes2009,('%file','%path'),($prmEntry/@xtrf => string(), $entrySigniture))"/>
+        <xsl:variable name="colSpec" as="element()" select="$prmColSpec[$colnum]"/>
         
         <!-- colsep -->
         <xsl:choose>
@@ -452,7 +491,7 @@
             </xsl:when>
             <xsl:when test="string($prmRowAttr/@colsep) eq '1'">
                 <xsl:variable name="cols" as="xs:integer" select="$prmRowAttr/@cols => xs:integer()"/>
-                <xsl:variable name="colPos" as="xs:integer" select="$prmEntry/@dita-ot:x => ahf:nz()"/>
+                <xsl:variable name="colPos" as="xs:integer" select="$colnum"/>
                 <xsl:variable name="colSpan" as="xs:integer" select="$prmEntry/@dita-ot:morecols => ahf:nz()"/>
                 <xsl:choose>
                     <xsl:when test="$colPos + $colSpan eq $cols">

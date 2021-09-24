@@ -52,5 +52,8 @@
     <xsl:include href="dita2html5_utility_domain.xsl"/>
     <xsl:include href="dita2html5_note_element.xsl"/>
     <xsl:include href="dita2html5_dir_attr.xsl"/>
+
+    <xsl:include href="dita2html5_build_colspec.xsl"/>
+    <xsl:include href="dita2html5_expand_table_info.xsl"/>
     
 </xsl:stylesheet>

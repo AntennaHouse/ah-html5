@@ -14,7 +14,8 @@
 
 <xsl:stylesheet version="3.0" 
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
->
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	exclude-result-prefixes="xs">
     <!--
     ===============================================
     Message Definition
@@ -366,6 +367,10 @@
         <xsl:text>[variable 906F] Illegal attribute found in variable element in style definition. variable name='%variable-name' attribute='%attribute'.</xsl:text>
     </xsl:variable>
 
+    <xsl:variable name="stMes1022" as="xs:string">
+        <xsl:text>[getColNumFromColName 1022F] colname='%colname' does not exists in table/tgroup/colspec. Probably table/tgroup/@cols='%cols' is not match actual column count. file=%file</xsl:text>
+    </xsl:variable>
+
     <xsl:variable name="stMes1600">
         <xsl:text>[makeTableCount 1600F] topicref/@href target does not found. href='%href' file=%file</xsl:text>
     </xsl:variable>
@@ -404,5 +409,16 @@
         <xsl:text>[toMm 2005F] Failed to convert to mm. Input value = '%value'.</xsl:text>
     </xsl:variable>
     
+    <xsl:variable name="stMes2007">
+        <xsl:text>[getEntryClassAttr 2007F] Failed to get entry information file='%file' entry='%path'.</xsl:text>
+    </xsl:variable>
+
+    <xsl:variable name="stMes2009">
+        <xsl:text>[getEntryClassAttr 2009F] $entryInfo/@ahf:colnum is empty. file='%file' entry='%path'.</xsl:text>
+    </xsl:variable>
+
+    <xsl:variable name="stMes2011">
+        <xsl:text>[expandTheadOrTbodyWithSpanInfo 2011W] Fixed DITA-OT entry/@colnum bug. file='%file' entry='%path' dita-ot:x='%dita-ot:x' ahf:colnum='%ahf:colnum'</xsl:text>
+    </xsl:variable>
     
 </xsl:stylesheet>
