@@ -330,6 +330,17 @@
         <xsl:sequence select="$prmElem[parent::*/*[1] is $prmElem] => exists()"/>
     </xsl:function>
     
+    <!-- 
+     function:  Determine the last child of parent
+     param:     prmElem
+     return:    xs:boolean
+     note:		
+     -->
+    <xsl:function name="ahf:isLastChildOfParent" as="xs:boolean">
+        <xsl:param name="prmElem" as="element()?"/>
+        <xsl:sequence select="$prmElem[parent::*/*[last()] is $prmElem] => exists()"/>
+    </xsl:function>
+    
 
     <!-- 
       ============================================

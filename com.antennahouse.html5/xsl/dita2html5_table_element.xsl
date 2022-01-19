@@ -486,41 +486,60 @@
         
         <!-- colsep -->
         <xsl:choose>
+            <xsl:when test="string($prmEntry/@colsep) eq '0'">
+                <xsl:sequence select="'colsep-0'"/>
+            </xsl:when>
+            <xsl:when test="string($prmEntry/@colsep) eq '1'">
+                <xsl:call-template name="ahf:getColSepForEntry">
+                    <xsl:with-param name="prmEntry" select="$prmEntry"/>
+                    <xsl:with-param name="prmColNum" select="$colnum"/>
+                </xsl:call-template>
+            </xsl:when>
+            <xsl:when test="string($colSpec/@colsep) eq '0'">
+                <xsl:sequence select="'colsep-0'"/>
+            </xsl:when>
+            <xsl:when test="string($colSpec/@colsep) eq '1'">
+                <xsl:call-template name="ahf:getColSepForEntry">
+                    <xsl:with-param name="prmEntry" select="$prmEntry"/>
+                    <xsl:with-param name="prmColNum" select="$colnum"/>
+                </xsl:call-template>
+            </xsl:when>
             <xsl:when test="string($prmRowAttr/@colsep) eq '0'">
                 <xsl:sequence select="'colsep-0'"/>
             </xsl:when>
             <xsl:when test="string($prmRowAttr/@colsep) eq '1'">
-                <xsl:variable name="cols" as="xs:integer" select="$prmRowAttr/@cols => xs:integer()"/>
-                <xsl:variable name="colPos" as="xs:integer" select="$colnum"/>
-                <xsl:variable name="colSpan" as="xs:integer" select="$prmEntry/@dita-ot:morecols => ahf:nz()"/>
-                <xsl:choose>
-                    <xsl:when test="$colPos + $colSpan eq $cols">
-                        <xsl:sequence select="'colsep-0'"/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:sequence select="'colsep-1'"/>
-                    </xsl:otherwise>
-                </xsl:choose>
+                <xsl:call-template name="ahf:getColSepForEntry">
+                    <xsl:with-param name="prmEntry" select="$prmEntry"/>
+                    <xsl:with-param name="prmColNum" select="$colnum"/>
+                </xsl:call-template>
             </xsl:when>
         </xsl:choose>
 
         <!-- rowsep -->
         <xsl:choose>
+            <xsl:when test="string($prmEntry/@rowsep) eq '0'">
+                <xsl:sequence select="'rowsep-0'"/>
+            </xsl:when>
+            <xsl:when test="string($prmEntry/@rowsep) eq '1'">
+                <xsl:call-template name="ahf:getRowSepForEntry">
+                    <xsl:with-param name="prmEntry" select="$prmEntry"/>
+                </xsl:call-template>
+            </xsl:when>
+            <xsl:when test="string($colSpec/@rowsep) eq '0'">
+                <xsl:sequence select="'rowsep-0'"/>
+            </xsl:when>
+            <xsl:when test="string($colSpec/@rowsep) eq '1'">
+                <xsl:call-template name="ahf:getRowSepForEntry">
+                    <xsl:with-param name="prmEntry" select="$prmEntry"/>
+                </xsl:call-template>
+            </xsl:when>
             <xsl:when test="string($prmRowAttr/@rowsep) eq '0'">
                 <xsl:sequence select="'rowsep-0'"/>
             </xsl:when>
             <xsl:when test="string($prmRowAttr/@rowsep) eq '1'">
-                <xsl:variable name="rows" as="xs:integer" select="$prmTgroup/*/*[contains-token(@class,'topic/row')] => count()"/>
-                <xsl:variable name="rowPos" as="xs:integer" select="$prmEntry/@dita-ot:y => ahf:nz()"/>
-                <xsl:variable name="rowSpan" as="xs:integer" select="$prmEntry/@morerows => ahf:nz()"/>
-                <xsl:choose>
-                    <xsl:when test="$rowPos + $rowSpan eq $rows">
-                        <xsl:sequence select="'rowsep-0'"/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:sequence select="'rowsep-1'"/>
-                    </xsl:otherwise>
-                </xsl:choose>
+                <xsl:call-template name="ahf:getRowSepForEntry">
+                    <xsl:with-param name="prmEntry" select="$prmEntry"/>
+                </xsl:call-template>
             </xsl:when>
         </xsl:choose>
         
@@ -567,6 +586,52 @@
         </xsl:choose>
     </xsl:template>
 
+    <!-- 
+     function:  Get class attribute value for entry column side rule
+     param:     prmEntry, prmRowAttr, $colnum
+     return:	xs:string
+     note:      generates @class attribute candidate for column rule
+     -->
+    <xsl:template name="ahf:getColSepForEntry" as="xs:string">
+        <xsl:param name="prmEntry" as="element()" required="yes"/>
+        <xsl:param name="prmColNum" as="xs:integer" required="yes"/>
+        <xsl:param name="prmRowAttr" as="element()" tunnel="yes" required="yes"/>
+        <xsl:variable name="cols" as="xs:integer" select="$prmRowAttr/@cols => xs:integer()"/>
+        <xsl:variable name="colPos" as="xs:integer" select="$prmColNum"/>
+        <xsl:variable name="colSpan" as="xs:integer" select="$prmEntry/@dita-ot:morecols => ahf:nz()"/>
+        <xsl:choose>
+            <xsl:when test="$colPos + $colSpan eq $cols">
+                <xsl:sequence select="'colsep-0'"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:sequence select="'colsep-1'"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
+    <!-- 
+     function:  Get class attribute value for entry row side rule
+     param:     prmEntry, prmRowAttr, $prmTgroup
+     return:	xs:string
+     note:      generates @class attribute candidate for row side rule
+     -->
+    <xsl:template name="ahf:getRowSepForEntry" as="xs:string">
+        <xsl:param name="prmEntry" as="element()" required="yes"/>
+        <xsl:param name="prmRowAttr" as="element()" tunnel="yes" required="yes"/>
+        <xsl:param name="prmTgroup" as="element()" tunnel="yes" required="yes"/>
+        <xsl:variable name="rows" as="xs:integer" select="$prmTgroup/*/*[contains-token(@class,'topic/row')] => count()"/>
+        <xsl:variable name="rowPos" as="xs:integer" select="$prmEntry/@dita-ot:y => ahf:nz()"/>
+        <xsl:variable name="rowSpan" as="xs:integer" select="$prmEntry/@morerows => ahf:nz()"/>
+        <xsl:choose>
+            <xsl:when test="$rowPos + $rowSpan eq $rows">
+                <xsl:sequence select="'rowsep-0'"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:sequence select="'rowsep-1'"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    
     <!-- 
      function:  get @headers atttribute for th and td
      param:     prmEntry
