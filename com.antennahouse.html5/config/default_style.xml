@@ -265,7 +265,7 @@
     
     <attribute-sets>
         <attribute-set name="atsRtl">
-            <attribute name="direction">rtl</attribute>
+            <attribute name="dir">rtl</attribute>
         </attribute-set>
         
         <attribute-set name="atsMain">
