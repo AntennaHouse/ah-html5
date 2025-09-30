@@ -122,7 +122,7 @@
         </xsl:variable>
 
         <!-- Debug -->
-        <xsl:if test="empty($tokenizedClassAtt) and not($prmIgnoreDefaultClassAtt)">
+        <xsl:if test="empty($tokenizedClassAtt) and not($prmIgnoreDefaultClassAtt) and $gpDebug">
             <xsl:message select="'[genClassAtt] element name =',$prmElement => name()"/>
             <xsl:message select="'[genClassAtt] element is empty:',$prmElement => empty()"/>
         </xsl:if>

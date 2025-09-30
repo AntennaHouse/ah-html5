@@ -92,8 +92,8 @@ E-mail : info@antennahouse.com
             <xsl:when test="string($gpLang)">
                 <xsl:sequence select="ahf:nomalizeXmlLang($gpLang)"/>
             </xsl:when>
-            <xsl:when test="$root/@xml:lang">
-                <xsl:sequence select="ahf:nomalizeXmlLang($root/@xml:lang)"/>
+            <xsl:when test="$map/@xml:lang">
+                <xsl:sequence select="ahf:nomalizeXmlLang($map/@xml:lang)"/>
             </xsl:when>
             <xsl:when test="$topic/@xml:lang">
                 <xsl:sequence select="ahf:nomalizeXmlLang($topic/@xml:lang)"/>
