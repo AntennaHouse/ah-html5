@@ -344,6 +344,10 @@
             <attribute name="style">white-space: pre-line;</attribute>
         </attribute-set>
         
+        <attribute-set name="atsNaviToc">
+            <attribute name="class">toc</attribute>
+            <attribute name="role">navigation</attribute>
+        </attribute-set>
         
     </attribute-sets>
 

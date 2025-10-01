@@ -59,6 +59,7 @@
             <body>
                 <xsl:call-template name="genCommonAtts"/>
                 <xsl:call-template name="genIdAtt"/>
+                <!-- Insert navigation -->
                 <main>
                     <xsl:call-template name="getAttributeSet">
                         <xsl:with-param name="prmAttrSetName" select="'atsMain'"/>
