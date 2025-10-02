@@ -60,6 +60,7 @@
                 <xsl:call-template name="genCommonAtts"/>
                 <xsl:call-template name="genIdAtt"/>
                 <!-- Insert navigation -->
+                <xsl:call-template name="genTopicNavi"/>
                 <main>
                     <xsl:call-template name="getAttributeSet">
                         <xsl:with-param name="prmAttrSetName" select="'atsMain'"/>

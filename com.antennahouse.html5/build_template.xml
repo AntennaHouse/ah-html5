@@ -25,7 +25,8 @@
         </condition>
 
         <!-- Stylesheet load control -->
-        <condition property="ahhtml5.reloadstylesheet" value="false">
+        <!-- Fatal Error! Cannot have two different documents with the same document-uri -->
+        <condition property="ahhtml5.reloadstylesheet" value="true">
             <not>
                 <isset property="ahhtml5.reloadstylesheet"/>
             </not>
@@ -164,15 +165,20 @@
     </target>
     
     <!-- Topic -->
-    <target name="dita2.ahhtml5.topic" depends="ahhtml5.topic.init, ahhtml5.image-metadata, ahhtml5.topics.common"/>
+    <target name="dita2.ahhtml5.topic" depends="ahhtml5.topic.init, ahhtml5.image-metadata, ahhtml5.topics.common.using.pipeline, ahhtml5.topics.get.list.from.job.xml, ahhtml5.topics.common.using.job.xml"/>
   
     <target name="ahhtml5.topic.init">
+        <property name="job.xml" value="${dita.temp.dir}${file.separator}.job.xml"/>
         <condition property="args.topic.xsl" value="${plugin.dir}/xsl/dita2html5_topic_shell.xsl">
             <not>
                 <isset property="args.topic.xsl"/>
             </not>
         </condition>
         <makeurl file="${dita.input.valfile}" property="dita.input.valfile.url" validate="no"/>
+        <condition property="job.xml.exists">
+            <available file="${job.xml}"/>
+        </condition>
+        <property name="topic.list.file" value="${dita.temp.dir}${file.separator}job.xml.topic.list"/>
     </target>
     
     <target name="ahhtml5.image-metadata" unless="ahhtml5.image-metadata.skip" description="Read image file and copy to output dir">
@@ -182,46 +188,68 @@
             </module>
         </pipeline>
     </target>
+
+    <target name="ahhtml5.topics.get.list.from.job.xml" if="job.xml.exists">
+        <xslt basedir="${dita.temp.dir}"
+            style="${plugin.dir}/xsl/dita2html5_gen_topic_list.xsl"
+            in="${job.xml}"
+            out="${topic.list.file}"
+            force="true">
+            <factory name="net.sf.saxon.TransformerFactoryImpl">
+                <attribute name="http://saxon.sf.net/feature/timing" value="true"/>
+                <!-- Suppress namespace warning -->
+                <attribute name="http://saxon.sf.net/feature/suppressXsltNamespaceCheck" value="true"/>
+                <!--Assert-->
+                <attribute name="http://saxon.sf.net/feature/enableAssertions" value="true"/>
+                <!-- Trace -->
+                <!--attribute name="http://saxon.sf.net/feature/traceListenerClass" value="net.sf.saxon.trace.XSLTTraceListener"/-->
+            </factory>
+            <param name="PRM_LINE_SEPARATOR" expression="${line.separator}"/>
+            <dita:extension id="dita.conductor.ahhtml5.param" behavior="org.dita.dost.platform.InsertAction"/>
+            <xmlcatalog>
+                <catalogpath path="${dita.plugin.org.dita.base.dir}/catalog-dita.xml"/>
+            </xmlcatalog>
+        </xslt>
+    </target>
     
-    <!--target name="ahhtml5.topics.common">
-        <property name="fullditatopic" value="${dita.temp.dir}/fullditatopic.list"/>
+    <target name="ahhtml5.topics.common.using.job.xml" if="job.xml.exists">
         <xslt basedir="${dita.temp.dir}" 
             destdir="${dita.output.dir}"                               
             reloadstylesheet="${ahhtml5.reloadstylesheet}"
             extension="${out.ext}"
             style="${args.topic.xsl}"
-            includesfile="${fullditatopic}"
+            includesfile="${topic.list.file}"
             filenameparameter="PRM_PROCESSING_FILE_NAME"
             filedirparameter="PRM_PROCESSING_FILE_DIR"
             force="true">
             <factory name="net.sf.saxon.TransformerFactoryImpl">
                 <attribute name="http://saxon.sf.net/feature/timing" value="true"/>
-                <!-*- Suppress namespace warning -*->
+                <!-- Suppress namespace warning -->
                 <attribute name="http://saxon.sf.net/feature/suppressXsltNamespaceCheck" value="true"/>
-                <!-*-Assert-*->
+                <!--Assert-->
                 <attribute name="http://saxon.sf.net/feature/enableAssertions" value="true"/>
-                <!-*- Trace -*->
-                <!-*-attribute name="http://saxon.sf.net/feature/traceListenerClass" value="net.sf.saxon.trace.XSLTTraceListener"/-*->
+                <!-- Trace -->
+                <!--attribute name="http://saxon.sf.net/feature/traceListenerClass" value="net.sf.saxon.trace.XSLTTraceListener"/-->
             </factory>
             <param name="PRM_MAP_URL" expression="${ahhtml5.map.url}" if:set="ahhtml5.map.url"/>
             <param name="PRM_FILTER_FILE" expression="${dita.input.valfile.url}" if:set="dita.input.valfile"/>
             <param name="PRM_OUTPUT_EXTENSION" expression="${out.ext}" if:set="out.ext"/>
             <param name="PRM_USER_CSSPATH" expression="${user.csspath}" if:set="user.csspath"/>
-            <param name="OUTPUTDIR" expression="${dita.output.dir}"/>
             <param name="PRM_OUTPUT_AS_XML" expression="${output.as.xml}" if:set="output.as.xml"/>
             <param name="PRM_USER_CSS_FILE" expression="${user.css.file}" if:set="user.css.file"/>
             <param name="PRM_OUTPUT_CSS_PATH_RELATIVE" expression="${output.css.path.relative}" if:set="output.css.path.relative"/>
             <param name="PRM_PLUGIN_CSS_FILES" expression="${plugin.css.files}" if:set="plugin.css.files"/>
+            <param name="PRM_OUTPUT_DIR_URL" expression="${dita.output.dir.url}" if:set="dita.output.dir.url"/>
+            <param name="PRM_DEBUG" expression="${args.debug}" if:set="args.debug"/>
             <param name="PRM_NAV_TOC" expression="${nav.toc}" if:set="nav.toc"/>
             <dita:extension id="dita.conductor.ahhtml5.param" behavior="org.dita.dost.platform.InsertAction"/>
             <xmlcatalog>
                 <catalogpath path="${dita.plugin.org.dita.base.dir}/catalog-dita.xml"/>
             </xmlcatalog>
         </xslt>
-    </target-->
+    </target>
 
-    <target name="ahhtml5.topics.common">
-        <!--property name="fullditatopic" value="${dita.temp.dir}/fullditatopic.list"/-->
+    <target name="ahhtml5.topics.common.using.pipeline" unless="job.xml.exists">
         <pipeline>
         <xslt basedir="${dita.temp.dir}" 
             destdir="${dita.output.dir}"                               
@@ -231,7 +259,8 @@
             filenameparameter="PRM_PROCESSING_FILE_NAME"
             filedirparameter="PRM_PROCESSING_FILE_DIR">
             <ditafileset format="dita" processingRole="normal"/>
-            <!--factory name="net.sf.saxon.TransformerFactoryImpl">
+            <!-- factory is not valid in pipeline
+                factory name="net.sf.saxon.TransformerFactoryImpl">
                 <attribute name="http://saxon.sf.net/feature/timing" value="true"/>
                 <attribute name="http://saxon.sf.net/feature/suppressXsltNamespaceCheck" value="true"/>
                 <attribute name="http://saxon.sf.net/feature/enableAssertions" value="true"/>

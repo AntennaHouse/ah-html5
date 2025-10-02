@@ -102,7 +102,7 @@
     <xsl:variable name="gpOutputDirUrl" as="xs:string" select="$PRM_OUTPUT_DIR_URL"/>
     
     <!-- Generating navigation in each topic -->
-    <xsl:param name="PRM_NAV_TOC" as="xs:string" required="no" select="'none'"/>
+    <xsl:param name="PRM_NAV_TOC" as="xs:string" required="no" select="'full'"/>
     <xsl:variable name="gpNavToc" as="xs:string" select="$PRM_NAV_TOC"/>
     <xsl:variable name="gpOutputNavTocFull" as="xs:boolean" select="$gpNavToc eq 'full'"/>
     <xsl:variable name="gpOutputNavTocPartial" as="xs:boolean" select="$gpNavToc eq 'partial'"/>

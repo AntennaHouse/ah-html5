@@ -349,6 +349,10 @@
             <attribute name="role">navigation</attribute>
         </attribute-set>
         
+        <attribute-set name="atsNaviActive">
+            <attribute name="class">active</attribute>
+        </attribute-set>
+        
     </attribute-sets>
 
     <xml-objects>

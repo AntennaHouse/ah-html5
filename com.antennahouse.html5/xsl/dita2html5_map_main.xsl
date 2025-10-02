@@ -203,42 +203,9 @@
         <xsl:param name="prmTopicref" as="element()"/>
         <xsl:sequence select="$prmTopicref[@class => contains-token('map/topicref')][. => ahf:isToc()][. => ahf:isResourceOnly() => not()] => exists()"/>
     </xsl:function>
-    <!--
-    function:   Generate Navtitle Template
-    param:      prmTopicRef
-    return:     xs:string
-    note:       
-    -->
-    <xsl:template name="getNavTitle" as="xs:string">
-        <xsl:param name="prmTopicRef" as="element()" required="no" select="."/>
-        
-        <xsl:choose>
-            <xsl:when test="$prmTopicRef/*[contains-token(@class, 'map/topicmeta')]/*[contains-token(@class, 'topic/navtitle')]">
-                <xsl:variable name="navTitleTemp" as="xs:string*">
-                    <xsl:apply-templates select="$prmTopicRef/*[contains-token(@class, 'map/topicmeta')]/*[contains-token(@class, 'topic/navtitle')]" mode="TEXT_ONLY"/>
-                </xsl:variable>
-                <xsl:sequence select="$navTitleTemp => string-join('') => normalize-space()"/>
-            </xsl:when>
-            <xsl:when test="$prmTopicRef/@navtitle">
-                <xsl:sequence select="$prmTopicRef/@navtitle => string() => normalize-space()"/>
-            </xsl:when>
-            <xsl:when test="$prmTopicRef/*[contains-token(@class, 'map/topicmeta')]/*[contains-token(@class, 'map/linktext')]">
-                <xsl:variable name="linkTextTemp" as="xs:string*">
-                    <xsl:apply-templates select="$prmTopicRef/*[contains-token(@class, 'map/topicmeta')]/*[contains-token(@class, 'map/linktext')]" mode="TEXT_ONLY"/>
-                </xsl:variable>
-                <xsl:sequence select="$linkTextTemp => string-join('') => normalize-space()"/>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:sequence select="$prmTopicRef/@href => normalize-space()"/>
-                <xsl:call-template name="warningContinue">
-                    <xsl:with-param name="prmMes" select="ahf:replace($stMes200,('%xpath','%href'),(ahf:getHistoryXpathStr($prmTopicRef),$prmTopicRef/@href => string()))"/>
-                </xsl:call-template>
-            </xsl:otherwise>
-        </xsl:choose>
-    </xsl:template>
 
     <!--
-    function:   Generate Navtitle Template
+    function:   Generate href attribute Template
     param:      prmTopicRef
     return:     xs:string
     note:       
@@ -272,4 +239,5 @@
         </xsl:variable>
         <xsl:attribute name="href" select="string-join($hrefTemp,'')"/>
     </xsl:template>
+    
 </xsl:stylesheet>

@@ -29,6 +29,19 @@
         <xsl:param name="prmMapUri" as="xs:string"/>
         <xsl:sequence select="ahf:getRelativePath(resolve-uri('.',$prmTopicUri),resolve-uri('.',$prmMapUri),'')"/>
     </xsl:function>
+    
+    <!--
+    function:   Get relative path from $prmTopicUri and $prmFileName to $prmMapUri 
+    param:      prmTopicUri, prmMapUri, prmFileName
+    return:     xs:string?
+    note:       
+    -->
+    <xsl:function name="ahf:getPathToFile" as="xs:string?">
+        <xsl:param name="prmTopicUri" as="xs:string"/>
+        <xsl:param name="prmMapUri" as="xs:string"/>
+        <xsl:param name="prmFileName" as="xs:string"/>
+        <xsl:sequence select="ahf:getRelativePath(resolve-uri('.',$prmTopicUri),resolve-uri('.',$prmMapUri), $prmFileName)"/>
+    </xsl:function>
 
     <!--
     function:   Get relative path to $prmFile from $prmBaseDir using $prmTargetDir 
@@ -54,6 +67,17 @@
                             then $targetDirPathTokens[$i]
                             else ()"/>
         <xsl:sequence select="string-join(($pathFromBase, $pathToTarget, $prmTargetFile), '/')" />
+    </xsl:function>
+
+    <!--
+    function:   Normalize href 
+    param:      prmHref
+    return:     xs:string
+    note:              
+    -->
+    <xsl:function name="ahf:normalizeHref" as="xs:string">
+        <xsl:param name="prmHref" as="xs:string"/>
+        <xsl:sequence select="replace(translate($prmHref, '\', '/'), ' ', '%20')"/>
     </xsl:function>
 
 </xsl:stylesheet>

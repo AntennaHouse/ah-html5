@@ -52,10 +52,11 @@
     <xsl:include href="dita2html5_utility_domain.xsl"/>
     <xsl:include href="dita2html5_note_element.xsl"/>
     <xsl:include href="dita2html5_dir_attr.xsl"/>
-    <xsl:include href="dita2html5_gen_topic_nav.xsl"/>
+    <xsl:include href="dita2html5_gen_topic_navi.xsl"/>
     <xsl:include href="dita2html5_util_uri.xsl"/>
     
     <xsl:include href="dita2html5_build_colspec.xsl"/>
     <xsl:include href="dita2html5_expand_table_info.xsl"/>
+    <xsl:include href="dita2html5_map_util.xsl"/>
     
 </xsl:stylesheet>
