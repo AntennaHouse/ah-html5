@@ -20,7 +20,7 @@
     <xsl:variable name="pathToMapDir" as="xs:string" select="ahf:getPathToMapDirFromTopic($gpMapUrl, base-uri()) => string()"/>
     <xsl:variable name="pathToFile" as="xs:string" select="ahf:getPathToFile($gpMapUrl, base-uri(), $gpProcessingFileName)"/>
     <xsl:variable name="currentFile" as="xs:string" select="ahf:normalizeHref($pathToFile)"/>
-    <xsl:variable name="currentTopicRef" as="element()?" select="$gpMapDoc/descendant::*[contains(@class, ' map/topicref ')][ahf:getPathFromTopicRef($path2ProjUri, .) eq $currentFile][1]"/>
+    <xsl:variable name="currentTopicRef" as="element()?" select="$gpMapDoc/descendant::*[contains-token(@class, 'map/topicref')][ahf:getPathFromTopicRef($path2ProjUri, .) eq $currentFile][1]"/>
     
     <!--
     function:   Generate Topic Navigation
@@ -29,6 +29,13 @@
     note:       
     -->
     <xsl:template name="genTopicNavi">
+        
+        <xsl:message select="'[genTopicNavi] $gpMapUrl=' || $gpMapUrl"/>
+        <xsl:message select="'[genTopicNavi] base-uri()=' || base-uri()"/>
+        <xsl:message select="'[genTopicNavi] $pathToMapDir=' || $pathToMapDir"/>
+        <!--xsl:message select="'[genTopicNavi] $pathToFile=' || $pathToFile"/>
+        <xsl:message select="'[genTopicNavi] $currentFile=' || $currentFile"/-->
+        <!--xsl:message select="'[genTopicNavi] $currentTopicRef=' || $currentTopicRef"/-->
         <xsl:choose>
             <xsl:when test="$gpOutputNavTocFull">
                 <nav>
@@ -36,7 +43,7 @@
                         <xsl:with-param name="prmAttrSetName" select="'atsNaviToc'"/>
                     </xsl:call-template>
                     <xsl:apply-templates select="$gpMapDoc" mode="MODE_TOC">
-                        <xsl:with-param name="prmPathToMapDirFromTopic" as="xs:string" select="$pathToMapDir"/>
+                        <xsl:with-param name="prmPathToMapDirFromTopic" as="xs:string" tunnel="yes" select="$pathToMapDir"/>
                     </xsl:apply-templates>
                 </nav>
             </xsl:when>
@@ -70,17 +77,14 @@
     <xsl:template match="@*" mode="MODE_TOC"/>
     
     <xsl:template match="*" mode="MODE_TOC">
-        <xsl:param name="prmPathToMapDirFromTopic" required="yes" as="xs:string"/>
-        <xsl:apply-templates select="*[contains(@class, ' map/topicref ')]" mode="#current">
-            <xsl:with-param name="prmPathToMapDirFromTopic" select="$prmPathToMapDirFromTopic"/>
-        </xsl:apply-templates>
+        <xsl:apply-templates select="*[contains-token(@class, 'map/topicref')]" mode="#current"/>
     </xsl:template>
     
-    <xsl:template match="*[contains(@class, ' map/topicref ')]
-                          [not(@toc = 'no')]
-                          [not(@processing-role = 'resource-only')]"
+    <xsl:template match="*[contains-token(@class, 'map/topicref')]
+                          [not(string(@toc) eq 'no')]
+                          [not(string(@processing-role) eq 'resource-only')]"
                           mode="MODE_TOC" priority="10">
-        <xsl:param name="prmPathToMapDirFromTopic" required="yes" as="xs:string"/>
+        <xsl:param name="prmPathToMapDirFromTopic" required="yes" tunnel="yes" as="xs:string"/>
         <xsl:param name="prmChildElements" required="no" select="if ($gpOutputNavTocFull) then *[contains(@class, ' map/topicref ')] else ()" as="element()*"/>
 
         <xsl:variable name="title" as="xs:string">
@@ -128,9 +132,7 @@
                     </xsl:choose>
                     <xsl:if test="exists($prmChildElements)">
                         <ul>
-                            <xsl:apply-templates select="$prmChildElements" mode="#current">
-                                <xsl:with-param name="prmPathToMapDirFromTopic" select="$prmPathToMapDirFromTopic"/>
-                            </xsl:apply-templates>
+                            <xsl:apply-templates select="$prmChildElements" mode="#current"/>
                         </ul>
                     </xsl:if>
                 </li>

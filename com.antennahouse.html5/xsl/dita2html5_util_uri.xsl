@@ -25,8 +25,8 @@
     note:       
     -->
     <xsl:function name="ahf:getPathToMapDirFromTopic" as="xs:string?">
-        <xsl:param name="prmTopicUri" as="xs:string"/>
         <xsl:param name="prmMapUri" as="xs:string"/>
+        <xsl:param name="prmTopicUri" as="xs:string"/>
         <xsl:sequence select="ahf:getRelativePath(resolve-uri('.',$prmTopicUri),resolve-uri('.',$prmMapUri),'')"/>
     </xsl:function>
     
@@ -37,8 +37,8 @@
     note:       
     -->
     <xsl:function name="ahf:getPathToFile" as="xs:string?">
-        <xsl:param name="prmTopicUri" as="xs:string"/>
         <xsl:param name="prmMapUri" as="xs:string"/>
+        <xsl:param name="prmTopicUri" as="xs:string"/>
         <xsl:param name="prmFileName" as="xs:string"/>
         <xsl:sequence select="ahf:getRelativePath(resolve-uri('.',$prmTopicUri),resolve-uri('.',$prmMapUri), $prmFileName)"/>
     </xsl:function>
