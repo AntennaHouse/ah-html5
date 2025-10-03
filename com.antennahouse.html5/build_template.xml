@@ -205,7 +205,6 @@
                 <!--attribute name="http://saxon.sf.net/feature/traceListenerClass" value="net.sf.saxon.trace.XSLTTraceListener"/-->
             </factory>
             <param name="PRM_LINE_SEPARATOR" expression="${line.separator}"/>
-            <dita:extension id="dita.conductor.ahhtml5.param" behavior="org.dita.dost.platform.InsertAction"/>
             <xmlcatalog>
                 <catalogpath path="${dita.plugin.org.dita.base.dir}/catalog-dita.xml"/>
             </xmlcatalog>
